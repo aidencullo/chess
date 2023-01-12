@@ -4,10 +4,12 @@ import Square from './Square.js';
 
 // Global vars
 var BOARD_WIDTH = 8;
-var WHITE_SIDE = 15;
+var BLACK_SIDE = 15;
 var WHITE = 1;
 var BLACK = 0;
 var NUM_SQUARES = 64;
+var RIGHT = 1;
+var LEFT = -1;
 
 export default class Game extends React.Component {
 
@@ -19,6 +21,7 @@ export default class Game extends React.Component {
 		piece: undefined,
 	    }),
 	    highlights: new Array(64).fill(0),
+	    active:false,
 	};
     }
 
@@ -54,7 +57,7 @@ export default class Game extends React.Component {
 
     setMainPiece(index) {
 	let color;
-	if (index <= WHITE_SIDE) {
+	if (index <= BLACK_SIDE) {
 	    color = BLACK;
 	} else {
 	    color = WHITE;
@@ -107,11 +110,7 @@ export default class Game extends React.Component {
     }
 
     setPawn(index) {
-	return {
-	    color: -1,
-	    piece: ""
-	};
-	if (index > WHITE_SIDE) {
+	if (index > BLACK_SIDE) {
 	    return {
 		color: WHITE,
 		piece: "p"
@@ -154,59 +153,92 @@ export default class Game extends React.Component {
 	    break;
 	default:
 	}
+	this.setState({
+	    active: true,
+	});
     }
 
     //incomplete
-    highlightQueen(index){}
+    highlightQueen(index){
+	let rookHighlights = this.highlightRook(index);
+	let bishopHighlights = this.highlightBishop(index);
+	let queenHighlights = rookHighlights.map(function (num, idx) {
+	    return num + bishopHighlights[idx];
+	});
+	this.setState({
+	    highlights: queenHighlights,
+	});
+    }
 
     //incomplete
-    highlightPawn(){}
+    highlightPawn(index){
+	const highlights = this.state.highlights.slice();
+	let pawnColor = this.state.squares[index].color;
+	
+	if(pawnColor === BLACK){
+	    this.highlight(index + BOARD_WIDTH, highlights, 0);
+	}
+	if(pawnColor === WHITE){
+	    this.highlight(index - BOARD_WIDTH, highlights, 0);
+	}
+	this.setState({
+	    highlights:highlights,
+	});
+    }
     
     //incomplete
     highlightBishop(index)  {
 	const highlights = this.state.highlights.slice();
-	const row = Math.floor(index / BOARD_WIDTH);
-	const xIndex = index % BOARD_WIDTH;
 	//northeast
-	let pos = index;
-	do {
-	    this.highlight(pos, highlights);
-	    pos -= (BOARD_WIDTH-1);
-	} while (pos > 0);
-	//southwest
-	pos = index;
-	do {
-	    this.highlight(pos, highlights);
-	    pos += (BOARD_WIDTH-1);
-	} while (pos > 0);
-	//northwest-southeast
-	for(let pos = (row + xIndex) * BOARD_WIDTH; pos < 0 && pos != index; pos -= (BOARD_WIDTH-1)) {
-	    this.highlight(pos, highlights);
+	for(let pos = index - (BOARD_WIDTH - 1); pos >= 0; pos -= (BOARD_WIDTH - 1)) {
+	    if(!this.highlight(pos, highlights, RIGHT)){
+		break;
+	    }
 	}
-
+	//southwest
+	for(let pos = index + (BOARD_WIDTH - 1); pos < NUM_SQUARES; pos += (BOARD_WIDTH - 1)) {
+	    if(!this.highlight(pos, highlights, LEFT)){
+		break;
+	    }
+	}
+	//northwest
+	for(let pos = index - (BOARD_WIDTH + 1); pos >= 0; pos -= (BOARD_WIDTH + 1)) {
+	    if(!this.highlight(pos, highlights, LEFT)){
+		break;
+	    }
+	}
+	//southeast
+	for(let pos = index + (BOARD_WIDTH + 1); pos < NUM_SQUARES; pos += (BOARD_WIDTH + 1)) {
+	    if(!this.highlight(pos, highlights, RIGHT)){
+		break;
+	    }
+	}
+	
 	this.setState({
 	    highlights: highlights,
 	})
+	return highlights;
 	
     }
+    
     highlightKing(index) {
 	const highlights = this.state.highlights.slice();
 	//north
-	this.highlight(index - 1 * BOARD_WIDTH, highlights);
+	this.highlight(index - 1 * BOARD_WIDTH, highlights, 0);
 	//northeast
-	this.highlight(index - 1 * BOARD_WIDTH + 1, highlights);
+	this.highlight(index - 1 * BOARD_WIDTH + 1, highlights, RIGHT);
 	//east
-	this.highlight(index + 1, highlights);
+	this.highlight(index + 1, highlights, RIGHT);
 	//southeast
-	this.highlight(index + 1 * BOARD_WIDTH + 1, highlights);
+	this.highlight(index + 1 * BOARD_WIDTH + 1, highlights, RIGHT);
 	//south
-	this.highlight(index + 1 * BOARD_WIDTH, highlights);
+	this.highlight(index + 1 * BOARD_WIDTH, highlights, 0);
 	//southwest
-	this.highlight(index + 1 * BOARD_WIDTH - 1, highlights);
+	this.highlight(index + 1 * BOARD_WIDTH - 1, highlights, LEFT);
 	//west
-	this.highlight(index - 1, highlights);
+	this.highlight(index - 1, highlights, LEFT);
 	//northwest
-	this.highlight(index - 1 * BOARD_WIDTH - 1, highlights);
+	this.highlight(index - 1 * BOARD_WIDTH - 1, highlights, LEFT);
 
 	this.setState({
 	    highlights: highlights,
@@ -216,19 +248,36 @@ export default class Game extends React.Component {
 
     highlightRook(index) {
 	const highlights = this.state.highlights.slice();
-	const row = Math.floor(index / BOARD_WIDTH);
-	//north-south
-	for(let pos = index % BOARD_WIDTH; pos < NUM_SQUARES && pos != index; pos += BOARD_WIDTH) {
-	    this.highlight(pos, highlights);
+	//north
+	for(let pos = index - BOARD_WIDTH; pos > 0; pos -= BOARD_WIDTH) {
+	    if(!this.highlight(pos, highlights, 0)) {
+		break;
+	    }
 	}
-	//east-west
-	for(let pos = row * BOARD_WIDTH; pos < row * (BOARD_WIDTH+1) && pos != index; pos++) {
-	    this.highlight(pos, highlights);
+	//south
+	for(let pos = index + BOARD_WIDTH; pos < NUM_SQUARES; pos += BOARD_WIDTH) {
+	    if(!this.highlight(pos, highlights, 0)) {
+		break;
+	    }
+	}
+	//east
+	for(let pos = index + 1;; pos++) {
+	    if(!this.highlight(pos, highlights, RIGHT)) {
+		break;
+	    }
+	}
+	//west
+	for(let pos = index - 1;; pos--) {
+	    if(!this.highlight(pos, highlights, LEFT)) {
+		break;
+	    }
 	}
 
 	this.setState({
 	    highlights: highlights,
 	})
+	return highlights;
+
 
     }
 
@@ -236,24 +285,24 @@ export default class Game extends React.Component {
 	const highlights = this.state.highlights.slice();
 	// north
 	// up 2, right 1
-	this.highlight(index - 2 * BOARD_WIDTH + 1, highlights);
+	this.highlight(index - 2 * BOARD_WIDTH + 1, highlights, RIGHT);
 	// up 2, left 1
-	this.highlight(index - 2 * BOARD_WIDTH - 1, highlights);
+	this.highlight(index - 2 * BOARD_WIDTH - 1, highlights, LEFT);
 	// right
 	// right 2, up 1
-	this.highlight(index + 2 + 1 * BOARD_WIDTH, highlights);
+	this.highlight(index + 2 + 1 * BOARD_WIDTH, highlights, RIGHT);
 	// right 2, down 1
-	this.highlight(index + 2 - 1 * BOARD_WIDTH, highlights);
+	this.highlight(index + 2 - 1 * BOARD_WIDTH, highlights, RIGHT);
 	// south
 	// south 2, right 1
-	this.highlight(index + 2 * BOARD_WIDTH + 1, highlights);
+	this.highlight(index + 2 * BOARD_WIDTH + 1, highlights, RIGHT);
 	// south 2, left 1
-	this.highlight(index + 2 * BOARD_WIDTH - 1, highlights);
+	this.highlight(index + 2 * BOARD_WIDTH - 1, highlights, LEFT);
 	// left
 	// left 2, up 1
-	this.highlight(index - 2 + 1 * BOARD_WIDTH, highlights);
+	this.highlight(index - 2 + 1 * BOARD_WIDTH, highlights, LEFT);
 	// left 2, down 1
-	this.highlight(index - 2 - 1 * BOARD_WIDTH, highlights);
+	this.highlight(index - 2 - 1 * BOARD_WIDTH, highlights, LEFT);
 
 	this.setState({
 	    highlights: highlights,
@@ -261,18 +310,31 @@ export default class Game extends React.Component {
 
     }
 
-    highlight(index, highlights) {
+    highlight(index, highlights, dir) {
+	//go off the right side of the board
+	if(dir === RIGHT && (index % BOARD_WIDTH === 0 || index % BOARD_WIDTH === 1)) {
+	    return false;
+	}
+	// or off the left side
+	if(dir === LEFT && (index % BOARD_WIDTH === (BOARD_WIDTH - 1) || index % BOARD_WIDTH === (BOARD_WIDTH - 2))) {
+	    return false;
+	}
 	if(index >= NUM_SQUARES) {
-	    return;
+	    return false;
+	}
+	if(index < 0) {
+	    return false;
 	}
 	if(this.hasPiece(index)) {
-	    return;
+	    return false;
 	}
 	highlights[index] = 1;
+	console.log("valid");
+	return true;
     }
 
     hasPiece(index) {
-	return this.state.squares[index].piece != "";
+	return this.state.squares[index].piece !== "";
     }
 
     render() {
