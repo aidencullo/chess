@@ -5,11 +5,18 @@ import Square from './Square.js';
 // Global vars
 var BOARD_WIDTH = 8;
 var BLACK_SIDE = 15;
+var WHITE_SIDE = 49;
 var WHITE = 1;
 var BLACK = 0;
 var NUM_SQUARES = 64;
 var RIGHT = 1;
 var LEFT = -1;
+var OPEN = 1;
+var ENEMY = 2;
+var EMPTY_SQUARE = {
+    color:-1,
+    name: ""
+};
 
 export default class Game extends React.Component {
 
@@ -21,7 +28,8 @@ export default class Game extends React.Component {
 		name: undefined,
 	    }),
 	    highlights: new Array(64).fill(0),
-	    active:false,
+	    active: undefined,
+	    selected: undefined
 	};
     }
 
@@ -34,7 +42,7 @@ export default class Game extends React.Component {
 
       initialization, setting, resetting pieces and board.
 
-      */
+    */
     
     initializeBoard() {
 	const squares = this.state.squares.slice();
@@ -47,16 +55,22 @@ export default class Game extends React.Component {
 		break;
 	    case 1:
 	    case 6:
-//		squares[index] = this.setPawn(index);
-		squares[index] = this.setEmptySquare();
+		squares[index] = this.setPawn(index);
 		break;
 	    default:
 		squares[index] = this.setEmptySquare();
 	    }
 	}
 
+	this.initializeVars(squares);
+
+    }
+
+    initializeVars(squares) {
 	this.setState({
 	    squares: squares,
+	    active: false,
+	    selected:-1
 	});
     }
 
@@ -140,7 +154,7 @@ export default class Game extends React.Component {
 
       functions for highlighting and un-highlighting based on user selection, piece, position, etc.
 
-      */
+    */
     
     clearHighlights() {
 	this.setState({
@@ -149,13 +163,6 @@ export default class Game extends React.Component {
     }
 
     checkMoves(index) {
-	if(this.state.active) {
-	    this.setState({
-		active: false,
-	    });
-	    this.clearHighlights();
-	    return;
-	}
 	const square = this.state.squares[index];
 	switch (square.name) {
 	case "kn":
@@ -180,6 +187,7 @@ export default class Game extends React.Component {
 	}
 	this.setState({
 	    active: true,
+	    selected: index
 	});
     }
 
@@ -202,9 +210,15 @@ export default class Game extends React.Component {
 	
 	if(pawnColor === BLACK){
 	    this.highlight(index + BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
+	    if(index < BLACK_SIDE) {
+		this.highlight(index + 2 * BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
+	    }		
 	}
 	if(pawnColor === WHITE){
 	    this.highlight(index - BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
+	    if(index > WHITE_SIDE) {
+		this.highlight(index - 2 * BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
+	    }		
 	}
 	this.setState({
 	    highlights:highlights,
@@ -313,20 +327,24 @@ export default class Game extends React.Component {
 	// up 2, left 1
 	this.highlight(index - 2 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
 	// right
-	// right 2, up 1
-	this.highlight(index + 2 + 1 * BOARD_WIDTH, highlights, RIGHT, this.state.squares[index].color);
-	// right 2, down 1
-	this.highlight(index + 2 - 1 * BOARD_WIDTH, highlights, RIGHT, this.state.squares[index].color);
+	if((index + 2 + 1 * BOARD_WIDTH) % BOARD_WIDTH > index % BOARD_WIDTH) {
+	    // right 2, up 1
+	    this.highlight(index + 2 + 1 * BOARD_WIDTH, highlights, RIGHT, this.state.squares[index].color);
+	    // right 2, down 1
+	    this.highlight(index + 2 - 1 * BOARD_WIDTH, highlights, RIGHT, this.state.squares[index].color);
+	}
 	// south
 	// south 2, right 1
 	this.highlight(index + 2 * BOARD_WIDTH + 1, highlights, RIGHT, this.state.squares[index].color);
 	// south 2, left 1
 	this.highlight(index + 2 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
 	// left
-	// left 2, up 1
-	this.highlight(index - 2 + 1 * BOARD_WIDTH, highlights, LEFT, this.state.squares[index].color);
-	// left 2, down 1
-	this.highlight(index - 2 - 1 * BOARD_WIDTH, highlights, LEFT, this.state.squares[index].color);
+	if((index - 2 + 1 * BOARD_WIDTH) % BOARD_WIDTH < index % BOARD_WIDTH) {
+	    // left 2, up 1
+	    this.highlight(index - 2 + 1 * BOARD_WIDTH, highlights, LEFT, this.state.squares[index].color);
+	    // left 2, down 1
+	    this.highlight(index - 2 - 1 * BOARD_WIDTH, highlights, LEFT, this.state.squares[index].color);
+	}
 
 	this.setState({
 	    highlights: highlights,
@@ -336,11 +354,11 @@ export default class Game extends React.Component {
 
     highlight(index, highlights, dir, color) {
 	//go off the right side of the board
-	if(dir === RIGHT && (index % BOARD_WIDTH === 0 || index % BOARD_WIDTH === 1)) {
+	if(dir === RIGHT && index % BOARD_WIDTH === 0) {
 	    return false;
 	}
 	// or off the left side
-	if(dir === LEFT && (index % BOARD_WIDTH === (BOARD_WIDTH - 1) || index % BOARD_WIDTH === (BOARD_WIDTH - 2))) {
+	if(dir === LEFT && index % BOARD_WIDTH === (BOARD_WIDTH - 1)) {
 	    return false;
 	}
 	if(index >= NUM_SQUARES) {
@@ -359,22 +377,93 @@ export default class Game extends React.Component {
 	return true;
     }
 
-	/*
-	  RETRIEVAL
+    deselectPiece() {
+	this.setState({
+	    active: false,
+	    selected: -1
+	});
+	this.clearHighlights();
+    }
+    
 
-	  getters, checking certain square, board, piece properties
+    /*
+      RETRIEVAL
 
-	  */
-	
+      getters, checking certain square, board, piece properties
+
+    */
+    
     getPieceInfo(index) {
 	if (this.state.squares[index].color !== undefined) {
 	    return this.state.squares[index];
 	}
     }
-	
+    
     hasPiece(index) {
 	return this.state.squares[index].name !== "";
     }
+
+    /*
+      EVENT HANDLERS
+
+    */
+
+    handleClick(index) {
+	if(this.state.active) {
+	    if(this.state.highlights[index] === OPEN) {
+		try {
+		    this.switchPieces(index);
+		} catch (e) {
+		    console.error(e);
+		}
+	    } else if(this.state.highlights[index] === ENEMY) {
+		try {
+		    this.takePiece(index);
+		} catch (e) {
+		    console.error(e);
+		}
+	    }
+	    // no matter what we deselect at this point
+	    this.deselectPiece();
+	} else {
+	    this.checkMoves(index);
+	}
+    }
+
+    /*
+      MOVEMENTS
+    */
+    
+    switchPieces(index) {
+	if(this.state.selected === -1) {
+	    throw new Error('Piece not selected');
+	}
+
+	const squares = this.state.squares.slice();
+	let selected = squares[this.state.selected];
+	squares[this.state.selected] = squares[index];
+	squares[index] = selected;
+	this.setState({
+	    squares: squares,
+	});
+    }
+
+    takePiece(index) {
+	if(this.state.selected === -1) {
+	    throw new Error('Piece not selected');
+	}
+
+	const squares = this.state.squares.slice();
+	squares[index] = squares[this.state.selected];
+	squares[this.state.selected] = EMPTY_SQUARE;
+	this.setState({
+	    squares: squares,
+	});
+    }
+
+    /*
+      RENDER
+    */
 
     render() {
 	return (
@@ -384,6 +473,7 @@ export default class Game extends React.Component {
 			key={index}
 			id={index}
 			getPieceInfo={() => this.getPieceInfo(index)}
+			handleClick={() => this.handleClick(index)}
 			checkMoves={() => this.checkMoves(index)}
 			highlight={this.state.highlights[index]}
 		    />
@@ -391,5 +481,4 @@ export default class Game extends React.Component {
 	    </div>
 	);
     }
-
 }
