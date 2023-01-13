@@ -14,59 +14,71 @@ import wbishop from './media/white/Bishop.png';
 import bbishop from './media/black/Bishop.png';
 
 var BOARD_WIDTH = 8;
+var WHITE = "white";
+var OTHER = "brown";
 
 export default class Square extends React.Component {
 
-	getImg() {
-		let state = this.props.getPieceInfo();
-		if (state !== undefined) {
-			let color = state.color;
-			switch (state.piece) {
-				case "kn":
-					return this.getImgBySrc(color ? wknight : bknight);
-				case "k":
-					return this.getImgBySrc(color ? wking : bking);
-				case "r":
-					return this.getImgBySrc(color ? wrook : brook);
-				case "b":
-					return this.getImgBySrc(color ? wbishop : bbishop);
-				case "q":
-					return this.getImgBySrc(color ? wqueen : bqueen);
-				case "p":
-					return this.getImgBySrc(color ? wpawn : bpawn);
-				default:
-			}
-		}
+    getImg() {
+	let state = this.props.getPieceInfo();
+	if (state !== undefined) {
+	    let color = state.color;
+	    switch (state.name) {
+	    case "kn":
+		return this.getImgBySrc(color ? wknight : bknight);
+	    case "k":
+		return this.getImgBySrc(color ? wking : bking);
+	    case "r":
+		return this.getImgBySrc(color ? wrook : brook);
+	    case "b":
+		return this.getImgBySrc(color ? wbishop : bbishop);
+	    case "q":
+		return this.getImgBySrc(color ? wqueen : bqueen);
+	    case "p":
+		return this.getImgBySrc(color ? wpawn : bpawn);
+	    default:
+	    }
 	}
+    }
 
-	getImgBySrc(source) {
-		return (
-				<img className="piece" src={source} alt="chess piece" />
-		);
-	}
+    getImgBySrc(source) {
+	return (
+	    <img className="piece" src={source} alt="chess piece" />
+	);
+    }
 
-	getColor() {
-		let index = this.props.id;
-		let row = Math.floor(index / BOARD_WIDTH);
-		if (row % 2 !== 0) {
-			return index % 2 === 0 ? "red" : "white";
-		} else {
-			return index % 2 === 0 ? "white" : "red";
-		}
+    getColor() {
+	let index = this.props.id;
+	let row = Math.floor(index / BOARD_WIDTH);
+	if (row % 2 !== 0) {
+	    return index % 2 === 0 ? OTHER : WHITE;
+	} else {
+	    return index % 2 === 0 ? WHITE : OTHER;
 	}
+    }
 
-	render() {
-		return (
-				<button
-					className="square"
-					style={{ 
-						backgroundColor: this.getColor(),
-						borderColor: this.props.highlight ? "green": "transparent",
-					}}
-					onClick={() => this.props.checkMoves()}
-				>
-					{this.getImg()}
-				</button>
-		);
+    setColor(color) {
+	if(color  === 1){
+	    return "green";
+	} else if (color === 2) {
+	    return "red";
+	} else {
+	    return "transparent";
 	}
+    }
+
+    render() {
+	return (
+	    <button
+		className="square"
+		style={{ 
+		    backgroundColor: this.getColor(),
+		    borderColor: this.setColor(this.props.highlight),
+		}}
+		onClick={() => this.props.checkMoves()}
+	    >
+		{this.getImg()}
+	    </button>
+	);
+    }
 }
