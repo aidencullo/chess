@@ -29,7 +29,8 @@ export default class Game extends React.Component {
 	    }),
 	    highlights: new Array(64).fill(0),
 	    active: undefined,
-	    selected: undefined
+	    selected: undefined,
+	    gameState: undefined
 	};
     }
 
@@ -70,7 +71,8 @@ export default class Game extends React.Component {
 	this.setState({
 	    squares: squares,
 	    active: false,
-	    selected:-1
+	    selected:-1,
+	    gameState:1
 	});
     }
 
@@ -403,6 +405,19 @@ export default class Game extends React.Component {
 	return this.state.squares[index].name !== "";
     }
 
+    getGame(){
+	return this.state.squares.map((square, index) => (
+		    <Square
+			key={index}
+			id={index}
+			getPieceInfo={() => this.getPieceInfo(index)}
+			handleClick={() => this.handleClick(index)}
+			checkMoves={() => this.checkMoves(index)}
+			highlight={this.state.highlights[index]}
+		    />
+		));
+    }
+
     /*
       EVENT HANDLERS
 
@@ -468,16 +483,7 @@ export default class Game extends React.Component {
     render() {
 	return (
 	    <div>
-		{this.state.squares.map((square, index) => (
-		    <Square
-			key={index}
-			id={index}
-			getPieceInfo={() => this.getPieceInfo(index)}
-			handleClick={() => this.handleClick(index)}
-			checkMoves={() => this.checkMoves(index)}
-			highlight={this.state.highlights[index]}
-		    />
-		))}
+		{this.getGame()}
 	    </div>
 	);
     }
