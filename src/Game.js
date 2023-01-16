@@ -225,22 +225,35 @@ export default class Game extends React.Component {
 	});
     }
 
+    highlightPawnMovements(index, highlights) {
+	let pawn = this.state.squares[index];
+	let direction = pawn.color ? -1 : 1;
+	if(!this.hasPiece(index + direction * BOARD_WIDTH)) {
+	    this.highlight(index + direction * BOARD_WIDTH, highlights, 0, pawn.color);
+	    if(!this.hasPiece(index + direction * 2 * BOARD_WIDTH) && Math.floor(index/BOARD_WIDTH) === (BOARD_WIDTH - 1 + direction) % (BOARD_WIDTH - 1)) {
+		this.highlight(index + direction * 2 * BOARD_WIDTH, highlights, 0, pawn.color);
+	    }
+	}
+    }
+
+    highlightPawnAttacks(index, highlights) {
+	let pawn = this.state.squares[index];
+	let direction = pawn.color ? -1 : 1;
+	if(this.hasPiece(index + (direction * BOARD_WIDTH) + 1)) {
+	    this.highlight(index + (direction * BOARD_WIDTH) + 1, highlights, 0, pawn.color);
+	}
+	if(this.hasPiece(index + (direction * BOARD_WIDTH) - 1)) {
+	    this.highlight(index + (direction * BOARD_WIDTH) - 1, highlights, 0, pawn.color);
+	}
+    }
+
+    highlightEnPassant(index, highlights) {}
+	
     highlightPawn(index){
 	const highlights = this.state.highlights.slice();
-	let pawnColor = this.state.squares[index].color;
-	
-	if(pawnColor === BLACK){
-	    this.highlight(index + BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
-	    if(index < BLACK_SIDE) {
-		this.highlight(index + 2 * BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
-	    }		
-	}
-	if(pawnColor === WHITE){
-	    this.highlight(index - BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
-	    if(index > WHITE_SIDE) {
-		this.highlight(index - 2 * BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
-	    }		
-	}
+	this.highlightPawnMovements(index,highlights);
+	this.highlightPawnAttacks(index, highlights);
+	this.highlightEnPassant(index, highlights);
 	this.setState({
 	    highlights:highlights,
 	});
