@@ -30,7 +30,7 @@ export default class Game extends React.Component {
 	    highlights: new Array(64).fill(0),
 	    active: undefined,
 	    selected: undefined,
-	    gameState: undefined
+	    next: undefined
 	};
     }
 
@@ -72,10 +72,20 @@ export default class Game extends React.Component {
 	    squares: squares,
 	    active: false,
 	    selected:-1,
-	    gameState:1
+	    next: WHITE
 	});
     }
 
+    /*
+      SETTERS
+    */
+
+    setNext(){
+	this.setState({
+	    next: this.state.next ? 0 : 1
+	});
+    }
+    
     setEmptySquare() {
 	return {
 	    color: -1,
@@ -155,7 +165,7 @@ export default class Game extends React.Component {
 	this.initializeBoard();
 	this.clearHighlights();
     }
-	
+    
 
     /*
       HIGHLIGHTING
@@ -171,6 +181,9 @@ export default class Game extends React.Component {
     }
 
     checkMoves(index) {
+	if (this.state.next !== this.state.squares[index].color) {
+	    return;
+	}
 	const square = this.state.squares[index];
 	switch (square.name) {
 	case "kn":
@@ -413,15 +426,15 @@ export default class Game extends React.Component {
 
     getGame(){
 	return this.state.squares.map((square, index) => (
-		    <Square
-			key={index}
-			id={index}
-			getPieceInfo={() => this.getPieceInfo(index)}
-			handleClick={() => this.handleClick(index)}
-			checkMoves={() => this.checkMoves(index)}
-			highlight={this.state.highlights[index]}
-		    />
-		));
+	    <Square
+		key={index}
+		id={index}
+		getPieceInfo={() => this.getPieceInfo(index)}
+		handleClick={() => this.handleClick(index)}
+		checkMoves={() => this.checkMoves(index)}
+		highlight={this.state.highlights[index]}
+	    />
+	));
     }
 
     /*
@@ -437,18 +450,21 @@ export default class Game extends React.Component {
 		} catch (e) {
 		    console.error(e);
 		}
+		this.setNext();
 	    } else if(this.state.highlights[index] === ENEMY) {
 		try {
 		    this.takePiece(index);
 		} catch (e) {
 		    console.error(e);
 		}
+		this.setNext();
 	    }
 	    // no matter what we deselect at this point
 	    this.deselectPiece();
 	} else {
 	    this.checkMoves(index);
 	}
+	// change color that is next
     }
 
     /*
