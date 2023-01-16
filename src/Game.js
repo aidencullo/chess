@@ -151,6 +151,12 @@ export default class Game extends React.Component {
 	}
     }
 
+    restart(){
+	this.initializeBoard();
+	this.clearHighlights();
+    }
+	
+
     /*
       HIGHLIGHTING
 
@@ -483,8 +489,11 @@ export default class Game extends React.Component {
     render() {
 	return (
 	    <div>
-		{this.getGame()}
-	    </div>
+		<div className="board">
+		    {this.getGame()}
+		</div>
+		<button onClick={() => this.restart()}>Restart</button>
+	    </div> 
 	);
     }
 }

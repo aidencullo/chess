@@ -21,7 +21,6 @@ export default class Screen extends React.Component {
 
     }
 
-
     /*
       P2P CONNECTION
       */
@@ -88,6 +87,9 @@ export default class Screen extends React.Component {
 
     /*
       SETTERS
+      */
+    /*
+      RENDER
       */
 
     render() {
