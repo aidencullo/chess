@@ -13,6 +13,13 @@ You and your friend can visit [this link](https://aidencullo.com/p2pchess) play 
 3. Player 2 inserts the p2p of player 1 into their webpage
 4. Enjoy
 
+## Issues
+
+1. Still to code
+   * checking/checkmate
+   * promotion
+   * castling
+
 ## Authors
 
 Aiden Cullo (cullo7) with guidance from Tanner Hoelzel (thoelze1)
