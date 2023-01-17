@@ -13,6 +13,7 @@ var RIGHT = 1;
 var LEFT = -1;
 var OPEN = 1;
 var ENEMY = 2;
+var ENPASSANT = 3;
 var EMPTY_SQUARE = {
     color:-1,
     name: ""
@@ -30,7 +31,8 @@ export default class Game extends React.Component {
 	    highlights: new Array(64).fill(0),
 	    active: undefined,
 	    selected: undefined,
-	    next: undefined
+	    nextTurn: undefined,
+	    lastMove: undefined
 	};
     }
 
@@ -44,25 +46,34 @@ export default class Game extends React.Component {
       initialization, setting, resetting pieces and board.
 
     */
-    
-    initializeBoard() {
-	const squares = this.state.squares.slice();
+
+    alternateBoard(squares){
+	this.setBoardToEmpty(squares);
+	this.setPawnCustom(32, squares, WHITE);
+	this.setPawnCustom(17, squares, BLACK);	
+    }
+
+    standardBoard(squares) {
 	for (let index = 0; index < this.state.squares.length; index++) {
 	    let row = Math.floor(index / BOARD_WIDTH);
 	    switch (row) {
 	    case 0:
 	    case 7:
-		squares[index] = this.setMainPiece(index);
+		this.setMainPiece(index, squares);
 		break;
 	    case 1:
 	    case 6:
-		squares[index] = this.setPawn(index);
+		this.setPawn(index, squares);
 		break;
 	    default:
-		squares[index] = this.setEmptySquare();
+		this.setEmptySquare(index, squares);
 	    }
 	}
-
+    }	
+    
+    initializeBoard() {
+	const squares = this.state.squares.slice();
+	this.alternateBoard(squares);
 	this.initializeVars(squares);
 
     }
@@ -72,28 +83,66 @@ export default class Game extends React.Component {
 	    squares: squares,
 	    active: false,
 	    selected:-1,
-	    next: WHITE
+	    nextTurn: BLACK,
+	    lastMove: {
+		start: -1,
+		end: -1,
+		piece: undefined
+	    }
 	});
     }
 
     /*
-      SETTERS
+      GETTERS
     */
 
-    setNext(){
-	this.setState({
-	    next: this.state.next ? 0 : 1
-	});
+
+    getPawn(index) {
+	if (index > BLACK_SIDE) {
+		return {
+		color: WHITE,
+		name: "p"
+	    };
+	} else {
+		return {
+		color: BLACK,
+		name: "p"
+	    };
+	}
     }
-    
-    setEmptySquare() {
+	
+    getEmptySquare() {
 	return {
 	    color: -1,
 	    name: ""
 	};
     }
+    
+    /*
+      SETTERS
+    */
 
-    setMainPiece(index) {
+    setBoardToEmpty(squares) {
+	for(const i in squares) {
+	    this.setEmptySquare(i, squares);
+	}
+    }
+    
+    setNextTurn(){
+	this.setState({
+	    nextTurn: this.state.nextTurn ? 0 : 1
+	});
+    }
+    
+    setEmptySquare(index, squares) {
+	squares[index] = {
+	    color: -1,
+	    name: ""
+	};
+    }
+
+
+    setMainPiece(index, squares) {
 	let color;
 	if (index <= BLACK_SIDE) {
 	    color = BLACK;
@@ -102,64 +151,80 @@ export default class Game extends React.Component {
 	}
 	switch (index % BOARD_WIDTH) {
 	case 0:
-	    return {
+	    squares[index] = {
 		color: color,
 		name: "r"
 	    };
+	    break;
 	case 1:
-	    return {
+	    squares[index] = {
 		color: color,
 		name: "kn"
 	    };
+	    break;
 	case 2:
-	    return {
+	    squares[index] = {
 		color: color,
 		name: "b"
 	    };
+	    break;
 	case 3:
-	    return {
+	    squares[index] = {
 		color: color,
 		name: "q"
 	    };
+	    break;
 	case 4:
-	    return {
+	    squares[index] = {
 		color: color,
 		name: "k"
 	    };
+	    break;
 	case 5:
-	    return {
+	    squares[index] = {
 		color: color,
 		name: "b"
 	    };
+	    break;
 	case 6:
-	    return {
+	    squares[index] = {
 		color: color,
 		name: "kn"
 	    };
+	    break;
 	case 7:
-	    return {
+	    squares[index] = {
 		color: color,
 		name: "r"
 	    };
+	    break;
 	default:
 	    console.log("rowIndex invalid value");
 	    return;
 	}
     }
 
-    setPawn(index) {
+    setPawn(index, squares) {
 	if (index > BLACK_SIDE) {
-	    return {
+	    squares[index] = {
 		color: WHITE,
 		name: "p"
 	    };
 	} else {
-	    return {
+	    squares[index] = {
 		color: BLACK,
 		name: "p"
 	    };
 	}
     }
+
+    setPawnCustom(index, squares, color) {
+	squares[index] = {
+	    color: color,
+	    name: "p"
+	};
+    }
+
 
     restart(){
 	this.initializeBoard();
@@ -181,7 +246,7 @@ export default class Game extends React.Component {
     }
 
     checkMoves(index) {
-	if (this.state.next !== this.state.squares[index].color) {
+	if (this.state.nextTurn !== this.state.squares[index].color) {
 	    return;
 	}
 	const square = this.state.squares[index];
@@ -212,8 +277,6 @@ export default class Game extends React.Component {
 	});
     }
 
-    //incomplete
-    // use ref instead of return
     highlightQueen(index){
 	let rookHighlights = this.highlightRook(index);
 	let bishopHighlights = this.highlightBishop(index);
@@ -247,8 +310,32 @@ export default class Game extends React.Component {
 	}
     }
 
-    highlightEnPassant(index, highlights) {}
-	
+    highlightEnPassant(index, highlights) {
+	let pawn = this.state.squares[index];
+	let direction = pawn.color ? -1 : 1;
+	let targetMoveRight = {
+	    start: index + (direction * 2 * BOARD_WIDTH) + 1,
+	    end: index + 1,
+	    piece: {
+		color: Number(!pawn.color),
+		name: "p"
+	    }
+	};
+	let targetMoveLeft = {
+	    start: index + (direction * 2 * BOARD_WIDTH) - 1,
+	    end: index - 1,
+	    piece: {
+		color: Number(!pawn.color),
+		name: "p"
+	    }
+	};
+	if(this.isEqualObject(this.state.lastMove, targetMoveRight)) {
+	    highlights[index + (direction * BOARD_WIDTH) + 1] = ENPASSANT;
+	} else if(this.isEqualObject(this.state.lastMove, targetMoveLeft)) {
+	    highlights[index + (direction * BOARD_WIDTH) - 1] = ENPASSANT;
+	}
+    }
+    
     highlightPawn(index){
 	const highlights = this.state.highlights.slice();
 	this.highlightPawnMovements(index,highlights);
@@ -403,11 +490,11 @@ export default class Game extends React.Component {
 	}
 	if(this.hasPiece(index)) {
 	    if(this.state.squares[index].color !== color) {
-		highlights[index] = 2;
+		highlights[index] = ENEMY;
 	    }
 	    return false;
 	}
-	highlights[index] = 1;
+	highlights[index] = OPEN;
 	return true;
     }
 
@@ -457,58 +544,86 @@ export default class Game extends React.Component {
 
     handleClick(index) {
 	if(this.state.active) {
-	    if(this.state.highlights[index] === OPEN) {
-		try {
-		    this.switchPieces(index);
-		} catch (e) {
-		    console.error(e);
-		}
-		this.setNext();
-	    } else if(this.state.highlights[index] === ENEMY) {
-		try {
-		    this.takePiece(index);
-		} catch (e) {
-		    console.error(e);
-		}
-		this.setNext();
-	    }
-	    // no matter what we deselect at this point
+	    if(this.state.highlights[index] > 0) {
+		this.makeMove(index);
+		this.setNextTurn()
+	    }	    
 	    this.deselectPiece();
 	} else {
 	    this.checkMoves(index);
 	}
-	// change color that is next
     }
 
     /*
       MOVEMENTS
     */
-    
-    switchPieces(index) {
-	if(this.state.selected === -1) {
-	    throw new Error('Piece not selected');
-	}
 
+    makeMove(index) {
 	const squares = this.state.squares.slice();
+	let lastMove = {
+	    start: this.state.selected,
+	    end: index,
+	    piece: this.state.squares[this.state.selected]
+	}   
+	if(this.state.highlights[index] === OPEN) {
+	    this.switchPieces(index, squares);
+	} else if(this.state.highlights[index] === ENEMY) {
+	    this.takePiece(index, squares);
+	} else if(this.state.highlights[index] === ENPASSANT) {
+	    this.switchPieces(index, squares);
+	    if(lastMove.start > lastMove.end) {
+		this.deletePiece(index + BOARD_WIDTH, squares);
+	    } else {
+		this.deletePiece(index - BOARD_WIDTH, squares);
+	    }		
+	}
+	this.setState({
+	    lastMove: lastMove,
+	    squares: squares
+	});	
+    }
+    
+    switchPieces(index, squares) {
 	let selected = squares[this.state.selected];
 	squares[this.state.selected] = squares[index];
 	squares[index] = selected;
-	this.setState({
-	    squares: squares,
-	});
     }
 
-    takePiece(index) {
-	if(this.state.selected === -1) {
-	    throw new Error('Piece not selected');
-	}
-
-	const squares = this.state.squares.slice();
+    takePiece(index, squares) {
 	squares[index] = squares[this.state.selected];
 	squares[this.state.selected] = EMPTY_SQUARE;
-	this.setState({
-	    squares: squares,
-	});
+    }
+
+    deletePiece(index, squares) {
+	squares[index] = EMPTY_SQUARE;
+    }
+
+    /*
+      AUXILIARY FUNCTIONS
+    */
+
+    isEqualObject(object1, object2) {
+	console.log("isequal");
+	console.log("ob1:", object1);
+	console.log("ob2:", object2);
+	if(Object.keys(object1).length !== Object.keys(object2).length) {
+	    return false;
+	}
+	for (const [key, value] of Object.entries(object1)) {
+	    console.log(`${typeof value}`);
+	    if(typeof value === "object") {
+		if (object2[key] === undefined) {
+		    return false;
+		} else if (!this.isEqualObject(value, object2[key])){
+		    return false;
+		}
+	    } else if(value !== object2[key]) {
+		console.log(`${value} !== ${object2[key]}`);
+		return false;
+	    }
+	}
+	console.log("true is equal");
+	return true;
     }
 
     /*

@@ -58,12 +58,12 @@ export default class Square extends React.Component {
     }
 
     setColor(color) {
-	if(color  === 1){
-	    return "green";
-	} else if (color === 2) {
-	    return "red";
-	} else {
+	if(color === 0) {
 	    return "transparent";
+	} else if(color  === 1){
+	    return "green";
+	} else {
+	    return "red";
 	}
     }
 
