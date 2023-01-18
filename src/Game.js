@@ -32,7 +32,8 @@ export default class Game extends React.Component {
 	    active: undefined,
 	    selected: undefined,
 	    nextTurn: undefined,
-	    lastMove: undefined
+	    lastMove: undefined,
+	    check: undefined
 	};
     }
 
@@ -73,9 +74,8 @@ export default class Game extends React.Component {
     
     initializeBoard() {
 	const squares = this.state.squares.slice();
-	this.alternateBoard(squares);
+	this.standardBoard(squares);
 	this.initializeVars(squares);
-
     }
 
     initializeVars(squares) {
@@ -88,7 +88,8 @@ export default class Game extends React.Component {
 		start: -1,
 		end: -1,
 		piece: undefined
-	    }
+	    },
+	    check: false
 	});
     }
 
@@ -251,23 +252,23 @@ export default class Game extends React.Component {
 	}
 	const square = this.state.squares[index];
 	switch (square.name) {
+	case "p":
+	    this.highlightPawn(index);
+	    break;
 	case "kn":
 	    this.highlightKnight(index);
-	    break;
-	case "k":
-	    this.highlightKing(index);
-	    break;
-	case "r":
-	    this.highlightRook(index);
 	    break;
 	case "b":
 	    this.highlightBishop(index);
 	    break;
+	case "r":
+	    this.highlightRook(index);
+	    break;
 	case "q":
 	    this.highlightQueen(index);
 	    break;
-	case "p":
-	    this.highlightPawn(index);
+	case "k":
+	    this.highlightKing(index);
 	    break;
 	default:
 	}
@@ -277,24 +278,25 @@ export default class Game extends React.Component {
 	});
     }
 
-    highlightQueen(index){
-	let rookHighlights = this.highlightRook(index);
-	let bishopHighlights = this.highlightBishop(index);
-	let queenHighlights = rookHighlights.map(function (num, idx) {
-	    return num + bishopHighlights[idx];
-	});
+    highlightPawn(index){
+	const highlights = this.state.highlights.slice();
+	this.highlightPawnMovements(index,highlights);
+	this.highlightPawnAttacks(index, highlights);
+	this.highlightEnPassant(index, highlights);
 	this.setState({
-	    highlights: queenHighlights,
+	    highlights: highlights,
 	});
     }
 
     highlightPawnMovements(index, highlights) {
 	let pawn = this.state.squares[index];
 	let direction = pawn.color ? -1 : 1;
-	if(!this.hasPiece(index + direction * BOARD_WIDTH)) {
-	    this.highlight(index + direction * BOARD_WIDTH, highlights, 0, pawn.color);
-	    if(!this.hasPiece(index + direction * 2 * BOARD_WIDTH) && Math.floor(index/BOARD_WIDTH) === (BOARD_WIDTH - 1 + direction) % (BOARD_WIDTH - 1)) {
-		this.highlight(index + direction * 2 * BOARD_WIDTH, highlights, 0, pawn.color);
+	let position = index + direction * BOARD_WIDTH;
+	if(!this.hasPiece(position)) {
+	    this.highlight(position, highlights, 0, pawn.color);
+	    position = position + BOARD_WIDTH;
+	    if(!this.hasPiece(position) && this.atStartingPosition(index)) {
+		this.highlight(position, highlights, 0, pawn.color);
 	    }
 	}
     }
@@ -336,15 +338,6 @@ export default class Game extends React.Component {
 	}
     }
     
-    highlightPawn(index){
-	const highlights = this.state.highlights.slice();
-	this.highlightPawnMovements(index,highlights);
-	this.highlightPawnAttacks(index, highlights);
-	this.highlightEnPassant(index, highlights);
-	this.setState({
-	    highlights:highlights,
-	});
-    }
     
     highlightBishop(index)  {
 	const highlights = this.state.highlights.slice();
@@ -379,32 +372,40 @@ export default class Game extends React.Component {
 	return highlights;
 	
     }
-    
-    highlightKing(index) {
+
+    highlightKnight(index) {
 	const highlights = this.state.highlights.slice();
-	//north
-	this.highlight(index - 1 * BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
-	//northeast
-	this.highlight(index - 1 * BOARD_WIDTH + 1, highlights, RIGHT, this.state.squares[index].color);
-	//east
-	this.highlight(index + 1, highlights, RIGHT, this.state.squares[index].color);
-	//southeast
-	this.highlight(index + 1 * BOARD_WIDTH + 1, highlights, RIGHT, this.state.squares[index].color);
-	//south
-	this.highlight(index + 1 * BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
-	//southwest
-	this.highlight(index + 1 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
-	//west
-	this.highlight(index - 1, highlights, LEFT, this.state.squares[index].color);
-	//northwest
-	this.highlight(index - 1 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
+	// north
+	// up 2, right 1
+	this.highlight(index - 2 * BOARD_WIDTH + 1, highlights, RIGHT, this.state.squares[index].color);
+	// up 2, left 1
+	this.highlight(index - 2 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
+	// right
+	if((index + 2 + 1 * BOARD_WIDTH) % BOARD_WIDTH > index % BOARD_WIDTH) {
+	    // right 2, up 1
+	    this.highlight(index + 2 + 1 * BOARD_WIDTH, highlights, RIGHT, this.state.squares[index].color);
+	    // right 2, down 1
+	    this.highlight(index + 2 - 1 * BOARD_WIDTH, highlights, RIGHT, this.state.squares[index].color);
+	}
+	// south
+	// south 2, right 1
+	this.highlight(index + 2 * BOARD_WIDTH + 1, highlights, RIGHT, this.state.squares[index].color);
+	// south 2, left 1
+	this.highlight(index + 2 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
+	// left
+	if((index - 2 + 1 * BOARD_WIDTH) % BOARD_WIDTH < index % BOARD_WIDTH) {
+	    // left 2, up 1
+	    this.highlight(index - 2 + 1 * BOARD_WIDTH, highlights, LEFT, this.state.squares[index].color);
+	    // left 2, down 1
+	    this.highlight(index - 2 - 1 * BOARD_WIDTH, highlights, LEFT, this.state.squares[index].color);
+	}
 
 	this.setState({
 	    highlights: highlights,
 	})
 
     }
-
+    
     highlightRook(index) {
 	const highlights = this.state.highlights.slice();
 	//north
@@ -440,38 +441,45 @@ export default class Game extends React.Component {
 
     }
 
-    highlightKnight(index) {
+    
+    // make this fuction more efficient
+    highlightQueen(index){
+	let rookHighlights = this.highlightRook(index);
+	let bishopHighlights = this.highlightBishop(index);
+	let queenHighlights = rookHighlights.map(function (num, idx) {
+	    return num + bishopHighlights[idx];
+	});
+	this.setState({
+	    highlights: queenHighlights,
+	});
+    }    
+    
+    highlightKing(index) {
 	const highlights = this.state.highlights.slice();
-	// north
-	// up 2, right 1
-	this.highlight(index - 2 * BOARD_WIDTH + 1, highlights, RIGHT, this.state.squares[index].color);
-	// up 2, left 1
-	this.highlight(index - 2 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
-	// right
-	if((index + 2 + 1 * BOARD_WIDTH) % BOARD_WIDTH > index % BOARD_WIDTH) {
-	    // right 2, up 1
-	    this.highlight(index + 2 + 1 * BOARD_WIDTH, highlights, RIGHT, this.state.squares[index].color);
-	    // right 2, down 1
-	    this.highlight(index + 2 - 1 * BOARD_WIDTH, highlights, RIGHT, this.state.squares[index].color);
-	}
-	// south
-	// south 2, right 1
-	this.highlight(index + 2 * BOARD_WIDTH + 1, highlights, RIGHT, this.state.squares[index].color);
-	// south 2, left 1
-	this.highlight(index + 2 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
-	// left
-	if((index - 2 + 1 * BOARD_WIDTH) % BOARD_WIDTH < index % BOARD_WIDTH) {
-	    // left 2, up 1
-	    this.highlight(index - 2 + 1 * BOARD_WIDTH, highlights, LEFT, this.state.squares[index].color);
-	    // left 2, down 1
-	    this.highlight(index - 2 - 1 * BOARD_WIDTH, highlights, LEFT, this.state.squares[index].color);
-	}
+	//north
+	this.highlight(index - 1 * BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
+	//northeast
+	this.highlight(index - 1 * BOARD_WIDTH + 1, highlights, RIGHT, this.state.squares[index].color);
+	//east
+	this.highlight(index + 1, highlights, RIGHT, this.state.squares[index].color);
+	//southeast
+	this.highlight(index + 1 * BOARD_WIDTH + 1, highlights, RIGHT, this.state.squares[index].color);
+	//south
+	this.highlight(index + 1 * BOARD_WIDTH, highlights, 0, this.state.squares[index].color);
+	//southwest
+	this.highlight(index + 1 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
+	//west
+	this.highlight(index - 1, highlights, LEFT, this.state.squares[index].color);
+	//northwest
+	this.highlight(index - 1 * BOARD_WIDTH - 1, highlights, LEFT, this.state.squares[index].color);
 
 	this.setState({
 	    highlights: highlights,
 	})
 
     }
+
+
 
     highlight(index, highlights, dir, color) {
 	//go off the right side of the board
@@ -488,13 +496,16 @@ export default class Game extends React.Component {
 	if(index < 0) {
 	    return false;
 	}
+	if(this.inCheck(index)) {
+	    return false;
+	}
 	if(this.hasPiece(index)) {
 	    if(this.state.squares[index].color !== color) {
 		highlights[index] = ENEMY;
 	    }
-	    return false;
+	} else {
+	    highlights[index] = OPEN;
 	}
-	highlights[index] = OPEN;
 	return true;
     }
 
@@ -537,6 +548,42 @@ export default class Game extends React.Component {
 	));
     }
 
+    // untested
+    atStartingPosition(index){
+	let piece = this.state.squares[index];
+	let direction = piece.color ? -1 : 1;
+	switch (piece.name) {
+	case "p":
+	    return Math.floor(index/BOARD_WIDTH) === (BOARD_WIDTH - 1 + direction) % (BOARD_WIDTH - 1)) {
+	case "kn":
+	    return false;
+	case "b":
+	    return false;
+	case "r":
+	    return false;
+	case "q":
+	    return false;
+	case "k":
+	    return false;
+	default:
+	}
+	this.setState({
+	    active: true,
+	    selected: index
+	});
+
+    }
+
+    inCheck(index) {
+	return false;
+//	Array(8).fill(0).map((_, i) => this.inCheckDirection(index, i));
+//	this.inCheckKnight(index);
+    }
+
+    inCheckDirection(index, i) {}
+
+    inCheckKnight(index) {}
+	
     /*
       EVENT HANDLERS
 
