@@ -38,7 +38,7 @@ export default class Screen extends React.Component {
 	    console.log("connection successful");
 	    otroconn.on('open', function () {
 		// upon receiving a connection we open an adjacent connection (outgoing)
-		if (screenSelf.state.outgoingConnection == undefined) {
+  		if (screenSelf.state.outgoingConnection === undefined) {
 		    screenSelf.setState({
 			outgoingConnection: screenSelf.state.local.connect(otroconn.peer),
 		    });
