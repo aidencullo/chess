@@ -33,7 +33,9 @@ export default class Game extends React.Component {
 	    selected: undefined,
 	    nextTurn: undefined,
 	    lastMove: undefined,
-	    check: undefined
+	    check: undefined,
+	    kingWhite: undefined,
+	    kingBlack: undefined
 	};
     }
 
@@ -88,7 +90,9 @@ export default class Game extends React.Component {
 		end: -1,
 		piece: undefined
 	    },
-	    check: false
+	    check: false,
+	    kingWhite: 60,
+	    kingBlack: 4
 	});
     }
 
@@ -520,11 +524,9 @@ export default class Game extends React.Component {
 	    return;
 	}
 
-	/*
-	  if(this.inCheck(index)) {
-	  return;
-	  }
-	*/
+	if(this.inCheck(index)) {
+	    return;
+	}
 
 	// potentially more checks
 	highlights[index] = state;
@@ -550,6 +552,14 @@ export default class Game extends React.Component {
 	return index >= 0 && index < NUM_SQUARES;
     }
 
+    isRook(index) {
+	return this.state.squares[index].name === "r";
+    }
+
+    isQueen(index) {
+	return this.state.squares[index].name === "q";
+    }
+    
     getPieceInfo(index) {
 	if (this.state.squares[index].color !== undefined) {
 	    return this.state.squares[index];
@@ -586,16 +596,35 @@ export default class Game extends React.Component {
     }
 
     inCheck(index) {
+	const squares = this.state.squares.slice();
+	this.makeMove(index, 1, squares);
+	const kingIndex = this.state.nextTurn ? this.state.kingWhite : this.state.kingBlack;
+	if(this.inCheckNorth(kingIndex)) {
+	    console.log("inCheck");
+	    return true;
+	}   
 	return false;
-	//    Array(8).fill(0).map((_, i) => this.inCheckDirection(index, i));
-	//    this.inCheckKnight(index);
     }
 
-    inCheckDirection(index, i) { }
-
-    inCheckKnight(index) {
-
+    inCheckNorth(index) {
+	let attackingIndex = index - BOARD_WIDTH;
+	while(attackingIndex >= 0) {
+	    if(this.hasPiece(attackingIndex)) {
+		if(this.hasFoePiece(attackingIndex)) {
+		    if(this.isRook(attackingIndex) || this.isQueen(attackingIndex)) {
+			return true;
+		    } else {
+			return false;
+		    }
+		} else {
+		    return false;
+		}
+	    }
+	    attackingIndex = index - BOARD_WIDTH;
+	}
+	return false;
     }
+ 	    
 
     /*
       EVENT HANDLERS
@@ -619,8 +648,23 @@ export default class Game extends React.Component {
     */
 
     // review this function
-    makeMove(index) {
-	const squares = this.state.squares.slice();
+    makeMove(index, altSquares = 0, newSquares = undefined) {
+	let squares;
+	if(!altSquares) {
+	    squares = this.state.squares.slice();
+	    if(this.selected === this.kingWhite) {
+		this.setState({
+		    kingWhite: index
+		})
+	    }
+	    if(this.selected === this.kingBlack) {
+		this.setState({
+		    kingBlack: index
+		})
+	    }
+	} else {
+	    squares = newSquares;
+	}
 	let lastMove = {
 	    start: this.state.selected,
 	    end: index,
@@ -638,10 +682,12 @@ export default class Game extends React.Component {
 		this.deletePiece(index - BOARD_WIDTH, squares);
 	    }
 	}
-	this.setState({
-	    lastMove: lastMove,
-	    squares: squares
-	});
+	if(!altSquares) {
+	    this.setState({
+		lastMove: lastMove,
+		squares: squares
+	    });
+	}
     }
 
     switchPieces(index, squares) {
