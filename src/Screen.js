@@ -21,11 +21,10 @@ export default class Screen extends React.Component {
 
     }
 
-    /*
-      P2P CONNECTION
-      */
+    /* ================================================================ */ 
+    /* P2P */
+    /* ================================================================ */ 
     
-    // setup p2p connection listeners
     initializeP2P(screenSelf) {
 
 	// listener for when our peer node is created
@@ -84,13 +83,6 @@ export default class Screen extends React.Component {
     handleChange(event) {
 	this.setState({ value: event.target.value });
     }
-
-    /*
-      SETTERS
-      */
-    /*
-      RENDER
-      */
 
     render() {
 	return (

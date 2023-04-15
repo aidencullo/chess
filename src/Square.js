@@ -17,25 +17,40 @@ var BOARD_WIDTH = 8;
 var WHITE = "white";
 var OTHER = "brown";
 
+const Color = Object.freeze({
+    White: 0,
+    Black: 1
+})
+
+const Piece = Object.freeze({
+    Pawn: 0,
+    Knight: 1,
+    Bishop: 2,
+    Rook: 3,
+    Queen: 4,
+    King: 5,
+    NoPiece: 6
+})
+
 export default class Square extends React.Component {
 
     getImg() {
-	let state = this.props.getPieceInfo();
+	let state = this.props.state;
 	if (state !== undefined) {
 	    let color = state.color;
-	    switch (state.name) {
-	    case "kn":
-		return this.getImgBySrc(color ? wknight : bknight);
-	    case "k":
-		return this.getImgBySrc(color ? wking : bking);
-	    case "r":
-		return this.getImgBySrc(color ? wrook : brook);
-	    case "b":
-		return this.getImgBySrc(color ? wbishop : bbishop);
-	    case "q":
-		return this.getImgBySrc(color ? wqueen : bqueen);
-	    case "p":
-		return this.getImgBySrc(color ? wpawn : bpawn);
+	    switch (state.piece) {
+	    case Piece.Knight:
+		return this.getImgBySrc(color === Color.White ? wknight : bknight);
+	    case Piece.King:
+		return this.getImgBySrc(color === Color.White ? wking : bking);
+	    case Piece.Rook:
+		return this.getImgBySrc(color === Color.White ? wrook : brook);
+	    case Piece.Bishop:
+		return this.getImgBySrc(color === Color.White ? wbishop : bbishop);
+	    case Piece.Queen:
+		return this.getImgBySrc(color === Color.White ? wqueen : bqueen);
+	    case Piece.Pawn:
+		return this.getImgBySrc(color === Color.White ? wpawn : bpawn);
 	    default:
 	    }
 	}
