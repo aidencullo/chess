@@ -7,10 +7,7 @@ import Square from './Square.js';
 // Global vars
 // geometrics
 var BOARD_WIDTH = 8;
-var BLACK_SIDE = 15;
-var WHITE = 1;
-var BLACK = 0;
-var NUM_SQUARES = 64;
+var BOARD_SIZE = 64;
 
 // highlighting
 var OPEN = 1;
@@ -19,7 +16,13 @@ var ENPASSANT = 3;
 
 const Color = Object.freeze({
     White: 0,
-    Black: 1
+    Black: 1,
+    NoColor: 2
+})
+
+const Direction = Object.freeze({
+    North: -1,
+    South: 1
 })
 
 const Piece = Object.freeze({
@@ -84,6 +87,7 @@ export default class Game extends React.Component {
      * @function
      */
     setAlternateBoard(squares) {
+	throw new Error("unimplemented chessboard initialization called")
     }
 
     /**
@@ -101,6 +105,9 @@ export default class Game extends React.Component {
 	this.setPiece(6, Piece.Knight, Color.Black, squares);
 	this.setPiece(7, Piece.Rook, Color.Black, squares);
 	this.setPieces(8, 15, Piece.Pawn, Color.Black, squares);
+
+	// empty
+	this.setPieces(16, 46, Piece.NoPiece, Color.NoColor, squares);
 
 	// white
 	this.setPieces(47, 55, Piece.Pawn, Color.White, squares);
@@ -144,35 +151,27 @@ export default class Game extends React.Component {
 	    kingBlack: 4
 	});
     }
-
     /*
      * GETTERS
      *
-     * Abstract retrieval of objects
+     * Retrieving abstract objects
      */
 
     /************************************************************************/
 
-    getPawn(index) {
-	if (index > BLACK_SIDE) {
-	    return {
-		color: Color.White,
-		piece: Piece.Pawn
-	    };
-	} else {
-	    return {
-		color: Color.Black,
-		piece: Piece.Pawn
-	    };
-	}
+    getDirection(color) {
+	return color === Color.White ? Direction.North : Direction.South;
     }
-
+    
     /*
-      SETTERS
-    */
+     * SETTERS
+     *
+     * Manipulating board squares
+     */
+
+    /************************************************************************/
 
     nextTurn() {
-	console.log(`setting turn to ${!this.state.turn}`)
 	this.setState({
 	    turn: this.state.turn === Color.White ? Color.Black : Color.White,
 	});
@@ -200,11 +199,41 @@ export default class Game extends React.Component {
     }
 
     /*
-      HIGHLIGHTING
+     * CHECKING
+     *
+     * check if squares are available for moves/attacks
+     */
 
-      functions for highlighting and un-highlighting based on user selection, piece, position, etc.
+    /************************************************************************/
+    
+    /**
+     * Check if it is user's turn
+     * @function
+     * @param {number} index - index in chessboard
+     */
+    isValidTurn(index) {
+	if(this.state.turn !== this.state.squares[index].color) {
+	    return false;
+	}
+	return true;
+    }    
+    
+    /**
+     * Check if a pawn could advance to a square
+     * @function
+     * @param {number} index - index of square on chessboard
+     */
+    isValidPawnMoveSquare(index) {
+	return this.isOnBoard(index) && !this.hasPiece(index)
+    }
+    
+    /*
+     * HIGHLIGHTING
+     *
+     * highlighting potential moves
+     */
 
-    */
+    /************************************************************************/
 
     clearHighlights() {
 	this.setState({
@@ -213,10 +242,6 @@ export default class Game extends React.Component {
     }
 
     checkMoves(index) {
-	console.log("checking moves...")
-	// if (this.state.turn !== this.state.squares[index].color) {
-	//     return;
-	// }
 	const square = this.state.squares[index];
 	
 	switch (square.piece) {
@@ -245,20 +270,6 @@ export default class Game extends React.Component {
 	    selected: index
 	});
     }
-    
-    /**
-     * Check if move is valid
-     * @function
-     * @param {number} index - index in chessboard
-     */
-    isValidTurn(index) {
-	console.log(`this.state.turn : ${this.state.turn}`)
-	console.log(`this.state.squares[index].color : ${this.state.squares[index].color}`)
-	if(this.state.turn !== this.state.squares[index].color) {
-	    return false;
-	}
-	return true;
-    }
 
     highlightPawn(index) {
 	const highlights = this.state.highlights.slice();
@@ -271,13 +282,16 @@ export default class Game extends React.Component {
 
     highlightPawnMovements(index, highlights) {
 	let pawn = this.state.squares[index];
-	let direction = pawn.color ? 1 : -1;
+	let direction = this.getDirection(pawn.color);
 	let position = index + direction * BOARD_WIDTH;
-	if (this.isOnBoard(index) && !this.hasPiece(position)) {
+	
+	if (this.isValidPawnMoveSquare(position)) {
 	    this.tryHighlight(position, highlights, OPEN);
 	    position = position + direction * BOARD_WIDTH;
-	    if (!this.hasPiece(position) && this.atStartingPawnPosition(index)) {
-		this.tryHighlight(position, highlights, OPEN);
+	    if (this.atStartingPawnPosition(index)) {
+		if (this.isValidPawnMoveSquare(position)) {
+		    this.tryHighlight(position, highlights, OPEN);
+		}
 	    }
 	}
     }
@@ -285,7 +299,7 @@ export default class Game extends React.Component {
 
     highlightPawnAttacks(index, highlights) {
 	let pawn = this.state.squares[index];
-	let direction = pawn.color ? 1 : -1;
+	let direction = this.getDirection(pawn.color);
 	let position = index + (direction * BOARD_WIDTH) + 1;
 	if (this.column(position) !== 0 && this.hasPiece(position)) {
 	    this.tryHighlight(position, highlights, ATTACK);
@@ -332,13 +346,13 @@ export default class Game extends React.Component {
 	    }
 	}
 	//southeast
-	for (let position = index + (BOARD_WIDTH + 1); position < NUM_SQUARES && this.column(position) !== 0; position += (BOARD_WIDTH + 1)) {
+	for (let position = index + (BOARD_WIDTH + 1); position < BOARD_SIZE && this.column(position) !== 0; position += (BOARD_WIDTH + 1)) {
 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
 		break;
 	    }
 	}
 	//southwest
-	for (let position = index + (BOARD_WIDTH - 1); position < NUM_SQUARES && this.column(position) !== BOARD_WIDTH - 1; position += (BOARD_WIDTH - 1)) {
+	for (let position = index + (BOARD_WIDTH - 1); position < BOARD_SIZE && this.column(position) !== BOARD_WIDTH - 1; position += (BOARD_WIDTH - 1)) {
 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
 		break;
 	    }
@@ -388,7 +402,6 @@ export default class Game extends React.Component {
     }
 
     highlightKnightSquare(index, newIndex, highlights) {
-	console.log(newIndex);
 	if (this.distance(index, newIndex) > 3) {
 	    return;
 	}
@@ -407,7 +420,7 @@ export default class Game extends React.Component {
 	    }
 	}
 	//south
-	for (let position = index + BOARD_WIDTH; position < NUM_SQUARES; position += BOARD_WIDTH) {
+	for (let position = index + BOARD_WIDTH; position < BOARD_SIZE; position += BOARD_WIDTH) {
 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
 		break;
 	    }
@@ -499,13 +512,13 @@ export default class Game extends React.Component {
     }
 
     tryHighlight(index, highlights, state) {
-	if(index <= 0 || index >= NUM_SQUARES) {
+	if(index <= 0 || index >= BOARD_SIZE) {
 	    return;
 	}
 
-	if(this.inCheck(index)) {
-	    return;
-	}
+	// if(this.inCheck(index)) {
+	//     return;
+	// }
 
 	// potentially more checks
 	highlights[index] = state;
@@ -528,7 +541,7 @@ export default class Game extends React.Component {
     */
 
     isOnBoard(index) {
-	return index >= 0 && index < NUM_SQUARES;
+	return index >= 0 && index < BOARD_SIZE;
     }
 
     isRook(index) {
@@ -548,7 +561,10 @@ export default class Game extends React.Component {
     }
 
     hasPiece(index) {
-	return this.state.squares[index].piece !== "";
+	if (this.state.squares[index].piece === null || this.state.squares[index].piece === undefined) {
+	    throw new Error("chessboard improperly initialized")
+	}
+	return this.state.squares[index].piece !== Piece.NoPiece;
     }
 
     getGame() {
@@ -565,7 +581,10 @@ export default class Game extends React.Component {
     }
 
     atStartingPawnPosition(index) {
-	return this.state.squares[index].color ? Math.floor(index/BOARD_WIDTH) === 6 : Math.floor(index/BOARD_WIDTH) === 1;
+	if (this.state.squares[index].color === Color.White) {
+	    return Math.floor(index/BOARD_WIDTH) === 6;
+	}
+	return Math.floor(index/BOARD_WIDTH) === 1;
     }
 
     inCheck(index) {
@@ -574,7 +593,6 @@ export default class Game extends React.Component {
 	// this.move(index, 1, squares);
 	// const kingIndex = this.state.turn === "w" ? this.state.kingWhite : this.state.kingBlack;
 	// if(this.inCheckNorth(kingIndex)) {
-	//     console.log("inCheck");
 	//     return true;
 	// }   
 	// return false;
