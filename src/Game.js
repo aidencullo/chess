@@ -3,42 +3,8 @@ import React from 'react';
 
 // internal
 import Square from './Square.js';
-
-// Global vars
-// geometrics
-const BOARD_WIDTH = 8;
-const BOARD_SIZE = 64;
-
-// highlighting
-const OPEN = 1;
-const ATTACK = 2;
-const ENPASSANT = 3;
-
-const Color = Object.freeze({
-    White: 0,
-    Black: 1,
-    NoColor: 2
-})
-
-const Direction = Object.freeze({
-    North: -1,
-    South: 1
-})
-
-const Piece = Object.freeze({
-    Pawn: 0,
-    Knight: 1,
-    Bishop: 2,
-    Rook: 3,
-    Queen: 4,
-    King: 5,
-    NoPiece: 6
-})
-
-const EMPTY_SQUARE = {
-    color : null,
-    piece : Piece.NoPiece
-}
+import { row, column, distance, arrayRange, isEqualObject } from './helpers';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Direction, Piece, EMPTY_SQUARE } from './data';
 
 /* 
  * Chess board and logic
@@ -85,13 +51,12 @@ export default class Game extends React.Component {
      * Non-standard chessboard setup.
      * @function
      */
-    setAlternateBoard(squares) {
+    setCustomBoard(squares) {
 	// empty
-	this.setPieces(this.arrayRange(0, 63, 1), Piece.NoPiece, Color.NoColor, squares);
+	this.setPieces(arrayRange(0, 63, 1), Piece.NoPiece, Color.NoColor, squares);
 	
 	// custom pieces
-	this.setPiece(8, Piece.Pawn, Color.Black, squares);
-	this.setPiece(25, Piece.Pawn, Color.White, squares);
+	this.setPiece(48, Piece.Pawn, Color.Black, squares);
     }
 
     /**
@@ -108,13 +73,13 @@ export default class Game extends React.Component {
 	this.setPiece(5, Piece.Bishop, Color.Black, squares);
 	this.setPiece(6, Piece.Knight, Color.Black, squares);
 	this.setPiece(7, Piece.Rook, Color.Black, squares);
-	this.setPieces(this.arrayRange(8, 15, 1), Piece.Pawn, Color.Black, squares);
+	this.setPieces(arrayRange(8, 15, 1), Piece.Pawn, Color.Black, squares);
 
 	// empty
-	this.setPieces(this.arrayRange(16, 46, 1), Piece.NoPiece, Color.NoColor, squares);
+	this.setPieces(arrayRange(16, 46, 1), Piece.NoPiece, Color.NoColor, squares);
 
 	// white
-	this.setPieces(this.arrayRange(47, 55, 1), Piece.Pawn, Color.White, squares);
+	this.setPieces(arrayRange(47, 55, 1), Piece.Pawn, Color.White, squares);
 	this.setPiece(56, Piece.Rook, Color.White, squares);
 	this.setPiece(57, Piece.Knight, Color.White, squares);
 	this.setPiece(58, Piece.Bishop, Color.White, squares);
@@ -131,7 +96,7 @@ export default class Game extends React.Component {
      */
     initializeBoard() {
 	const squares = this.state.squares.slice();
-	this.setAlternateBoard(squares);
+	this.setCustomBoard(squares);
 	this.initializeVars(squares);
     }
 
@@ -231,6 +196,29 @@ export default class Game extends React.Component {
 	return this.isOnBoard(index) && !this.hasPiece(index)
     }
     
+    /**
+     * Check if move is pawn promotion
+     * @function
+     * @param {number} index - index of square on chessboard
+     */
+    isPromotion(index) {
+	if (this.state.squares[this.state.selected].piece !== Piece.Pawn) {
+	    return false;
+	}
+	if (!this.isEndOfBoard(index)) {
+	    return false;
+	}
+	return true;
+    }
+        
+    /**
+     * Check if square on row 0 or 8
+     * @function
+     * @param {number} index - index of square on chessboard
+     */
+    isEndOfBoard(index) {
+	return row(index) === 0 || row(index) === 7;
+    }
     /*
      * HIGHLIGHTING
      *
@@ -307,11 +295,11 @@ export default class Game extends React.Component {
 	let direction = this.getDirection(pawn.color);
 	let position = index + (direction * BOARD_WIDTH) + 1;
 	
-	if (this.column(position) !== 0 && this.hasPiece(position)) {
+	if (column(position) !== 0 && this.hasPiece(position)) {
 	    this.tryHighlight(position, highlights, ATTACK);
 	}
 	position = index + (direction * BOARD_WIDTH) - 1;
-	if (this.column(position) !== BOARD_WIDTH - 1 && this.hasPiece(position)) {
+	if (column(position) !== BOARD_WIDTH - 1 && this.hasPiece(position)) {
 	    this.tryHighlight(position, highlights, ATTACK);
 	}
 	this.highlightEnPassant(index, highlights);
@@ -339,9 +327,9 @@ export default class Game extends React.Component {
 	    }
 	};
 
-	if (this.isEqualObject(this.state.lastMove, targetMoveRight)) {
+	if (isEqualObject(this.state.lastMove, targetMoveRight)) {
 	    this.tryHighlight(index + (direction * BOARD_WIDTH) + 1, highlights, ENPASSANT);
-	} else if (this.isEqualObject(this.state.lastMove, targetMoveLeft)) {
+	} else if (isEqualObject(this.state.lastMove, targetMoveLeft)) {
 	    this.tryHighlight(index + (direction * BOARD_WIDTH) - 1, highlights, ENPASSANT);
 	}
     }
@@ -349,25 +337,25 @@ export default class Game extends React.Component {
     highlightBishop(index) {
 	const highlights = this.state.highlights.slice();
 	//northeast
-	for (let position = index - (BOARD_WIDTH - 1); position >= 0 && this.column(position) !== 0; position -= (BOARD_WIDTH - 1)) {
+	for (let position = index - (BOARD_WIDTH - 1); position >= 0 && column(position) !== 0; position -= (BOARD_WIDTH - 1)) {
 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
 		break;
 	    }
 	}
 	//southeast
-	for (let position = index + (BOARD_WIDTH + 1); position < BOARD_SIZE && this.column(position) !== 0; position += (BOARD_WIDTH + 1)) {
+	for (let position = index + (BOARD_WIDTH + 1); position < BOARD_SIZE && column(position) !== 0; position += (BOARD_WIDTH + 1)) {
 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
 		break;
 	    }
 	}
 	//southwest
-	for (let position = index + (BOARD_WIDTH - 1); position < BOARD_SIZE && this.column(position) !== BOARD_WIDTH - 1; position += (BOARD_WIDTH - 1)) {
+	for (let position = index + (BOARD_WIDTH - 1); position < BOARD_SIZE && column(position) !== BOARD_WIDTH - 1; position += (BOARD_WIDTH - 1)) {
 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
 		break;
 	    }
 	}
 	//northwest
-	for (let position = index - (BOARD_WIDTH + 1); position >= 0 && this.column(position) !== BOARD_WIDTH - 1; position -= (BOARD_WIDTH + 1)) {
+	for (let position = index - (BOARD_WIDTH + 1); position >= 0 && column(position) !== BOARD_WIDTH - 1; position -= (BOARD_WIDTH + 1)) {
 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
 		break;
 	    }
@@ -411,7 +399,7 @@ export default class Game extends React.Component {
     }
 
     highlightKnightSquare(index, newIndex, highlights) {
-	if (this.distance(index, newIndex) > 3) {
+	if (distance(index, newIndex) > 3) {
 	    return;
 	}
 	if(this.isOnBoard(newIndex)){
@@ -435,13 +423,13 @@ export default class Game extends React.Component {
 	    }
 	}
 	//east
-	for (let position = index + 1; this.column(position) !== 0; position++) {
+	for (let position = index + 1; column(position) !== 0; position++) {
 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
 		break;
 	    }
 	}
 	//west
-	for (let position = index - 1; this.column(position) !== BOARD_WIDTH - 1; position--) {
+	for (let position = index - 1; column(position) !== BOARD_WIDTH - 1; position--) {
 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
 		break;
 	    }
@@ -474,15 +462,15 @@ export default class Game extends React.Component {
 	    this.highlightFriendOrFoeOrOpen(index, index - 1 * BOARD_WIDTH, highlights);
 	}
 	//northeast
-	if(this.isOnBoard(index - 1 * BOARD_WIDTH + 1) && this.column(index - 1 * BOARD_WIDTH + 1) !== 0){
+	if(this.isOnBoard(index - 1 * BOARD_WIDTH + 1) && column(index - 1 * BOARD_WIDTH + 1) !== 0){
 	    this.highlightFriendOrFoeOrOpen(index, index - 1 * BOARD_WIDTH + 1, highlights);
 	}
 	//east
-	if(this.column(index + 1) !== 0){
+	if(column(index + 1) !== 0){
 	    this.highlightFriendOrFoeOrOpen(index, index + 1, highlights);
 	}
 	//southeast
-	if(this.isOnBoard(index + 1 * BOARD_WIDTH + 1) && this.column(index + 1 * BOARD_WIDTH + 1) !== 0){
+	if(this.isOnBoard(index + 1 * BOARD_WIDTH + 1) && column(index + 1 * BOARD_WIDTH + 1) !== 0){
 	    this.highlightFriendOrFoeOrOpen(index, index + 1 * BOARD_WIDTH + 1, highlights);
 	}
 	//south
@@ -490,15 +478,15 @@ export default class Game extends React.Component {
 	    this.highlightFriendOrFoeOrOpen(index, index + 1 * BOARD_WIDTH, highlights);
 	}
 	//southwest
-	if(this.isOnBoard(index + 1 * BOARD_WIDTH - 1) && this.column(index + 1 * BOARD_WIDTH - 1) !== BOARD_WIDTH - 1){
+	if(this.isOnBoard(index + 1 * BOARD_WIDTH - 1) && column(index + 1 * BOARD_WIDTH - 1) !== BOARD_WIDTH - 1){
 	    this.highlightFriendOrFoeOrOpen(index, index + 1 * BOARD_WIDTH - 1, highlights);
 	}
 	//west
-	if(this.column(index - 1) !== BOARD_WIDTH - 1){
+	if(column(index - 1) !== BOARD_WIDTH - 1){
 	    this.highlightFriendOrFoeOrOpen(index, index - 1, highlights);
 	}
 	//northwest
-	if(this.isOnBoard(index - 1 * BOARD_WIDTH - 1) && this.column(index - 1 * BOARD_WIDTH - 1) !== BOARD_WIDTH - 1){
+	if(this.isOnBoard(index - 1 * BOARD_WIDTH - 1) && column(index - 1 * BOARD_WIDTH - 1) !== BOARD_WIDTH - 1){
 	    this.highlightFriendOrFoeOrOpen(index, index - 1 * BOARD_WIDTH - 1, highlights);
 	}
 
@@ -625,15 +613,21 @@ export default class Game extends React.Component {
 	}
 	return false;
     }
-    
 
     /*
-      EVENT HANDLERS
-    */
+     * Handlers
+     *
+     * respond to user actions
+     */
 
+    /************************************************************************/
+    
     handleClick(index) {
 	if (this.state.active) {
 	    if (this.state.highlights[index] > 0) {
+		if (this.isPromotion(index)) {
+		    //aqui falta codigo ;)
+		}
 		this.move(index);
 		this.nextTurn();
 	    }
@@ -710,45 +704,6 @@ export default class Game extends React.Component {
     /* ================================================================ */ 
     /* AUXILIARY FUNCTIONS */
     /* ================================================================ */ 
-
-    distance(p1, p2) {
-	const rd = Math.abs(this.row(p1) - this.row(p2));
-	const cd = Math.abs(this.column(p1) - this.column(p2));
-	return Math.sqrt(rd * rd + cd * cd);
-    }
-
-    isEqualObject(object1, object2) {
-	if (Object.keys(object1).length !== Object.keys(object2).length) {
-	    return false;
-	}
-	for (const [key, value] of Object.entries(object1)) {
-	    if (typeof value === "object") {
-		if (object2[key] === null) {
-		    return false;
-		} else if (!this.isEqualObject(value, object2[key])) {
-		    return false;
-		}
-	    } else if (value !== object2[key]) {
-		return false;
-	    }
-	}
-	return true;
-    }
-
-    row(index) {
-	return Math.floor(index / BOARD_WIDTH);
-    }
-
-    column(index) {
-	return index % BOARD_WIDTH;
-    }
-
-    arrayRange(start, stop, step) {
-	return Array.from(
-	    { length: (stop - start) / step + 1 },
-	    (value, index) => start + index * step
-	);
-    }
     
     /*
       RENDER

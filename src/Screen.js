@@ -18,7 +18,7 @@ export default class Screen extends React.Component {
 
     render() {
 	return (
-	    <div class="game">
+	    <div className="game">
 		<Game/>
 	    </div>
 	);
