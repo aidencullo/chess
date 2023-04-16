@@ -2,6 +2,7 @@
     width: 240px;
     height:240px;
 }
+
 .square {
     width: 30px;
     height: 30px;
@@ -11,46 +12,17 @@
     float:left;
     border: 5px solid transparent;
 }
+
 .piece {
     width:15px;
     height:15px;
 }
-.message {
-    outline:solid;
-    width: fit-content;
-    margin:5px;
-    border-radius: 5px;
-    padding:5px;
+
+.game {
+  display: flex;
+  justify-content: center;
 }
-.chat {
-    width: 300px;
-    height: 300px;
-    outline: solid;
-    float: right;
-    margin: 1em;
-    overflow: scroll;
-    display:none;
-}
-.receiver {
-    color:blue;
-    margin-left: auto;
-}
-.sender {
-    color:red;
-}
-.screen {
-    width: fit-content;
-    margin: 0 auto;
-}
+
 body {
     background-color: #87CEEB;
-}
-.white {
-    background-color:white;
-}
-.blackk {
-    background-color:black;
-}
-.credentials {
-    padding: 5px;
 }

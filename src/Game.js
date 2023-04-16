@@ -6,13 +6,13 @@ import Square from './Square.js';
 
 // Global vars
 // geometrics
-var BOARD_WIDTH = 8;
-var BOARD_SIZE = 64;
+const BOARD_WIDTH = 8;
+const BOARD_SIZE = 64;
 
 // highlighting
-var OPEN = 1;
-var ATTACK = 2;
-var ENPASSANT = 3;
+const OPEN = 1;
+const ATTACK = 2;
+const ENPASSANT = 3;
 
 const Color = Object.freeze({
     White: 0,
@@ -34,7 +34,6 @@ const Piece = Object.freeze({
     King: 5,
     NoPiece: 6
 })
-
 
 const EMPTY_SQUARE = {
     color : null,
@@ -87,7 +86,12 @@ export default class Game extends React.Component {
      * @function
      */
     setAlternateBoard(squares) {
-	throw new Error("unimplemented chessboard initialization called")
+	// empty
+	this.setPieces(this.arrayRange(0, 63, 1), Piece.NoPiece, Color.NoColor, squares);
+	
+	// custom pieces
+	this.setPiece(8, Piece.Pawn, Color.Black, squares);
+	this.setPiece(25, Piece.Pawn, Color.White, squares);
     }
 
     /**
@@ -104,13 +108,13 @@ export default class Game extends React.Component {
 	this.setPiece(5, Piece.Bishop, Color.Black, squares);
 	this.setPiece(6, Piece.Knight, Color.Black, squares);
 	this.setPiece(7, Piece.Rook, Color.Black, squares);
-	this.setPieces(8, 15, Piece.Pawn, Color.Black, squares);
+	this.setPieces(this.arrayRange(8, 15, 1), Piece.Pawn, Color.Black, squares);
 
 	// empty
-	this.setPieces(16, 46, Piece.NoPiece, Color.NoColor, squares);
+	this.setPieces(this.arrayRange(16, 46, 1), Piece.NoPiece, Color.NoColor, squares);
 
 	// white
-	this.setPieces(47, 55, Piece.Pawn, Color.White, squares);
+	this.setPieces(this.arrayRange(47, 55, 1), Piece.Pawn, Color.White, squares);
 	this.setPiece(56, Piece.Rook, Color.White, squares);
 	this.setPiece(57, Piece.Knight, Color.White, squares);
 	this.setPiece(58, Piece.Bishop, Color.White, squares);
@@ -127,7 +131,7 @@ export default class Game extends React.Component {
      */
     initializeBoard() {
 	const squares = this.state.squares.slice();
-	this.setStandardBoard(squares);
+	this.setAlternateBoard(squares);
 	this.initializeVars(squares);
     }
 
@@ -184,13 +188,13 @@ export default class Game extends React.Component {
 	};
     }
 
-    setPieces(indexStart, indexEnd, piece, color, squares) {
-	for (let index = indexStart; index <= indexEnd; index++) {
+    setPieces(indexArray, piece, color, squares) {
+	indexArray.forEach((index) => {
 	    squares[index] = {
 		color: color,
 		piece: piece
 	    };
-	}
+	});
     }
     
     restart() {
@@ -273,14 +277,16 @@ export default class Game extends React.Component {
 
     highlightPawn(index) {
 	const highlights = this.state.highlights.slice();
-	this.highlightPawnMovements(index, highlights);
+	
+	this.highlightPawnMoves(index, highlights);
 	this.highlightPawnAttacks(index, highlights);
+	
 	this.setState({
 	    highlights: highlights,
 	});
     }
 
-    highlightPawnMovements(index, highlights) {
+    highlightPawnMoves(index, highlights) {
 	let pawn = this.state.squares[index];
 	let direction = this.getDirection(pawn.color);
 	let position = index + direction * BOARD_WIDTH;
@@ -296,11 +302,11 @@ export default class Game extends React.Component {
 	}
     }
 
-
     highlightPawnAttacks(index, highlights) {
 	let pawn = this.state.squares[index];
 	let direction = this.getDirection(pawn.color);
 	let position = index + (direction * BOARD_WIDTH) + 1;
+	
 	if (this.column(position) !== 0 && this.hasPiece(position)) {
 	    this.tryHighlight(position, highlights, ATTACK);
 	}
@@ -313,7 +319,8 @@ export default class Game extends React.Component {
 
     highlightEnPassant(index, highlights) {
 	let pawn = this.state.squares[index];
-	let direction = pawn.color ? -1 : 1;
+	let direction = this.getDirection(pawn.color);
+	
 	let targetMoveRight = {
 	    start: index + (direction * 2 * BOARD_WIDTH) + 1,
 	    end: index + 1,
@@ -322,6 +329,7 @@ export default class Game extends React.Component {
 		piece: Piece.Pawn
 	    }
 	};
+
 	let targetMoveLeft = {
 	    start: index + (direction * 2 * BOARD_WIDTH) - 1,
 	    end: index - 1,
@@ -330,6 +338,7 @@ export default class Game extends React.Component {
 		piece: Piece.Pawn
 	    }
 	};
+
 	if (this.isEqualObject(this.state.lastMove, targetMoveRight)) {
 	    this.tryHighlight(index + (direction * BOARD_WIDTH) + 1, highlights, ENPASSANT);
 	} else if (this.isEqualObject(this.state.lastMove, targetMoveLeft)) {
@@ -562,7 +571,7 @@ export default class Game extends React.Component {
 
     hasPiece(index) {
 	if (this.state.squares[index].piece === null || this.state.squares[index].piece === undefined) {
-	    throw new Error("chessboard improperly initialized")
+	    throw new Error(`chessboard improperly initialized: piece at square ${index} is null or undefined`)
 	}
 	return this.state.squares[index].piece !== Piece.NoPiece;
     }
@@ -734,6 +743,13 @@ export default class Game extends React.Component {
 	return index % BOARD_WIDTH;
     }
 
+    arrayRange(start, stop, step) {
+	return Array.from(
+	    { length: (stop - start) / step + 1 },
+	    (value, index) => start + index * step
+	);
+    }
+    
     /*
       RENDER
     */
