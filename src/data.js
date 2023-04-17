@@ -35,4 +35,4 @@ const EMPTY_SQUARE = {
     piece : Piece.NoPiece
 }
 
-export { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Direction, Piece, EMPTY_SQUARE }
+export { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Direction, Piece, EMPTY_SQUARE };

@@ -51,19 +51,25 @@ export default class Game extends React.Component {
      * Non-standard chessboard setup.
      * @function
      */
-    setCustomBoard(squares) {
+    setCustomBoard() {
+	const squares = this.state.squares.slice();
 	// empty
 	this.setPieces(arrayRange(0, 63, 1), Piece.NoPiece, Color.NoColor, squares);
 	
 	// custom pieces
 	this.setPiece(48, Piece.Pawn, Color.Black, squares);
+
+	this.setState({
+	    squares: squares,
+	})
     }
 
     /**
      * Standard chessboard setup.
      * @function
      */
-    setStandardBoard(squares) {
+    setStandardBoard() {
+	const squares = this.state.squares.slice();
 	//black
 	this.setPiece(0, Piece.Rook, Color.Black, squares);
 	this.setPiece(1, Piece.Knight, Color.Black, squares);
@@ -88,6 +94,10 @@ export default class Game extends React.Component {
 	this.setPiece(61, Piece.Bishop, Color.White, squares);
 	this.setPiece(62, Piece.Knight, Color.White, squares);
 	this.setPiece(63, Piece.Rook, Color.White, squares);
+
+	this.setState({
+	    squares: squares,
+	})
     }
 
     /**
@@ -95,9 +105,8 @@ export default class Game extends React.Component {
      * @function
      */
     initializeBoard() {
-	const squares = this.state.squares.slice();
-	this.setCustomBoard(squares);
-	this.initializeVars(squares);
+	this.setCustomBoard();
+	this.initializeVars();
     }
 
     /**
@@ -106,7 +115,6 @@ export default class Game extends React.Component {
      */
     initializeVars(squares) {
 	this.setState({
-	    squares: squares,
 	    active: false,
 	    selected: -1,
 	    turn: Color.Black,
@@ -219,6 +227,84 @@ export default class Game extends React.Component {
     isEndOfBoard(index) {
 	return row(index) === 0 || row(index) === 7;
     }
+
+    isOnBoard(index) {
+	return index >= 0 && index < BOARD_SIZE;
+    }
+
+    isRook(index) {
+	return this.state.squares[index].piece === Piece.Rook;
+    }
+
+    isQueen(index) {
+	return this.state.squares[index].piece === Piece.Queen;
+    }
+    
+    hasFoePiece(index, otherIndex) {
+	return this.state.squares[index].color !== this.state.squares[otherIndex].color;
+    }
+
+    hasFriendPiece(index, otherIndex) {
+	return this.state.squares[index].color === this.state.squares[otherIndex].color;
+    }
+
+    hasPiece(index) {
+	if (this.state.squares[index].piece === null || this.state.squares[index].piece === undefined) {
+	    throw new Error(`chessboard improperly initialized: piece at square ${index} is null or undefined`)
+	}
+	return this.state.squares[index].piece !== Piece.NoPiece;
+    }
+
+    getGame() {
+	return this.state.squares.map((square, index) => (
+	    <Square
+		key={index}
+		id={index}
+		state={this.state.squares[index]}
+		handleClick={() => this.handleClick(index)}
+		checkMoves={() => this.checkMoves(index)}
+		highlight={this.state.highlights[index]}
+	    />
+	));
+    }
+
+    atStartingPawnPosition(index) {
+	if (this.state.squares[index].color === Color.White) {
+	    return Math.floor(index/BOARD_WIDTH) === 6;
+	}
+	return Math.floor(index/BOARD_WIDTH) === 1;
+    }
+
+    inCheck(index) {
+	return false;
+	// const squares = this.state.squares.slice();
+	// this.move(index, 1, squares);
+	// const kingIndex = this.state.turn === "w" ? this.state.kingWhite : this.state.kingBlack;
+	// if(this.inCheckNorth(kingIndex)) {
+	//     return true;
+	// }   
+	// return false;
+    }
+
+    inCheckNorth(index) {
+	let attackingIndex = index - BOARD_WIDTH;
+	while(attackingIndex >= 0) {
+	    if(this.hasPiece(attackingIndex)) {
+		if(this.hasFoePiece(attackingIndex)) {
+		    if(this.isRook(attackingIndex) || this.isQueen(attackingIndex)) {
+			return true;
+		    } else {
+			return false;
+		    }
+		} else {
+		    return false;
+		}
+	    }
+	    attackingIndex = index - BOARD_WIDTH;
+	}
+	return false;
+    }    
+
     /*
      * HIGHLIGHTING
      *
@@ -512,12 +598,6 @@ export default class Game extends React.Component {
 	if(index <= 0 || index >= BOARD_SIZE) {
 	    return;
 	}
-
-	// if(this.inCheck(index)) {
-	//     return;
-	// }
-
-	// potentially more checks
 	highlights[index] = state;
     }
 
@@ -529,91 +609,6 @@ export default class Game extends React.Component {
 	this.clearHighlights();
     }
 
-
-    /*
-      RETRIEVAL
-
-      getters, checking certain square, board, piece properties
-
-    */
-
-    isOnBoard(index) {
-	return index >= 0 && index < BOARD_SIZE;
-    }
-
-    isRook(index) {
-	return this.state.squares[index].piece === Piece.Rook;
-    }
-
-    isQueen(index) {
-	return this.state.squares[index].piece === Piece.Queen;
-    }
-    
-    hasFoePiece(index, otherIndex) {
-	return this.state.squares[index].color !== this.state.squares[otherIndex].color;
-    }
-
-    hasFriendPiece(index, otherIndex) {
-	return this.state.squares[index].color === this.state.squares[otherIndex].color;
-    }
-
-    hasPiece(index) {
-	if (this.state.squares[index].piece === null || this.state.squares[index].piece === undefined) {
-	    throw new Error(`chessboard improperly initialized: piece at square ${index} is null or undefined`)
-	}
-	return this.state.squares[index].piece !== Piece.NoPiece;
-    }
-
-    getGame() {
-	return this.state.squares.map((square, index) => (
-	    <Square
-		key={index}
-		id={index}
-		state={this.state.squares[index]}
-		handleClick={() => this.handleClick(index)}
-		checkMoves={() => this.checkMoves(index)}
-		highlight={this.state.highlights[index]}
-	    />
-	));
-    }
-
-    atStartingPawnPosition(index) {
-	if (this.state.squares[index].color === Color.White) {
-	    return Math.floor(index/BOARD_WIDTH) === 6;
-	}
-	return Math.floor(index/BOARD_WIDTH) === 1;
-    }
-
-    inCheck(index) {
-	return false;
-	// const squares = this.state.squares.slice();
-	// this.move(index, 1, squares);
-	// const kingIndex = this.state.turn === "w" ? this.state.kingWhite : this.state.kingBlack;
-	// if(this.inCheckNorth(kingIndex)) {
-	//     return true;
-	// }   
-	// return false;
-    }
-
-    inCheckNorth(index) {
-	let attackingIndex = index - BOARD_WIDTH;
-	while(attackingIndex >= 0) {
-	    if(this.hasPiece(attackingIndex)) {
-		if(this.hasFoePiece(attackingIndex)) {
-		    if(this.isRook(attackingIndex) || this.isQueen(attackingIndex)) {
-			return true;
-		    } else {
-			return false;
-		    }
-		} else {
-		    return false;
-		}
-	    }
-	    attackingIndex = index - BOARD_WIDTH;
-	}
-	return false;
-    }
-
     /*
      * Handlers
      *
@@ -623,13 +618,20 @@ export default class Game extends React.Component {
     /************************************************************************/
     
     handleClick(index) {
+	const piece = this.state.squares[this.state.selected]
 	if (this.state.active) {
 	    if (this.state.highlights[index] > 0) {
 		if (this.isPromotion(index)) {
-		    //aqui falta codigo ;)
+		    const squares = this.state.squares.slice();
+		    this.deletePiece(this.state.selected, squares)
+		    this.setPiece(index, Piece.Queen, piece.color, squares);
+		    this.setState({
+			squares: squares
+		    })
+		} else {
+		    this.move(index);
+		    this.nextTurn();
 		}
-		this.move(index);
-		this.nextTurn();
 	    }
 	    this.deselectPiece();
 	} else {
@@ -640,10 +642,13 @@ export default class Game extends React.Component {
     }
 
     /*
-      MOVEMENTS
-    */
+     * MOVEMENTS
+     *
+     * moving pieces
+     */
 
-    // review this function
+    /************************************************************************/
+
     move(index, altSquares = 0, newSquares = null) {
 	let squares;
 	if(!altSquares) {
