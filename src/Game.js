@@ -74,8 +74,8 @@ export default class Game extends React.Component {
 	this.setPiece(0, Piece.Rook, Color.Black, squares);
 	this.setPiece(1, Piece.Knight, Color.Black, squares);
 	this.setPiece(2, Piece.Bishop, Color.Black, squares);
-	this.setPiece(3, Piece.King, Color.Black, squares);
-	this.setPiece(4, Piece.Queen, Color.Black, squares);
+	this.setPiece(3, Piece.Queen, Color.Black, squares);
+	this.setPiece(4, Piece.King, Color.Black, squares);
 	this.setPiece(5, Piece.Bishop, Color.Black, squares);
 	this.setPiece(6, Piece.Knight, Color.Black, squares);
 	this.setPiece(7, Piece.Rook, Color.Black, squares);
@@ -85,12 +85,12 @@ export default class Game extends React.Component {
 	this.setPieces(arrayRange(16, 46, 1), Piece.NoPiece, Color.NoColor, squares);
 
 	// white
-	this.setPieces(arrayRange(47, 55, 1), Piece.Pawn, Color.White, squares);
+	this.setPieces(arrayRange(48, 55, 1), Piece.Pawn, Color.White, squares);
 	this.setPiece(56, Piece.Rook, Color.White, squares);
 	this.setPiece(57, Piece.Knight, Color.White, squares);
 	this.setPiece(58, Piece.Bishop, Color.White, squares);
-	this.setPiece(59, Piece.King, Color.White, squares);
-	this.setPiece(60, Piece.Queen, Color.White, squares);
+	this.setPiece(59, Piece.Queen, Color.White, squares);
+	this.setPiece(60, Piece.King, Color.White, squares);
 	this.setPiece(61, Piece.Bishop, Color.White, squares);
 	this.setPiece(62, Piece.Knight, Color.White, squares);
 	this.setPiece(63, Piece.Rook, Color.White, squares);
@@ -105,7 +105,7 @@ export default class Game extends React.Component {
      * @function
      */
     initializeBoard() {
-	this.setCustomBoard();
+	this.setStandardBoard();
 	this.initializeVars();
     }
 
@@ -255,55 +255,12 @@ export default class Game extends React.Component {
 	return this.state.squares[index].piece !== Piece.NoPiece;
     }
 
-    getGame() {
-	return this.state.squares.map((square, index) => (
-	    <Square
-		key={index}
-		id={index}
-		state={this.state.squares[index]}
-		handleClick={() => this.handleClick(index)}
-		checkMoves={() => this.checkMoves(index)}
-		highlight={this.state.highlights[index]}
-	    />
-	));
-    }
-
     atStartingPawnPosition(index) {
 	if (this.state.squares[index].color === Color.White) {
 	    return Math.floor(index/BOARD_WIDTH) === 6;
 	}
 	return Math.floor(index/BOARD_WIDTH) === 1;
     }
-
-    inCheck(index) {
-	return false;
-	// const squares = this.state.squares.slice();
-	// this.move(index, 1, squares);
-	// const kingIndex = this.state.turn === "w" ? this.state.kingWhite : this.state.kingBlack;
-	// if(this.inCheckNorth(kingIndex)) {
-	//     return true;
-	// }   
-	// return false;
-    }
-
-    inCheckNorth(index) {
-	let attackingIndex = index - BOARD_WIDTH;
-	while(attackingIndex >= 0) {
-	    if(this.hasPiece(attackingIndex)) {
-		if(this.hasFoePiece(attackingIndex)) {
-		    if(this.isRook(attackingIndex) || this.isQueen(attackingIndex)) {
-			return true;
-		    } else {
-			return false;
-		    }
-		} else {
-		    return false;
-		}
-	    }
-	    attackingIndex = index - BOARD_WIDTH;
-	}
-	return false;
-    }    
 
     /*
      * HIGHLIGHTING
@@ -313,6 +270,12 @@ export default class Game extends React.Component {
 
     /************************************************************************/
 
+    setHighlight() {
+	this.setState({
+	    highlights: new Array(64).fill(0),
+	});
+    }	
+    
     clearHighlights() {
 	this.setState({
 	    highlights: new Array(64).fill(0),
@@ -706,19 +669,20 @@ export default class Game extends React.Component {
 	squares[index] = EMPTY_SQUARE;
     }
 
-    /* ================================================================ */ 
-    /* AUXILIARY FUNCTIONS */
-    /* ================================================================ */ 
-    
-    /*
-      RENDER
-    */
-
     render() {
 	return (
 	    <div>
 		<div className="board">
-		    {this.getGame()}
+		    {this.state.squares.map((_, index) => (
+			<Square
+			    key={index}
+			    id={index}
+			    state={this.state.squares[index]}
+			    handleClick={() => this.handleClick(index)}
+			    checkMoves={() => this.checkMoves(index)}
+			    highlight={this.state.highlights[index]}
+			/>
+		    ))}
 		</div>
 		<button onClick={() => this.restart()}>Restart</button>
 	    </div>

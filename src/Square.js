@@ -1,66 +1,19 @@
+// external
 import React from 'react';
 
-import wknight from './media/white/Knight.png';
-import bknight from './media/black/Knight.png';
-import wking from './media/white/King.png';
-import bking from './media/black/King.png';
-import wqueen from './media/white/Queen.png';
-import bqueen from './media/black/Queen.png';
-import wrook from './media/white/Rook.png';
-import brook from './media/black/Rook.png';
-import wpawn from './media/white/Pawn.png';
-import bpawn from './media/black/Pawn.png';
-import wbishop from './media/white/Bishop.png';
-import bbishop from './media/black/Bishop.png';
+// internal
+import Pawn from './Pawn.js';
+import Knight from './Knight.js';
+import Bishop from './Bishop.js';
+import Rook from './Rook.js';
+import Queen from './Queen.js';
+import King from './King.js';
+import { BOARD_WIDTH, Color, Piece } from './data';
 
-var BOARD_WIDTH = 8;
 var WHITE = "white";
 var OTHER = "brown";
 
-const Color = Object.freeze({
-    White: 0,
-    Black: 1
-})
-
-const Piece = Object.freeze({
-    Pawn: 0,
-    Knight: 1,
-    Bishop: 2,
-    Rook: 3,
-    Queen: 4,
-    King: 5,
-    NoPiece: 6
-})
-
 export default class Square extends React.Component {
-
-    getImg() {
-	let state = this.props.state;
-	if (state !== undefined) {
-	    let color = state.color;
-	    switch (state.piece) {
-	    case Piece.Knight:
-		return this.getImgBySrc(color === Color.White ? wknight : bknight);
-	    case Piece.King:
-		return this.getImgBySrc(color === Color.White ? wking : bking);
-	    case Piece.Rook:
-		return this.getImgBySrc(color === Color.White ? wrook : brook);
-	    case Piece.Bishop:
-		return this.getImgBySrc(color === Color.White ? wbishop : bbishop);
-	    case Piece.Queen:
-		return this.getImgBySrc(color === Color.White ? wqueen : bqueen);
-	    case Piece.Pawn:
-		return this.getImgBySrc(color === Color.White ? wpawn : bpawn);
-	    default:
-	    }
-	}
-    }
-
-    getImgBySrc(source) {
-	return (
-	    <img className="piece" src={source} alt="chess piece" />
-	);
-    }
 
     getColor() {
 	let index = this.props.id;
@@ -75,7 +28,7 @@ export default class Square extends React.Component {
     setColor(color) {
 	if(color === 0) {
 	    return "transparent";
-	} else if(color  === 1){
+	} else if(color === 1){
 	    return "green";
 	} else {
 	    return "red";
@@ -92,7 +45,34 @@ export default class Square extends React.Component {
 		}}
 		onClick={() => this.props.handleClick()}
 	    >
-		{this.getImg()}
+		{(() => {
+		    switch (this.props.state.piece) {
+		    case Piece.Pawn:
+			return <Pawn
+				   state={this.props.state}
+			       />;
+		    case Piece.Knight:
+			return <Knight
+				   state={this.props.state}
+			       />;
+		    case Piece.Bishop:
+			return <Bishop
+				   state={this.props.state}
+			       />;
+		    case Piece.Rook:
+			return <Rook
+				   state={this.props.state}
+			       />;
+		    case Piece.Queen:
+			return <Queen
+				   state={this.props.state}
+			       />;
+		    case Piece.King:
+			return <King
+				   state={this.props.state}
+			       />;
+		    }
+		})()}		
 	    </button>
 	);
     }

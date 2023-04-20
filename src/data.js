@@ -1,4 +1,3 @@
-
 // Global vars
 // geometrics
 const BOARD_WIDTH = 8;
