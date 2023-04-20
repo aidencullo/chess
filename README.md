@@ -1,6 +1,6 @@
-# P2P Chess
+# Chess
 
-P2P Chess is a standard chess game written in React that uses Peerjs for data transmission between parties.
+Online chess game written in React.
 
 ## How to play
 
@@ -9,20 +9,21 @@ You and your friend can visit [this link](https://aidencullo.com/p2pchess) play 
 ## Instructions
 
 1. Visit aidencullo.com/p2pchess
-2. Player 1 sends their unique p2p id to the player 2
-3. Player 2 inserts the p2p of player 1 into their webpage
-4. Enjoy
+2. Connect with your friend
+3. Enjoy
 
 ## Issues
 
 1. Still to code
-   * checking/checkmate
+   * checking
    * promotion
    * castling
+   * unit tests
+   * linting
 
 ## Authors
 
-Aiden Cullo (cullo7) with guidance from Tanner Hoelzel (thoelze1)
+Aiden Cullo (aidencullo) with guidance from Tanner Hoelzel (thoelze1)
 
 ## Contributing
 
