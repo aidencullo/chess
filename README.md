@@ -18,8 +18,21 @@ You and your friend can visit [this link](https://aidencullo.com/p2pchess) play 
    * checking
    * promotion
    * castling
-   * unit tests
-   * linting
+   
+## Technical Notes
+
+The code is written in React, JavaScript, and JSX. The code is fairly
+basic, I just wanted to build a complete project in React. Unit and
+Integration testing is
+done with [Jest](https://jestjs.io/fr/) which is built-in to apps
+created with `npx create-react-app`.
+
+### Install
+`npm install`
+### Run
+`npm run start`
+### Test
+`npm run test`
 
 ## Authors
 
