@@ -34,6 +34,11 @@ created with `npx create-react-app`.
 ### Test
 `npm run test`
 
+## Resources
+
+### Testing
+www.freecodecamp.org/news/how-to-write-unit-tests-in-react/
+
 ## Authors
 
 Aiden Cullo (aidencullo) with guidance from Tanner Hoelzel (thoelze1)
