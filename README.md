@@ -37,7 +37,9 @@ created with `npx create-react-app`.
 ## Resources
 
 ### Testing
-www.freecodecamp.org/news/how-to-write-unit-tests-in-react/
+[tutorial](https://www.freecodecamp.org/news/how-to-write-unit-tests-in-react/)
+[matchers](https://jestjs.io/docs/using-matchers)
+[queries](https://testing-library.com/docs/queries/about/)
 
 ## Authors
 

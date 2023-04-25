@@ -9,7 +9,7 @@ export default class Pawn extends React.Component {
     render() {
 	return (
 	    <>
-		<img className="piece" src={this.props.state.color === Color.White ? wpawn : bpawn} alt="chess piece" />
+		<img className="piece" src={this.props.state.color === Color.White ? wpawn : bpawn} alt="pawn chess piece"/>
 	    </>
 	);
     }

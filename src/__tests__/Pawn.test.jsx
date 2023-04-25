@@ -2,18 +2,18 @@ import { render, screen } from '@testing-library/react'
 
 import Pawn from 'components/Pawn';
 
-test("Example 1 renders successfully", () => {
+test("Pawn unit test successful", () => {
 
-    const squares = new Array(64).fill({
+    const square = {
 	color: null,
 	piece: null,
-    });
+    };
 
     render(<Pawn
-	       state = { squares }
+	       state = { square }
 	   />);
 
-//    const element = screen.getByText(/first test/i);
+    const element = screen.getByAltText(/pawn chess piece/i);
 
-//    expect(element).toBeInTheDocument();
+    expect(element).toBeInTheDocument();
 })
