@@ -8,7 +8,7 @@ import Bishop from './Bishop.js';
 import Rook from './Rook.js';
 import Queen from './Queen.js';
 import King from './King.js';
-import { BOARD_WIDTH, Color, Piece } from './data';
+import { BOARD_WIDTH, Piece } from '../data';
 
 var WHITE = "white";
 var OTHER = "brown";
@@ -71,6 +71,7 @@ export default class Square extends React.Component {
 			return <King
 				   state={this.props.state}
 			       />;
+		    default:
 		    }
 		})()}		
 	    </button>
