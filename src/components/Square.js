@@ -2,12 +2,12 @@
 import React from 'react';
 
 // internal
-import Pawn from './Pawn.js';
-import Knight from './Knight.js';
-import Bishop from './Bishop.js';
-import Rook from './Rook.js';
-import Queen from './Queen.js';
-import King from './King.js';
+import Pawn from 'components/Pawn.js';
+import Knight from 'components/Knight.js';
+import Bishop from 'components/Bishop.js';
+import Rook from 'components/Rook.js';
+import Queen from 'components/Queen.js';
+import King from 'components/King.js';
 import { BOARD_WIDTH, Piece } from 'data';
 
 var WHITE = "white";
