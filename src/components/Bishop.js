@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Color } from '../data';
-import wbishop from '../media/white/Bishop.png';
-import bbishop from '../media/black/Bishop.png';
+import { Color } from 'data';
+import wbishop from 'media/white/Bishop.png';
+import bbishop from 'media/black/Bishop.png';
 
 export default class Bishop extends React.Component {
 

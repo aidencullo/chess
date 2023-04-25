@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Color } from '../data';
-import wpawn from '../media/white/Pawn.png';
-import bpawn from '../media/black/Pawn.png';
+import { Color } from 'data';
+import wpawn from 'media/white/Pawn.png';
+import bpawn from 'media/black/Pawn.png';
 
 export default class Pawn extends React.Component {
 

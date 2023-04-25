@@ -2,9 +2,9 @@
 import React from 'react';
 
 // internal
-import Square from './components/Square.js';
-import { row, column, distance, arrayRange, isEqualObject } from './helpers';
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Direction, Piece, EMPTY_SQUARE } from './data';
+import Square from 'components/Square.js';
+import { row, column, distance, arrayRange, isEqualObject } from 'helpers';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Direction, Piece, EMPTY_SQUARE } from 'data';
 
 /* 
  * Chess board and logic

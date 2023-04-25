@@ -1,4 +1,4 @@
-import { BOARD_WIDTH } from './data';
+import { BOARD_WIDTH } from 'data';
 
 function distance(p1, p2) {
     const rd = Math.abs(this.row(p1) - this.row(p2));
