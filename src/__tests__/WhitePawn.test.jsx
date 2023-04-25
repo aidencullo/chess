@@ -2,10 +2,12 @@ import { render, screen } from '@testing-library/react'
 
 import Pawn from 'components/Pawn';
 
-test("Pawn existence", () => {
+import { Color } from 'data';
+
+test("White Pawn existence", () => {
 
     const square = {
-	color: null,
+	color: Color.White,
 	piece: null,
     };
 
@@ -13,10 +15,10 @@ test("Pawn existence", () => {
 	       state = { square }
 	   />);
 
-    // grab the element
-    const element = screen.getByAltText(/chess piece/i);
+    // grab white pawn
+    const element = screen.getByAltText(/white pawn chess piece/i);
 
-    // contains document
+    // check if in document
     expect(element).toBeInTheDocument();
     
 })
