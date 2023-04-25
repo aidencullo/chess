@@ -9,7 +9,8 @@ export default class Knight extends React.Component {
     render() {
 	return (
 	    <>
-		<img className="piece" src={this.props.state.color === Color.White ? wknight : bknight} alt="chess piece" />
+		{ this.props.state.color === Color.White ? <img className="piece" src={ wknight} alt="white knight chess piece" /> :
+		  <img className="piece" src={ bknight} alt="black knight chess piece" /> }
 	    </>
 	);
     }

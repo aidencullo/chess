@@ -9,7 +9,8 @@ export default class Queen extends React.Component {
     render() {
 	return (
 	    <>
-		<img className="piece" src={this.props.state.color === Color.White ? wqueen : bqueen} alt="chess piece" />
+		{ this.props.state.color === Color.White ? <img className="piece" src={ wqueen} alt="white queen chess piece" /> :
+		  <img className="piece" src={ bqueen} alt="black queen chess piece" /> }
 	    </>
 	);
     }

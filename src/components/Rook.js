@@ -9,7 +9,8 @@ export default class Rook extends React.Component {
     render() {
 	return (
 	    <>
-		<img className="piece" src={this.props.state.color === Color.White ? wrook : brook} alt="chess piece" />
+		{ this.props.state.color === Color.White ? <img className="piece" src={ wrook} alt="white rook chess piece" /> :
+		  <img className="piece" src={ brook} alt="black rook chess piece" /> }
 	    </>
 	);
     }

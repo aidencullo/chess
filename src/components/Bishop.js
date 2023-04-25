@@ -9,7 +9,8 @@ export default class Bishop extends React.Component {
     render() {
 	return (
 	    <>
-		<img className="piece" src={this.props.state.color === Color.White ? wbishop : bbishop} alt="chess piece" />
+		{ this.props.state.color === Color.White ? <img className="piece" src={ wbishop } alt="white bishop chess piece" /> :
+		  <img className="piece" src={ bbishop} alt="black bishop chess piece" /> }
 	    </>
 	);
     }
