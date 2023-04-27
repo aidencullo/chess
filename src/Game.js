@@ -233,17 +233,7 @@ export default class Game extends React.Component {
     }
 
     hasPiece(index) {
-	if (this.state.squares[index].piece === null || this.state.squares[index].piece === undefined) {
-	    throw new Error(`chessboard improperly initialized: piece at square ${index} is null or undefined`)
-	}
 	return this.state.squares[index].piece !== Piece.NoPiece;
-    }
-
-    atStartingPawnPosition(index) {
-	if (this.state.squares[index].color === Color.White) {
-	    return Math.floor(index/BOARD_WIDTH) === 6;
-	}
-	return Math.floor(index/BOARD_WIDTH) === 1;
     }
 
     /*
@@ -502,17 +492,17 @@ export default class Game extends React.Component {
 	const piece = this.state.squares[this.state.selected]
 	if (this.state.active) {
 	    if (this.state.highlights[index] > 0) {
-		if (this.isPromotion(index)) {
-		    const squares = this.state.squares.slice();
-		    this.deletePiece(this.state.selected, squares)
-		    this.setPiece(index, Piece.Queen, piece.color, squares);
-		    this.setState({
-			squares: squares
-		    })
-		} else {
+		// if (this.isPromotion(index)) {
+		//     const squares = this.state.squares.slice();
+		//     this.deletePiece(this.state.selected, squares)
+		//     this.setPiece(index, Piece.Queen, piece.color, squares);
+		//     this.setState({
+		// 	squares: squares
+		//     })
+		// } else {
 		    this.move(index);
 		    this.nextTurn();
-		}
+		// }
 	    }
 	    this.deselectPiece();
 	} else {

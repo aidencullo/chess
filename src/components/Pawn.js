@@ -6,6 +6,7 @@ import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Piece, EMPTY_S
 import wpawn from 'media/white/Pawn.png';
 import bpawn from 'media/black/Pawn.png';
 import { getDirection, isOnBoard } from 'auxiliary/helpers';
+import { row, column, distance } from 'auxiliary/geometry';
 
 /* 
  * Pawn chess movement logic
@@ -29,15 +30,10 @@ export default class Pawn extends React.Component {
     
     /************************************************************************/
 
-    /**
-     * Highlight possible pawn moves
-     * @function
-     * @param {number} index - index in chessboard
-     */
     highlight() {
 	const highlights = this.props.highlights.slice();
 	this.highlightMoves(this.props.index, highlights);
-	// this.highlightPawnAttacks(index, highlights);
+	this.highlightAttacks(this.props.index, highlights);
 	
 	this.props.setHighlights(highlights);
     }
@@ -59,36 +55,30 @@ export default class Pawn extends React.Component {
 	}
     }
 
-    /**
-     * Check if a pawn could advance to a square
-     * @function
-     * @param {number} index - index of square on chessboard
-     */
     isValidMove(index) {
-	return isOnBoard(index) && !this.props.squares[index].piece !== Piece.NoPiece;
+	return isOnBoard(index) && !this.hasPiece(index);
 
     }    
 
-    /**
-     * Check if piece is in starting position
-     * @function
-     * @param {number} index - index of square on chessboard
-     */
     hasMoved(index) {
 	if (this.props.squares[index].color === Color.White) {
 	    return Math.floor(index/BOARD_WIDTH) !== 6;
 	}
 	return Math.floor(index/BOARD_WIDTH) !== 1;
-    }	
+    }
+
+    hasPiece(index) {
+	return this.props.squares[index].piece !== Piece.NoPiece;
+    }    
 	
-    // highlightPawnAttacks(index, highlights) {
-    // 	let pawn = this.state.squares[index];
-    // 	let direction = this.getDirection(pawn.color);
-    // 	let position = index + (direction * BOARD_WIDTH) + 1;
+    highlightAttacks(index, highlights) {
+	let pawn = this.props.squares[index];
+	let direction = getDirection(pawn.color);
+	let position_east = index + (direction * BOARD_WIDTH) + 1;
 	
-    // 	if (column(position) !== 0 && this.hasPiece(position)) {
-    // 	    this.tryHighlight(position, highlights, ATTACK);
-    // 	}
+	if (column(position_east) !== 0 && this.hasPiece(position_east)) {
+	    highlights[position_east] = 2;
+	}
     // 	position = index + (direction * BOARD_WIDTH) - 1;
     // 	if (column(position) !== BOARD_WIDTH - 1 && this.hasPiece(position)) {
     // 	    this.tryHighlight(position, highlights, ATTACK);
@@ -123,7 +113,7 @@ export default class Pawn extends React.Component {
     // 	} else if (isEqualObject(this.state.lastMove, targetMoveLeft)) {
     // 	    this.tryHighlight(index + (direction * BOARD_WIDTH) - 1, highlights, ENPASSANT);
     // 	}
-    // }
+    }
     
     render() {
 	return (
