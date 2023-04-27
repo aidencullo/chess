@@ -13,6 +13,11 @@ import bpawn from 'media/black/Pawn.png';
  */
 export default class Pawn extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.highlight = this.highlight.bind(this);
+  }
+    
     /************************************************************************/
 
     /*
@@ -29,9 +34,10 @@ export default class Pawn extends React.Component {
      * @param {number} index - index in chessboard
      */
     highlight() {
-	console.log("highlight");
-	// const highlights = this.state.highlights.slice();
-	// highlights[0] = 1;
+	console.log(this);
+	const highlights = this.props.highlights.slice();
+	highlights[0] = 1;
+	this.props.setHighlights(highlights);
 //	this.highlightPawnMoves(index, highlights);
 //	this.highlightPawnAttacks(index, highlights);
 	
@@ -101,7 +107,7 @@ export default class Pawn extends React.Component {
     render() {
 	return (
 	    <>
-		{this.props.state.color === Color.White ? <img className="piece" src={wpawn} alt="white pawn chess piece"/> :
+		{this.props.state.color === Color.White ? <img className="piece" src={wpawn} alt="white pawn chess piece" onClick={this.highlight}/> :
 		 <img className="piece" src={bpawn} alt="black pawn chess piece" onClick={this.highlight}/>}
 	    </>
 	);

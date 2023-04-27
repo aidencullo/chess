@@ -33,6 +33,8 @@ export default class Game extends React.Component {
 	    kingWhite: null,
 	    kingBlack: null
 	};
+
+	this.setHighlights = this.setHighlights.bind(this);
     }
 
     componentDidMount() {
@@ -494,6 +496,18 @@ export default class Game extends React.Component {
 	this.clearHighlights();
     }
 
+
+    /**
+     * Update board highlights
+     * @function
+     * @param {Array<number>} highlights - updated array of highlighted squares
+     */
+    setHighlights(highlights) {
+	this.setState({
+	    highlights: highlights
+	})
+    }
+    
     /*
      * Handlers
      *
@@ -602,6 +616,8 @@ export default class Game extends React.Component {
 			    state={this.state.squares[index]}
 			    handleClick={() => this.handleClick(index)}
 			    highlight={this.state.highlights[index]}
+			    highlights={this.state.highlights}
+			    setHighlights={this.setHighlights}
 			/>
 		    ))}
 		</div>
