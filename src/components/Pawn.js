@@ -57,7 +57,14 @@ export default class Pawn extends React.Component {
 
     isValidMove(index) {
 	return isOnBoard(index) && !this.hasPiece(index);
+    }    
 
+    onWestEdge(index) {
+	return column(index) === 0;
+    }    
+
+    onEastEdge(index) {
+	return column(index) === BOARD_WIDTH - 1;
     }    
 
     hasMoved(index) {
@@ -71,18 +78,21 @@ export default class Pawn extends React.Component {
 	return this.props.squares[index].piece !== Piece.NoPiece;
     }    
 	
-    highlightAttacks(index, highlights) {
-	let pawn = this.props.squares[index];
+    highlightAttacks(currentIndex, highlights) {
+	let pawn = this.props.squares[currentIndex];
 	let direction = getDirection(pawn.color);
-	let position_east = index + (direction * BOARD_WIDTH) + 1;
-	
-	if (column(position_east) !== 0 && this.hasPiece(position_east)) {
-	    highlights[position_east] = 2;
+	let targetIndex = currentIndex + (direction * BOARD_WIDTH) + 1;
+
+	if (!this.onEastEdge(currentIndex)) {
+	    highlights[targetIndex] = Number(this.hasPiece(targetIndex) * 2);	    
 	}
-    // 	position = index + (direction * BOARD_WIDTH) - 1;
-    // 	if (column(position) !== BOARD_WIDTH - 1 && this.hasPiece(position)) {
-    // 	    this.tryHighlight(position, highlights, ATTACK);
-    // 	}
+
+	targetIndex = currentIndex + (direction * BOARD_WIDTH) - 1;
+	
+	if (!this.onWestEdge(currentIndex)) {
+	    highlights[targetIndex] = Number(this.hasPiece(targetIndex) * 2);	    
+	}
+
     // 	this.highlightEnPassant(index, highlights);
     // }
 
