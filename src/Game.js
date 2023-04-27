@@ -269,20 +269,13 @@ export default class Game extends React.Component {
      */
 
     /************************************************************************/
-
-    setHighlight() {
-	this.setState({
-	    highlights: new Array(64).fill(0),
-	});
-    }	
-    
     clearHighlights() {
 	this.setState({
 	    highlights: new Array(64).fill(0),
 	});
     }
 
-    checkMoves(index) {
+    highlightMoves(index) {
 	const square = this.state.squares[index];
 	
 	switch (square.piece) {
@@ -599,7 +592,7 @@ export default class Game extends React.Component {
 	    this.deselectPiece();
 	} else {
 	    if (this.isValidTurn(index)) {
-		this.checkMoves(index);
+		this.highlightMoves(index);
 	    }
 	}
     }
@@ -679,7 +672,6 @@ export default class Game extends React.Component {
 			    id={index}
 			    state={this.state.squares[index]}
 			    handleClick={() => this.handleClick(index)}
-			    checkMoves={() => this.checkMoves(index)}
 			    highlight={this.state.highlights[index]}
 			/>
 		    ))}
