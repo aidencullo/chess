@@ -50,11 +50,12 @@ export default class Pawn extends React.Component {
 	if (this.isValidMove(position)) {
 	    highlights[position] = 1;
 	    position = position + direction * BOARD_WIDTH;
-	//     if (this.atStartingPawnPosition(index)) {
-	// 	if (this.isValidPawnMoveSquare(position)) {
-	    highlights[position] = 1;
-	// 	}
-	//     }
+	    if (this.hasMoved(index)) {
+		return;
+	    }
+	    if (this.isValidMove(position)) {
+		    highlights[position] = 1;
+	    }
 	}
     }
 
@@ -68,6 +69,18 @@ export default class Pawn extends React.Component {
 
     }    
 
+    /**
+     * Check if piece is in starting position
+     * @function
+     * @param {number} index - index of square on chessboard
+     */
+    hasMoved(index) {
+	if (this.props.squares[index].color === Color.White) {
+	    return Math.floor(index/BOARD_WIDTH) !== 6;
+	}
+	return Math.floor(index/BOARD_WIDTH) !== 1;
+    }	
+	
     // highlightPawnAttacks(index, highlights) {
     // 	let pawn = this.state.squares[index];
     // 	let direction = this.getDirection(pawn.color);
