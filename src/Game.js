@@ -280,7 +280,7 @@ export default class Game extends React.Component {
 	
 	switch (square.piece) {
 	case Piece.Pawn:
-	    this.highlightPawn(index);
+//	    this.highlightPawn(index);
 	    break;
 	case Piece.Knight:
 	    this.highlightKnight(index);
@@ -303,77 +303,6 @@ export default class Game extends React.Component {
 	    active: true,
 	    selected: index
 	});
-    }
-
-    highlightPawn(index) {
-	const highlights = this.state.highlights.slice();
-	
-	this.highlightPawnMoves(index, highlights);
-	this.highlightPawnAttacks(index, highlights);
-	
-	this.setState({
-	    highlights: highlights,
-	});
-    }
-
-    highlightPawnMoves(index, highlights) {
-	let pawn = this.state.squares[index];
-	let direction = this.getDirection(pawn.color);
-	let position = index + direction * BOARD_WIDTH;
-	
-	if (this.isValidPawnMoveSquare(position)) {
-	    this.tryHighlight(position, highlights, OPEN);
-	    position = position + direction * BOARD_WIDTH;
-	    if (this.atStartingPawnPosition(index)) {
-		if (this.isValidPawnMoveSquare(position)) {
-		    this.tryHighlight(position, highlights, OPEN);
-		}
-	    }
-	}
-    }
-
-    highlightPawnAttacks(index, highlights) {
-	let pawn = this.state.squares[index];
-	let direction = this.getDirection(pawn.color);
-	let position = index + (direction * BOARD_WIDTH) + 1;
-	
-	if (column(position) !== 0 && this.hasPiece(position)) {
-	    this.tryHighlight(position, highlights, ATTACK);
-	}
-	position = index + (direction * BOARD_WIDTH) - 1;
-	if (column(position) !== BOARD_WIDTH - 1 && this.hasPiece(position)) {
-	    this.tryHighlight(position, highlights, ATTACK);
-	}
-	this.highlightEnPassant(index, highlights);
-    }
-
-    highlightEnPassant(index, highlights) {
-	let pawn = this.state.squares[index];
-	let direction = this.getDirection(pawn.color);
-	
-	let targetMoveRight = {
-	    start: index + (direction * 2 * BOARD_WIDTH) + 1,
-	    end: index + 1,
-	    piece: {
-		color: Number(!pawn.color),
-		piece: Piece.Pawn
-	    }
-	};
-
-	let targetMoveLeft = {
-	    start: index + (direction * 2 * BOARD_WIDTH) - 1,
-	    end: index - 1,
-	    piece: {
-		color: Number(!pawn.color),
-		piece: Piece.Pawn
-	    }
-	};
-
-	if (isEqualObject(this.state.lastMove, targetMoveRight)) {
-	    this.tryHighlight(index + (direction * BOARD_WIDTH) + 1, highlights, ENPASSANT);
-	} else if (isEqualObject(this.state.lastMove, targetMoveLeft)) {
-	    this.tryHighlight(index + (direction * BOARD_WIDTH) - 1, highlights, ENPASSANT);
-	}
     }
 
     highlightBishop(index) {

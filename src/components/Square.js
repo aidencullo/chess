@@ -50,6 +50,7 @@ export default class Square extends React.Component {
 		    case Piece.Pawn:
 			return <Pawn
 				   state={this.props.state}
+				   highlights={this.props.highlights}
 			       />;
 		    case Piece.Knight:
 			return <Knight
