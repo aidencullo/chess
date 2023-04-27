@@ -2,9 +2,10 @@
 import React from 'react';
 
 // internal
-import { Color } from 'data';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Piece, EMPTY_SQUARE } from 'data';
 import wpawn from 'media/white/Pawn.png';
 import bpawn from 'media/black/Pawn.png';
+import { getDirection, isOnBoard } from 'auxiliary/helpers';
 
 /* 
  * Pawn chess movement logic
@@ -34,31 +35,38 @@ export default class Pawn extends React.Component {
      * @param {number} index - index in chessboard
      */
     highlight() {
-	console.log(this);
 	const highlights = this.props.highlights.slice();
-	highlights[0] = 1;
-	this.props.setHighlights(highlights);
-//	this.highlightPawnMoves(index, highlights);
-//	this.highlightPawnAttacks(index, highlights);
+	this.highlightMoves(this.props.index, highlights);
+	// this.highlightPawnAttacks(index, highlights);
 	
-	// set highlights
+	this.props.setHighlights(highlights);
     }
 
-    highlightPawnMoves(index, highlights) {
-	// let pawn = this.state.squares[index];
-	// let direction = this.getDirection(pawn.color);
-	// let position = index + direction * BOARD_WIDTH;
+    highlightMoves(index, highlights) {
+	let pawn = this.props.squares[index];
+	let direction = getDirection(pawn.color);
+	let position = index + direction * BOARD_WIDTH;
 	
-	// if (this.isValidPawnMoveSquare(position)) {
-	//     this.tryHighlight(position, highlights, OPEN);
-	//     position = position + direction * BOARD_WIDTH;
+	if (this.isValidMove(position)) {
+	    highlights[position] = 1;
+	    position = position + direction * BOARD_WIDTH;
 	//     if (this.atStartingPawnPosition(index)) {
 	// 	if (this.isValidPawnMoveSquare(position)) {
-	// 	    this.tryHighlight(position, highlights, OPEN);
+	    highlights[position] = 1;
 	// 	}
 	//     }
-	// }
+	}
     }
+
+    /**
+     * Check if a pawn could advance to a square
+     * @function
+     * @param {number} index - index of square on chessboard
+     */
+    isValidMove(index) {
+	return isOnBoard(index) && !this.props.squares[index].piece !== Piece.NoPiece;
+
+    }    
 
     // highlightPawnAttacks(index, highlights) {
     // 	let pawn = this.state.squares[index];

@@ -3,8 +3,9 @@ import React from 'react';
 
 // internal
 import Square from 'components/Square.js';
-import { row, column, distance, arrayRange, isEqualObject } from 'helpers';
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Direction, Piece, EMPTY_SQUARE } from 'data';
+import { row, column, distance } from 'auxiliary/geometry';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Piece, EMPTY_SQUARE } from 'data';
+import { arrayRange } from 'auxiliary/helpers';
 
 /* 
  * Chess board and logic
@@ -84,7 +85,7 @@ export default class Game extends React.Component {
 	this.setPieces(arrayRange(8, 15, 1), Piece.Pawn, Color.Black, squares);
 
 	// empty
-	this.setPieces(arrayRange(16, 46, 1), Piece.NoPiece, Color.NoColor, squares);
+	this.setPieces(arrayRange(16, 47, 1), Piece.NoPiece, Color.NoColor, squares);
 
 	// white
 	this.setPieces(arrayRange(48, 55, 1), Piece.Pawn, Color.White, squares);
@@ -130,18 +131,7 @@ export default class Game extends React.Component {
 	    kingBlack: 4
 	});
     }
-    /*
-     * GETTERS
-     *
-     * Retrieving abstract objects
-     */
 
-    /************************************************************************/
-
-    getDirection(color) {
-	return color === Color.White ? Direction.North : Direction.South;
-    }
-    
     /*
      * SETTERS
      *
@@ -197,14 +187,6 @@ export default class Game extends React.Component {
 	return true;
     }    
     
-    /**
-     * Check if a pawn could advance to a square
-     * @function
-     * @param {number} index - index of square on chessboard
-     */
-    isValidPawnMoveSquare(index) {
-	return this.isOnBoard(index) && !this.hasPiece(index)
-    }
     
     /**
      * Check if move is pawn promotion
@@ -618,6 +600,7 @@ export default class Game extends React.Component {
 			    highlight={this.state.highlights[index]}
 			    highlights={this.state.highlights}
 			    setHighlights={this.setHighlights}
+			    squares={this.state.squares}
 			/>
 		    ))}
 		</div>

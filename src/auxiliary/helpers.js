@@ -1,12 +1,13 @@
-import { BOARD_WIDTH } from 'data';
+import { Color, Direction } from 'data';
+import { BOARD_SIZE } from 'data';
 
-function distance(p1, p2) {
-    const rd = Math.abs(this.row(p1) - this.row(p2));
-    const cd = Math.abs(this.column(p1) - this.column(p2));
-    return Math.sqrt(rd * rd + cd * cd);
-}
+/* 
+ * Helper functions
+ * 
+ * @author Aiden Cullo [https://github.com/aidencullo]
+ */
 
-function isEqualObject(object1, object2) {
+export function isEqualObject(object1, object2) {
     if (Object.keys(object1).length !== Object.keys(object2).length) {
 	return false;
     }
@@ -24,19 +25,17 @@ function isEqualObject(object1, object2) {
     return true;
 }
 
-function row(index) {
-    return Math.floor(index / BOARD_WIDTH);
-}
-
-function column(index) {
-    return index % BOARD_WIDTH;
-}
-
-function arrayRange(start, stop, step) {
+export function arrayRange(start, stop, step) {
     return Array.from(
 	{ length: (stop - start) / step + 1 },
 	(value, index) => start + index * step
     );
 }
 
-export { row, column, distance, arrayRange, isEqualObject };
+export function getDirection(color) {
+    return color === Color.White ? Direction.North : Direction.South;
+}
+
+export function isOnBoard(index) {
+    return index >= 0 && index < BOARD_SIZE;
+}
