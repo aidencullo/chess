@@ -2,13 +2,14 @@
 import React from 'react';
 
 // internal
-import Pawn from 'components/Pawn.js';
-import Knight from 'components/Knight.js';
-import Bishop from 'components/Bishop.js';
-import Rook from 'components/Rook.js';
-import Queen from 'components/Queen.js';
-import King from 'components/King.js';
-import { BOARD_WIDTH, Piece } from 'data';
+import Pawn from 'components/Pawn';
+import Knight from 'components/Knight';
+import Bishop from 'components/Bishop';
+import Rook from 'components/Rook';
+import Queen from 'components/Queen';
+import King from 'components/King';
+import { BOARD_WIDTH } from 'types/constants';
+import { Piece } from 'types/Piece';
 
 var WHITE = "white";
 var OTHER = "brown";

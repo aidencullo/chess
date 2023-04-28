@@ -1,8 +1,5 @@
-import { Color, Direction } from 'data';
-import { BOARD_SIZE } from 'data';
-
 /* 
- * Helper functions
+ * Move helper functions
  * 
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
@@ -25,17 +22,3 @@ export function isEqualMove(move1, move2) {
     return true;
 }
 
-export function arrayRange(start, stop, step) {
-    return Array.from(
-	{ length: (stop - start) / step + 1 },
-	(value, index) => start + index * step
-    );
-}
-
-export function getDirection(color) {
-    return color === Color.White ? Direction.North : Direction.South;
-}
-
-export function isOnBoard(index) {
-    return index >= 0 && index < BOARD_SIZE;
-}

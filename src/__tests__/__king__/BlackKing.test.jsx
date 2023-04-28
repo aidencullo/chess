@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 
 import King from 'components/King';
 
-import { Color } from 'data';
+import { Color } from 'types/Color';
 
 test("Black King existence", () => {
 

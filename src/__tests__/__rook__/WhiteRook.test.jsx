@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 
 import Rook from 'components/Rook';
 
-import { Color } from 'data';
+import { Color } from 'types/Color';
 
 test("White Rook existence", () => {
 

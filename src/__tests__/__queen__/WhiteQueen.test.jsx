@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 
 import Queen from 'components/Queen';
 
-import { Color } from 'data';
+import { Color } from 'types/Color';
 
 test("White Queen existence", () => {
 

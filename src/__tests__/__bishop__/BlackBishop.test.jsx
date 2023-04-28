@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 
 import Bishop from 'components/Bishop';
 
-import { Color } from 'data';
+import { Color } from 'types/Color';
 
 test("Black Bishop existence", () => {
 

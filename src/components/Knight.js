@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Color } from 'data';
+import { Color } from 'types/Color';
 import wknight from 'media/white/Knight.png';
 import bknight from 'media/black/Knight.png';
 

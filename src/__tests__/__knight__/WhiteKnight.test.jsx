@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 
 import Knight from 'components/Knight';
 
-import { Color } from 'data';
+import { Color } from 'types/Color';
 
 test("White Knight existence", () => {
 

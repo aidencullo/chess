@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 
 import Pawn from 'components/Pawn';
 
-import { Color } from 'data';
+import { Color } from 'types/Color';
 
 test("White Pawn existence", () => {
 

@@ -2,11 +2,15 @@
 import React from 'react';
 
 // internal
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Piece, EMPTY_SQUARE } from 'data';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from 'types/constants';
+import { Piece } from 'types/Piece';
+import { Color } from 'types/Color';
+import { isEqualMove } from 'auxiliary/move';
+import { isOnBoard } from 'auxiliary/board';
+import { getDirection } from 'auxiliary/direction';
+import { row, column, distance } from 'auxiliary/geometry';
 import wpawn from 'media/white/Pawn.png';
 import bpawn from 'media/black/Pawn.png';
-import { getDirection, isOnBoard, isEqualMove } from 'auxiliary/helpers';
-import { row, column, distance } from 'auxiliary/geometry';
 
 /* 
  * Pawn chess movement logic

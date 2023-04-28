@@ -4,8 +4,10 @@ import React from 'react';
 // internal
 import Square from 'components/Square.js';
 import { row, column, distance } from 'auxiliary/geometry';
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Piece, EMPTY_SQUARE } from 'data';
-import { arrayRange } from 'auxiliary/helpers';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from 'types/constants';
+import { Piece } from 'types/Piece';
+import { Color } from 'types/Color';
+import { arrayRange } from 'auxiliary/array';
 
 /* 
  * Chess board and logic
@@ -501,8 +503,8 @@ export default class Game extends React.Component {
 		// 	squares: squares
 		//     })
 		// } else {
-		    this.move(index);
-		    this.nextTurn();
+		this.move(index);
+		this.nextTurn();
 		// }
 	    }
 	    this.deselectPiece();
@@ -513,6 +515,8 @@ export default class Game extends React.Component {
 	}
     }
 
+    /************************************************************************/
+
     /*
      * MOVEMENTS
      *
@@ -521,28 +525,15 @@ export default class Game extends React.Component {
 
     /************************************************************************/
 
-    move(index, altSquares = 0, newSquares = null) {
-	let squares;
-	if(!altSquares) {
-	    squares = this.state.squares.slice();
-	    if(this.selected === this.kingWhite) {
-		this.setState({
-		    kingWhite: index
-		})
-	    }
-	    if(this.selected === this.kingBlack) {
-		this.setState({
-		    kingBlack: index
-		})
-	    }
-	} else {
-	    squares = newSquares;
-	}
+    move(index) {
+	const squares = this.state.squares.slice();
+	
 	let lastMove = {
 	    start: this.state.selected,
 	    end: index,
 	    piece: this.state.squares[this.state.selected]
 	}
+
 	if (this.state.highlights[index] === OPEN) {
 	    this.switchPieces(index, squares);
 	} else if (this.state.highlights[index] === ATTACK) {
@@ -555,12 +546,11 @@ export default class Game extends React.Component {
 		this.deletePiece(index - BOARD_WIDTH, squares);
 	    }
 	}
-	if(!altSquares) {
-	    this.setState({
-		lastMove: lastMove,
-		squares: squares
-	    });
-	}
+	
+	this.setState({
+	    lastMove: lastMove,
+	    squares: squares
+	});
     }
 
     switchPieces(index, squares) {
