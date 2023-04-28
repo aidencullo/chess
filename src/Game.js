@@ -60,7 +60,8 @@ export default class Game extends React.Component {
 	this.setPieces(arrayRange(0, 63, 1), Piece.NoPiece, Color.NoColor, squares);
 	
 	// custom pieces
-	this.setPiece(48, Piece.Pawn, Color.Black, squares);
+	this.setPiece(24, Piece.Pawn, Color.White, squares);
+	this.setPiece(9, Piece.Pawn, Color.Black, squares);
 
 	this.setState({
 	    squares: squares,
@@ -108,7 +109,7 @@ export default class Game extends React.Component {
      * @function
      */
     initializeBoard() {
-	this.setStandardBoard();
+	this.setCustomBoard();
 	this.initializeVars();
     }
 
@@ -591,6 +592,8 @@ export default class Game extends React.Component {
 			    highlights={this.state.highlights}
 			    setHighlights={this.setHighlights}
 			    squares={this.state.squares}
+			    turn={this.state.turn}
+			    lastMove={this.state.lastMove}
 			/>
 		    ))}
 		</div>

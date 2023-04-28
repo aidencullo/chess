@@ -7,18 +7,18 @@ import { BOARD_SIZE } from 'data';
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-export function isEqualObject(object1, object2) {
-    if (Object.keys(object1).length !== Object.keys(object2).length) {
+export function isEqualMove(move1, move2) {
+    if (Object.keys(move1).length !== Object.keys(move2).length) {
 	return false;
     }
-    for (const [key, value] of Object.entries(object1)) {
+    for (const [key, value] of Object.entries(move1)) {
 	if (typeof value === "object") {
-	    if (object2[key] === null) {
+	    if (move2[key] === null) {
 		return false;
-	    } else if (!this.isEqualObject(value, object2[key])) {
+	    } else if (!isEqualMove(value, move2[key])) {
 		return false;
 	    }
-	} else if (value !== object2[key]) {
+	} else if (value !== move2[key]) {
 	    return false;
 	}
     }

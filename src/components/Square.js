@@ -53,7 +53,9 @@ export default class Square extends React.Component {
 				   highlights={this.props.highlights}
 				   setHighlights={this.props.setHighlights}
 				   index={this.props.id}
-				   squares={this.props.squares}
+				   squares={this.props.squares}				   
+				   turn={this.props.turn}
+				   lastMove={this.props.lastMove}
 			       />;
 		    case Piece.Knight:
 			return <Knight

@@ -5,7 +5,7 @@ import React from 'react';
 import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, Color, Piece, EMPTY_SQUARE } from 'data';
 import wpawn from 'media/white/Pawn.png';
 import bpawn from 'media/black/Pawn.png';
-import { getDirection, isOnBoard } from 'auxiliary/helpers';
+import { getDirection, isOnBoard, isEqualMove } from 'auxiliary/helpers';
 import { row, column, distance } from 'auxiliary/geometry';
 
 /* 
@@ -17,7 +17,7 @@ export default class Pawn extends React.Component {
 
   constructor(props){
     super(props);
-    this.highlight = this.highlight.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
     
     /************************************************************************/
@@ -30,10 +30,17 @@ export default class Pawn extends React.Component {
     
     /************************************************************************/
 
+    handleClick() {
+	if (this.props.state.color === this.props.turn) {
+	    this.highlight();
+	}
+    }
+
     highlight() {
 	const highlights = this.props.highlights.slice();
 	this.highlightMoves(this.props.index, highlights);
 	this.highlightAttacks(this.props.index, highlights);
+	this.highlightEnPassant(this.props.index, highlights);
 	
 	this.props.setHighlights(highlights);
     }
@@ -93,43 +100,46 @@ export default class Pawn extends React.Component {
 	    highlights[targetIndex] = Number(this.hasPiece(targetIndex) * 2);	    
 	}
 
-    // 	this.highlightEnPassant(index, highlights);
-    // }
+    }
 
-    // highlightEnPassant(index, highlights) {
-    // 	let pawn = this.state.squares[index];
-    // 	let direction = this.getDirection(pawn.color);
+    highlightEnPassant(index, highlights) {
+	let pawn = this.props.squares[index];
+	let direction = getDirection(pawn.color);
 	
-    // 	let targetMoveRight = {
-    // 	    start: index + (direction * 2 * BOARD_WIDTH) + 1,
-    // 	    end: index + 1,
-    // 	    piece: {
-    // 		color: Number(!pawn.color),
-    // 		piece: Piece.Pawn
-    // 	    }
-    // 	};
+	let targetMoveEast = {
+	    start: index + (direction * 2 * BOARD_WIDTH) + 1,
+	    end: index + 1,
+	    piece: {
+		color: pawn.color === Color.White ? Color.Black : Color.White,
+		piece: Piece.Pawn
+	    }
+	};
 
-    // 	let targetMoveLeft = {
-    // 	    start: index + (direction * 2 * BOARD_WIDTH) - 1,
-    // 	    end: index - 1,
-    // 	    piece: {
-    // 		color: Number(!pawn.color),
-    // 		piece: Piece.Pawn
-    // 	    }
-    // 	};
+	let targetMoveWest = {
+	    start: index + (direction * 2 * BOARD_WIDTH) - 1,
+	    end: index - 1,
+	    piece: {
+		color: pawn.color === Color.White ? Color.Black : Color.White,
+		piece: Piece.Pawn
+	    }
+	};
 
-    // 	if (isEqualObject(this.state.lastMove, targetMoveRight)) {
-    // 	    this.tryHighlight(index + (direction * BOARD_WIDTH) + 1, highlights, ENPASSANT);
-    // 	} else if (isEqualObject(this.state.lastMove, targetMoveLeft)) {
-    // 	    this.tryHighlight(index + (direction * BOARD_WIDTH) - 1, highlights, ENPASSANT);
-    // 	}
+	if (isEqualMove(this.props.lastMove, targetMoveEast)) {
+	    let position = index + (direction * BOARD_WIDTH) + 1;
+	    highlights[position] = 2;
+	    return;
+	}
+	if (isEqualMove(this.props.lastMove, targetMoveWest)) {
+	    let position = index + (direction * BOARD_WIDTH) - 1;
+	    highlights[position] = 2;
+	}
     }
     
     render() {
 	return (
 	    <>
-		{this.props.state.color === Color.White ? <img className="piece" src={wpawn} alt="white pawn chess piece" onClick={this.highlight}/> :
-		 <img className="piece" src={bpawn} alt="black pawn chess piece" onClick={this.highlight}/>}
+		{this.props.state.color === Color.White ? <img className="piece" src={wpawn} alt="white pawn chess piece" onClick={this.handleClick}/> :
+		 <img className="piece" src={bpawn} alt="black pawn chess piece" onClick={this.handleClick}/>}
 	    </>
 	);
     }
