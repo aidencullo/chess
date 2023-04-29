@@ -2,7 +2,7 @@
 import React from 'react';
 
 // internal
-import Game from 'Game.js';
+import Game from 'Game';
 
 /* 
  * Homepage
