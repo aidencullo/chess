@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
 
-import Knight from 'components/Knight';
+import Knight from '@/components/Knight';
 
-import { Color } from 'types/Color';
+import { Color } from '@/types/Color';
 
 test("White Knight existence", () => {
 

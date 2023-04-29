@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Color } from 'types/Color';
-import wrook from 'media/white/Rook.png';
-import brook from 'media/black/Rook.png';
+import { Color } from '@/types/Color';
+import wrook from '@/media/white/Rook.png';
+import brook from '@/media/black/Rook.png';
 
 export default class Rook extends React.Component {
 

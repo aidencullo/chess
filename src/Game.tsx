@@ -2,12 +2,12 @@
 import React from 'react';
 
 // internal
-import Square from 'components/Square.js';
-import { row, column, distance } from 'auxiliary/geometry';
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from 'types/constants';
-import { Piece } from 'types/Piece';
-import { Color } from 'types/Color';
-import { arrayRange } from 'auxiliary/array';
+import Square from '@/components/Square';
+import { row, column, distance } from '@/auxiliary/geometry';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/types/constants';
+import { Piece } from '@/types/Piece';
+import { Color } from '@/types/Color';
+import { arrayRange } from '@/auxiliary/array';
 
 /* 
  * Chess board and logic

@@ -1,4 +1,4 @@
-import { BOARD_SIZE } from 'types/constants';
+import { BOARD_SIZE } from '@/types/constants';
 
 /* 
  * board helper functions

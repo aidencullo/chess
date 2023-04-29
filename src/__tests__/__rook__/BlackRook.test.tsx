@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
 
-import Rook from 'components/Rook';
+import Rook from '@/components/Rook';
 
-import { Color } from 'types/Color';
+import { Color } from '@/types/Color';
 
 test("Black Rook existence", () => {
 

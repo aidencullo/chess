@@ -1,4 +1,4 @@
-import { BOARD_WIDTH } from 'types/constants';
+import { BOARD_WIDTH } from '@/types/constants';
 
 /* 
  * Geometry helper functions

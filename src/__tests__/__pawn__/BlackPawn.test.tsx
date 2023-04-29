@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
 
-import Pawn from 'components/Pawn';
+import Pawn from '@/components/Pawn';
 
-import { Color } from 'types/Color';
+import { Color } from '@/types/Color';
 
 test("Black Pawn existence", () => {
 

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
 
-import Queen from 'components/Queen';
+import Queen from '@/components/Queen';
 
-import { Color } from 'types/Color';
+import { Color } from '@/types/Color';
 
 test("Black Queen existence", () => {
 

@@ -1,5 +1,5 @@
-import { Color } from 'types/Color';
-import { Direction } from 'types/Direction';
+import { Color } from '@/types/Color';
+import { Direction } from '@/types/Direction';
 
 /* 
  * Array helper functions
