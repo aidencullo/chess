@@ -7,20 +7,21 @@ import { Color } from '@/types/Color';
 describe("Pawn test", () => {
     test("Black Pawn existence", () => {
 
-    const square = {
-	color: Color.Black,
-	piece: null,
-    };
+	throw new Error("test error");
+	const square = {
+	    color: Color.Black,
+	    piece: null,
+	};
 
-    render(<Pawn
+	render(<Pawn
 	       state = { square }
-	   />);
+	    />);
 
-    // grab black pawn
-    const element = screen.getByAltText(/black pawn chess piece/i);
+	// grab black pawn
+	const element = screen.getByAltText(/black pawn chess piece/i);
 
-    // check if in document
-    expect(element).toBeDefined();
+	// check if in document
+	expect(element).toBeDefined();
 	
     })
 })
