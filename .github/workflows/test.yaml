@@ -1,10 +1,9 @@
 name: runs tests
 
-on:
-  - 'main'
+on: push
 
 jobs:
-  tests:
+  test:
     runs-on: macos-latest
     
     steps:
