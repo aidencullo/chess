@@ -7,7 +7,6 @@ import { Color } from '@/types/Color';
 describe("Pawn test", () => {
     test("Black Pawn existence", () => {
 
-	throw new Error("test error");
 	const square = {
 	    color: Color.Black,
 	    piece: null,
