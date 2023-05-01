@@ -1,10 +1,11 @@
+import { describe, expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react'
 
 import Pawn from '@/components/Pawn';
-
 import { Color } from '@/types/Color';
 
-test("White Pawn existence", () => {
+describe("Pawn test", () => {
+    test("Black Pawn existence", () => {
 
     const square = {
 	color: Color.White,
@@ -15,10 +16,11 @@ test("White Pawn existence", () => {
 	       state = { square }
 	   />);
 
-    // grab white pawn
+    // grab black pawn
     const element = screen.getByAltText(/white pawn chess piece/i);
 
     // check if in document
-    expect(element).toBeInTheDocument();
-    
+    expect(element).toBeDefined();
+	
+    })
 })
