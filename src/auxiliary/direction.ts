@@ -1,4 +1,4 @@
-import { ColorI, isWhite } from '@/models/ColorI';
+import { Color } from '@/models/Color';
 import { Direction } from '@/enums/Direction';
 
 /* 
@@ -7,6 +7,6 @@ import { Direction } from '@/enums/Direction';
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-export function getDirection(color : ColorI) {
-    return isWhite(color) ? Direction.North : Direction.South;
+export function getDirection(color : Color) {
+    return color.isWhite() ? Direction.North : Direction.South;
 }

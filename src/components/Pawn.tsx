@@ -3,12 +3,9 @@ import React from 'react';
 
 // internal
 import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/enums/constants';
-import { Piece } from '@/enums/Piece';
-import { PieceI } from '@/models/PieceI';
-import { PieceTypeI } from '@/models/PieceTypeI';
-import { ColorI } from '@/models/ColorI';
-import { Color } from '@/enums/Color';
-import { MoveI, isEqualMove } from '@/models/MoveI';
+import { Piece } from '@/models/Piece';
+import { Color } from '@/models/Color';
+import { Move } from '@/models/Move';
 import { isOnBoard } from '@/auxiliary/board';
 import { getDirection } from '@/auxiliary/direction';
 import { row, column, distance } from '@/auxiliary/geometry';
@@ -89,7 +86,7 @@ export default class Pawn extends React.Component {
     }
 
     hasPiece(index) {
-	return this.props.squares[index].piece !== Piece.NoPiece;
+	return this.props.squares[index].piece.isNoPiece();
     }    
 	
     highlightAttacks(currentIndex, highlights) {
@@ -119,7 +116,7 @@ export default class Pawn extends React.Component {
 	//     piece: {
 	// 	color: pawn.color === Color.White ? Color.Black : Color.White,
 	// 	piece: Piece.Pawn
-	//     } as PieceI
+	//     } as Piece
 	// };
 
 	// let targetMoveWest : MoveI = {
@@ -128,27 +125,19 @@ export default class Pawn extends React.Component {
 	//     piece: {
 	// 	color: pawn.color === Color.White ? Color.Black : Color.White,
 	// 	piece: Piece.Pawn
-	//     } as PieceI
+	//     } as Piece
 	// };
 
-	// let targetMoveEast : MoveI = {
-	//     start: 0,
-	//     end: 0,
-	//     piece: {
-	// 	color: {} as ColorI;
-	// 	type: {} as PieceTypeI;
-	//     } as PieceI
-	// };
+	let targetMoveEast : MoveI = {};
 
-	let targetMoveEast : MoveI = {} as MoveI;
-	let targetMoveWest : MoveI = {} as MoveI;
+	let targetMoveWest : MoveI = {};
 
-	if (isEqualMove(this.props.lastMove, targetMoveEast)) {
+	if (this.props.lastMove.isEqual(targetMoveEast)) {
 	    let position = index + (direction * BOARD_WIDTH) + 1;
 	    highlights[position] = 2;
 	    return;
 	}
-	if (isEqualMove(this.props.lastMove, targetMoveWest)) {
+	if (this.props.lastMove.isEqual(targetMoveWest)) {
 	    let position = index + (direction * BOARD_WIDTH) - 1;
 	    highlights[position] = 2;
 	}
