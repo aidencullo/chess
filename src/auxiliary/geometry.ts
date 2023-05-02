@@ -1,4 +1,4 @@
-import { BOARD_WIDTH } from '@/enums/constants';
+import { BOARD_WIDTH } from '@/constants/board';
 
 /* 
  * Geometry helper functions

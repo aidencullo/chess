@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Color } from '@/enums/Color';
+import { Color } from '@/models/Color';
 import wqueen from '@/media/white/Queen.png';
 import bqueen from '@/media/black/Queen.png';
 

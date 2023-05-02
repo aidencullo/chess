@@ -2,11 +2,11 @@
 import React from 'react';
 
 // internal
-import Square from '@/components/Square';
+import Square from '@components/Square';
 import { row, column, distance } from '@/auxiliary/geometry';
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/enums/constants';
-import { Piece } from '@/enums/Piece';
-import { Color } from '@/enums/Color';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/constants/board';
+import { Piece } from '@models/Piece';
+import { Color } from '@models/Color';
 import { arrayRange } from '@/auxiliary/array';
 
 /* 
@@ -23,11 +23,8 @@ export default class Game extends React.Component {
     constructor(props) {
 	super(props);
 	this.state = {
-	    squares: new Array(64).fill({
-		color: null,
-		piece: null,
-	    }),
-	    highlights: new Array(64).fill(0),
+	    squares: new Array(64).fill(null),
+	    highlights: new Array(64).fill(null),
 	    active: null,
 	    selected: null,
 	    turn: null,
@@ -52,6 +49,35 @@ export default class Game extends React.Component {
 
     /************************************************************************/
 
+    /**
+     * Generic chessboard setup.
+     * @function
+     */
+    initializeBoard() {
+//	this.setCustomBoard();
+//	this.initializeVars();
+    }
+
+    /**
+     * Initialize state with non-null values.
+     * @function
+     */
+    initializeVars(squares) {
+	this.setState({
+	    active: false,
+	    selected: -1,
+	    turn: Color.Black,
+	    lastMove: {
+		start: -1,
+		end: -1,
+		piece: null
+	    },
+	    check: false,
+	    kingWhite: 60,
+	    kingBlack: 4
+	});
+    }
+    
     /**
      * Non-standard chessboard setup.
      * @function
@@ -104,35 +130,6 @@ export default class Game extends React.Component {
 	this.setState({
 	    squares: squares,
 	})
-    }
-
-    /**
-     * Generic chessboard setup.
-     * @function
-     */
-    initializeBoard() {
-	this.setCustomBoard();
-	this.initializeVars();
-    }
-
-    /**
-     * Initialize state with non-null values.
-     * @function
-     */
-    initializeVars(squares) {
-	this.setState({
-	    active: false,
-	    selected: -1,
-	    turn: Color.Black,
-	    lastMove: {
-		start: -1,
-		end: -1,
-		piece: null
-	    },
-	    check: false,
-	    kingWhite: 60,
-	    kingBlack: 4
-	});
     }
 
     /*
@@ -252,216 +249,216 @@ export default class Game extends React.Component {
 	});
     }
 
-    highlightMoves(index) {
-	const square = this.state.squares[index];
+    // highlightMoves(index) {
+    // 	const square = this.state.squares[index];
 	
-	switch (square.piece) {
-	case Piece.Pawn:
-//	    this.highlightPawn(index);
-	    break;
-	case Piece.Knight:
-	    this.highlightKnight(index);
-	    break;
-	case Piece.Bishop:
-	    this.highlightBishop(index);
-	    break;
-	case Piece.Rook:
-	    this.highlightRook(index);
-	    break;
-	case Piece.Queen:
-	    this.highlightQueen(index);
-	    break;
-	case Piece.King:
-	    this.highlightKing(index);
-	    break;
-	default:
-	}
-	this.setState({
-	    active: true,
-	    selected: index
-	});
-    }
+    // 	switch (square.piece) {
+    // 	case Piece.Pawn:
+    // 	    this.highlightPawn(index);
+    // 	    break;
+    // 	case Piece.Knight:
+    // 	    this.highlightKnight(index);
+    // 	    break;
+    // 	case Piece.Bishop:
+    // 	    this.highlightBishop(index);
+    // 	    break;
+    // 	case Piece.Rook:
+    // 	    this.highlightRook(index);
+    // 	    break;
+    // 	case Piece.Queen:
+    // 	    this.highlightQueen(index);
+    // 	    break;
+    // 	case Piece.King:
+    // 	    this.highlightKing(index);
+    // 	    break;
+    // 	default:
+    // 	}
+    // 	this.setState({
+    // 	    active: true,
+    // 	    selected: index
+    // 	});
+    // }
 
-    highlightBishop(index) {
-	const highlights = this.state.highlights.slice();
-	//northeast
-	for (let position = index - (BOARD_WIDTH - 1); position >= 0 && column(position) !== 0; position -= (BOARD_WIDTH - 1)) {
-	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
-		break;
-	    }
-	}
-	//southeast
-	for (let position = index + (BOARD_WIDTH + 1); position < BOARD_SIZE && column(position) !== 0; position += (BOARD_WIDTH + 1)) {
-	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
-		break;
-	    }
-	}
-	//southwest
-	for (let position = index + (BOARD_WIDTH - 1); position < BOARD_SIZE && column(position) !== BOARD_WIDTH - 1; position += (BOARD_WIDTH - 1)) {
-	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
-		break;
-	    }
-	}
-	//northwest
-	for (let position = index - (BOARD_WIDTH + 1); position >= 0 && column(position) !== BOARD_WIDTH - 1; position -= (BOARD_WIDTH + 1)) {
-	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
-		break;
-	    }
-	}
+    // highlightBishop(index) {
+    // 	const highlights = this.state.highlights.slice();
+    // 	//northeast
+    // 	for (let position = index - (BOARD_WIDTH - 1); position >= 0 && column(position) !== 0; position -= (BOARD_WIDTH - 1)) {
+    // 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
+    // 		break;
+    // 	    }
+    // 	}
+    // 	//southeast
+    // 	for (let position = index + (BOARD_WIDTH + 1); position < BOARD_SIZE && column(position) !== 0; position += (BOARD_WIDTH + 1)) {
+    // 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
+    // 		break;
+    // 	    }
+    // 	}
+    // 	//southwest
+    // 	for (let position = index + (BOARD_WIDTH - 1); position < BOARD_SIZE && column(position) !== BOARD_WIDTH - 1; position += (BOARD_WIDTH - 1)) {
+    // 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
+    // 		break;
+    // 	    }
+    // 	}
+    // 	//northwest
+    // 	for (let position = index - (BOARD_WIDTH + 1); position >= 0 && column(position) !== BOARD_WIDTH - 1; position -= (BOARD_WIDTH + 1)) {
+    // 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
+    // 		break;
+    // 	    }
+    // 	}
 
-	this.setState({
-	    highlights: highlights,
-	})
-	return highlights;
+    // 	this.setState({
+    // 	    highlights: highlights,
+    // 	})
+    // 	return highlights;
 
-    }
+    // }
 
 
-    highlightKnight(index) {
-	const highlights = this.state.highlights.slice();
-	// north
-	// up 2, right 1
-	this.highlightKnightSquare(index, index - 2 * BOARD_WIDTH + 1, highlights);
-	// up 2, left 1
-	this.highlightKnightSquare(index, index - 2 * BOARD_WIDTH - 1, highlights);
-	// right
-	// right 2, up 1
-	this.highlightKnightSquare(index, index + 2 + 1 * BOARD_WIDTH, highlights);
-	// right 2, down 1
-	this.highlightKnightSquare(index, index + 2 - 1 * BOARD_WIDTH, highlights);
-	// south
-	// south 2, right 1
-	this.highlightKnightSquare(index, index + 2 * BOARD_WIDTH + 1, highlights);
-	// south 2, left 1
-	this.highlightKnightSquare(index, index + 2 * BOARD_WIDTH - 1, highlights);
-	// left
-	// left 2, up 1
-	this.highlightKnightSquare(index, index - 2 + 1 * BOARD_WIDTH, highlights);
-	// left 2, down 1
-	this.highlightKnightSquare(index, index - 2 - 1 * BOARD_WIDTH, highlights);
+    // highlightKnight(index) {
+    // 	const highlights = this.state.highlights.slice();
+    // 	// north
+    // 	// up 2, right 1
+    // 	this.highlightKnightSquare(index, index - 2 * BOARD_WIDTH + 1, highlights);
+    // 	// up 2, left 1
+    // 	this.highlightKnightSquare(index, index - 2 * BOARD_WIDTH - 1, highlights);
+    // 	// right
+    // 	// right 2, up 1
+    // 	this.highlightKnightSquare(index, index + 2 + 1 * BOARD_WIDTH, highlights);
+    // 	// right 2, down 1
+    // 	this.highlightKnightSquare(index, index + 2 - 1 * BOARD_WIDTH, highlights);
+    // 	// south
+    // 	// south 2, right 1
+    // 	this.highlightKnightSquare(index, index + 2 * BOARD_WIDTH + 1, highlights);
+    // 	// south 2, left 1
+    // 	this.highlightKnightSquare(index, index + 2 * BOARD_WIDTH - 1, highlights);
+    // 	// left
+    // 	// left 2, up 1
+    // 	this.highlightKnightSquare(index, index - 2 + 1 * BOARD_WIDTH, highlights);
+    // 	// left 2, down 1
+    // 	this.highlightKnightSquare(index, index - 2 - 1 * BOARD_WIDTH, highlights);
 
-	this.setState({
-	    highlights: highlights,
-	})
+    // 	this.setState({
+    // 	    highlights: highlights,
+    // 	})
 
-    }
+    // }
 
-    highlightKnightSquare(index, newIndex, highlights) {
-	if (distance(index, newIndex) > 3) {
-	    return;
-	}
-	if(this.isOnBoard(newIndex)){
-	    this.highlightFriendOrFoeOrOpen(index, newIndex, highlights);
-	}
-    }
+    // highlightKnightSquare(index, newIndex, highlights) {
+    // 	if (distance(index, newIndex) > 3) {
+    // 	    return;
+    // 	}
+    // 	if(this.isOnBoard(newIndex)){
+    // 	    this.highlightFriendOrFoeOrOpen(index, newIndex, highlights);
+    // 	}
+    // }
 
     
-    highlightRook(index) {
-	const highlights = this.state.highlights.slice();
-	//north
-	for (let position = index - BOARD_WIDTH; position > 0; position -= BOARD_WIDTH) {
-	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
-		break;
-	    }
-	}
-	//south
-	for (let position = index + BOARD_WIDTH; position < BOARD_SIZE; position += BOARD_WIDTH) {
-	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
-		break;
-	    }
-	}
-	//east
-	for (let position = index + 1; column(position) !== 0; position++) {
-	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
-		break;
-	    }
-	}
-	//west
-	for (let position = index - 1; column(position) !== BOARD_WIDTH - 1; position--) {
-	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
-		break;
-	    }
-	}
+    // highlightRook(index) {
+    // 	const highlights = this.state.highlights.slice();
+    // 	//north
+    // 	for (let position = index - BOARD_WIDTH; position > 0; position -= BOARD_WIDTH) {
+    // 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
+    // 		break;
+    // 	    }
+    // 	}
+    // 	//south
+    // 	for (let position = index + BOARD_WIDTH; position < BOARD_SIZE; position += BOARD_WIDTH) {
+    // 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
+    // 		break;
+    // 	    }
+    // 	}
+    // 	//east
+    // 	for (let position = index + 1; column(position) !== 0; position++) {
+    // 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
+    // 		break;
+    // 	    }
+    // 	}
+    // 	//west
+    // 	for (let position = index - 1; column(position) !== BOARD_WIDTH - 1; position--) {
+    // 	    if(!this.highlightFriendOrFoeOrOpen(index, position, highlights)){
+    // 		break;
+    // 	    }
+    // 	}
 
-	this.setState({
-	    highlights: highlights,
-	})
-	return highlights;
-    }
+    // 	this.setState({
+    // 	    highlights: highlights,
+    // 	})
+    // 	return highlights;
+    // }
 
 
-    // make this fuction more efficient
-    // going to pass highlights by ref in the future
-    highlightQueen(index) {
-	let rookHighlights = this.highlightRook(index);
-	let bishopHighlights = this.highlightBishop(index);
-	let queenHighlights = rookHighlights.map(function (num, idx) {
-	    return num + bishopHighlights[idx];
-	});
-	this.setState({
-	    highlights: queenHighlights,
-	});
-    }
+    // // make this fuction more efficient
+    // // going to pass highlights by ref in the future
+    // highlightQueen(index) {
+    // 	let rookHighlights = this.highlightRook(index);
+    // 	let bishopHighlights = this.highlightBishop(index);
+    // 	let queenHighlights = rookHighlights.map(function (num, idx) {
+    // 	    return num + bishopHighlights[idx];
+    // 	});
+    // 	this.setState({
+    // 	    highlights: queenHighlights,
+    // 	});
+    // }
 
-    highlightKing(index) {
-	const highlights = this.state.highlights.slice();
-	//north
-	if(this.isOnBoard(index - 1 * BOARD_WIDTH)){
-	    this.highlightFriendOrFoeOrOpen(index, index - 1 * BOARD_WIDTH, highlights);
-	}
-	//northeast
-	if(this.isOnBoard(index - 1 * BOARD_WIDTH + 1) && column(index - 1 * BOARD_WIDTH + 1) !== 0){
-	    this.highlightFriendOrFoeOrOpen(index, index - 1 * BOARD_WIDTH + 1, highlights);
-	}
-	//east
-	if(column(index + 1) !== 0){
-	    this.highlightFriendOrFoeOrOpen(index, index + 1, highlights);
-	}
-	//southeast
-	if(this.isOnBoard(index + 1 * BOARD_WIDTH + 1) && column(index + 1 * BOARD_WIDTH + 1) !== 0){
-	    this.highlightFriendOrFoeOrOpen(index, index + 1 * BOARD_WIDTH + 1, highlights);
-	}
-	//south
-	if(this.isOnBoard(index + 1 * BOARD_WIDTH)){
-	    this.highlightFriendOrFoeOrOpen(index, index + 1 * BOARD_WIDTH, highlights);
-	}
-	//southwest
-	if(this.isOnBoard(index + 1 * BOARD_WIDTH - 1) && column(index + 1 * BOARD_WIDTH - 1) !== BOARD_WIDTH - 1){
-	    this.highlightFriendOrFoeOrOpen(index, index + 1 * BOARD_WIDTH - 1, highlights);
-	}
-	//west
-	if(column(index - 1) !== BOARD_WIDTH - 1){
-	    this.highlightFriendOrFoeOrOpen(index, index - 1, highlights);
-	}
-	//northwest
-	if(this.isOnBoard(index - 1 * BOARD_WIDTH - 1) && column(index - 1 * BOARD_WIDTH - 1) !== BOARD_WIDTH - 1){
-	    this.highlightFriendOrFoeOrOpen(index, index - 1 * BOARD_WIDTH - 1, highlights);
-	}
+    // highlightKing(index) {
+    // 	const highlights = this.state.highlights.slice();
+    // 	//north
+    // 	if(this.isOnBoard(index - 1 * BOARD_WIDTH)){
+    // 	    this.highlightFriendOrFoeOrOpen(index, index - 1 * BOARD_WIDTH, highlights);
+    // 	}
+    // 	//northeast
+    // 	if(this.isOnBoard(index - 1 * BOARD_WIDTH + 1) && column(index - 1 * BOARD_WIDTH + 1) !== 0){
+    // 	    this.highlightFriendOrFoeOrOpen(index, index - 1 * BOARD_WIDTH + 1, highlights);
+    // 	}
+    // 	//east
+    // 	if(column(index + 1) !== 0){
+    // 	    this.highlightFriendOrFoeOrOpen(index, index + 1, highlights);
+    // 	}
+    // 	//southeast
+    // 	if(this.isOnBoard(index + 1 * BOARD_WIDTH + 1) && column(index + 1 * BOARD_WIDTH + 1) !== 0){
+    // 	    this.highlightFriendOrFoeOrOpen(index, index + 1 * BOARD_WIDTH + 1, highlights);
+    // 	}
+    // 	//south
+    // 	if(this.isOnBoard(index + 1 * BOARD_WIDTH)){
+    // 	    this.highlightFriendOrFoeOrOpen(index, index + 1 * BOARD_WIDTH, highlights);
+    // 	}
+    // 	//southwest
+    // 	if(this.isOnBoard(index + 1 * BOARD_WIDTH - 1) && column(index + 1 * BOARD_WIDTH - 1) !== BOARD_WIDTH - 1){
+    // 	    this.highlightFriendOrFoeOrOpen(index, index + 1 * BOARD_WIDTH - 1, highlights);
+    // 	}
+    // 	//west
+    // 	if(column(index - 1) !== BOARD_WIDTH - 1){
+    // 	    this.highlightFriendOrFoeOrOpen(index, index - 1, highlights);
+    // 	}
+    // 	//northwest
+    // 	if(this.isOnBoard(index - 1 * BOARD_WIDTH - 1) && column(index - 1 * BOARD_WIDTH - 1) !== BOARD_WIDTH - 1){
+    // 	    this.highlightFriendOrFoeOrOpen(index, index - 1 * BOARD_WIDTH - 1, highlights);
+    // 	}
 
-	this.setState({
-	    highlights: highlights,
-	})
+    // 	this.setState({
+    // 	    highlights: highlights,
+    // 	})
 
-    }
+    // }
 
-    highlightFriendOrFoeOrOpen(index, newIndex, highlights) {
-	if (!this.hasPiece(newIndex)) {
-	    this.tryHighlight(newIndex, highlights, OPEN);
-	    return true;
-	} else if (this.hasFoePiece(index, newIndex)) {
-	    this.tryHighlight(newIndex, highlights, ATTACK);
-	    return false;
-	} else {
-	    return false;
-	}
-    }
+    // highlightFriendOrFoeOrOpen(index, newIndex, highlights) {
+    // 	if (!this.hasPiece(newIndex)) {
+    // 	    this.tryHighlight(newIndex, highlights, OPEN);
+    // 	    return true;
+    // 	} else if (this.hasFoePiece(index, newIndex)) {
+    // 	    this.tryHighlight(newIndex, highlights, ATTACK);
+    // 	    return false;
+    // 	} else {
+    // 	    return false;
+    // 	}
+    // }
 
-    tryHighlight(index, highlights, state) {
-	if(index <= 0 || index >= BOARD_SIZE) {
-	    return;
-	}
-	highlights[index] = state;
-    }
+    // tryHighlight(index, highlights, state) {
+    // 	if(index <= 0 || index >= BOARD_SIZE) {
+    // 	    return;
+    // 	}
+    // 	highlights[index] = state;
+    // }
 
     deselectPiece() {
 	this.setState({
@@ -495,17 +492,8 @@ export default class Game extends React.Component {
 	const piece = this.state.squares[this.state.selected]
 	if (this.state.active) {
 	    if (this.state.highlights[index] > 0) {
-		// if (this.isPromotion(index)) {
-		//     const squares = this.state.squares.slice();
-		//     this.deletePiece(this.state.selected, squares)
-		//     this.setPiece(index, Piece.Queen, piece.color, squares);
-		//     this.setState({
-		// 	squares: squares
-		//     })
-		// } else {
 		this.move(index);
 		this.nextTurn();
-		// }
 	    }
 	    this.deselectPiece();
 	} else {

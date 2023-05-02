@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Color } from '@/enums/Color';
+import { Color } from '@/models/Color';
 import wbishop from '@/media/white/Bishop.png';
 import bbishop from '@/media/black/Bishop.png';
 

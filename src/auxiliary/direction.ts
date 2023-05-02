@@ -1,5 +1,5 @@
 import { Color } from '@/models/Color';
-import { Direction } from '@/enums/Direction';
+import { Direction } from '@/models/Direction';
 
 /* 
  * Array helper functions

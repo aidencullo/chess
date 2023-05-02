@@ -2,7 +2,7 @@
 import React from 'react';
 
 // internal
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/enums/constants';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/constants/board';
 import { Piece } from '@/models/Piece';
 import { Color } from '@/models/Color';
 import { Move } from '@/models/Move';

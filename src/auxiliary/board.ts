@@ -1,4 +1,4 @@
-import { BOARD_SIZE } from '@/enums/constants';
+import { BOARD_SIZE } from '@/constants/board';
 
 /* 
  * board helper functions

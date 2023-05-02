@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Color } from '@/enums/Color';
+import { Color } from '@/models/Color';
 import wrook from '@/media/white/Rook.png';
 import brook from '@/media/black/Rook.png';
 
