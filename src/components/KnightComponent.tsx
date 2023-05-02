@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { Color } from '@/models/Color';
-import wknight from '@/media/white/Knight.png';
-import bknight from '@/media/black/Knight.png';
+import wknight from '@/media/white/KnightComponent.png';
+import bknight from '@/media/black/KnightComponent.png';
 
-export default class Knight extends React.Component {
+export default class KnightComponent extends React.Component {
 
     render() {
 	return (

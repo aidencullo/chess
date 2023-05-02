@@ -2,11 +2,12 @@
 import React from 'react';
 
 // internal
-import Square from '@components/Square';
+import SquareComponent from '@components/SquareComponent';
 import { row, column, distance } from '@/auxiliary/geometry';
 import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/constants/board';
 import { Piece } from '@models/Piece';
 import { Color } from '@models/Color';
+import { Square } from '@models/Square';
 import { arrayRange } from '@/auxiliary/array';
 
 /* 
@@ -24,21 +25,13 @@ export default class Game extends React.Component {
 	super(props);
 	this.state = {
 	    squares: new Array(64).fill(null),
-	    highlights: new Array(64).fill(null),
+	    highlights: new Array(64).fill(0),
 	    active: null,
-	    selected: null,
 	    turn: null,
 	    lastMove: null,
-	    check: null,
-	    kingWhite: null,
-	    kingBlack: null
 	};
 
 	this.setHighlights = this.setHighlights.bind(this);
-    }
-
-    componentDidMount() {
-	this.initializeBoard();
     }
 
     /*
@@ -54,46 +47,7 @@ export default class Game extends React.Component {
      * @function
      */
     initializeBoard() {
-//	this.setCustomBoard();
-//	this.initializeVars();
-    }
-
-    /**
-     * Initialize state with non-null values.
-     * @function
-     */
-    initializeVars(squares) {
-	this.setState({
-	    active: false,
-	    selected: -1,
-	    turn: Color.Black,
-	    lastMove: {
-		start: -1,
-		end: -1,
-		piece: null
-	    },
-	    check: false,
-	    kingWhite: 60,
-	    kingBlack: 4
-	});
-    }
-    
-    /**
-     * Non-standard chessboard setup.
-     * @function
-     */
-    setCustomBoard() {
-	const squares = this.state.squares.slice();
-	// empty
-	this.setPieces(arrayRange(0, 63, 1), Piece.NoPiece, Color.NoColor, squares);
-	
-	// custom pieces
-	this.setPiece(24, Piece.Pawn, Color.White, squares);
-	this.setPiece(9, Piece.Pawn, Color.Black, squares);
-
-	this.setState({
-	    squares: squares,
-	})
+	this.setStandardBoard();
     }
 
     /**
@@ -102,30 +56,9 @@ export default class Game extends React.Component {
      */
     setStandardBoard() {
 	const squares = this.state.squares.slice();
-	//black
-	this.setPiece(0, Piece.Rook, Color.Black, squares);
-	this.setPiece(1, Piece.Knight, Color.Black, squares);
-	this.setPiece(2, Piece.Bishop, Color.Black, squares);
-	this.setPiece(3, Piece.Queen, Color.Black, squares);
-	this.setPiece(4, Piece.King, Color.Black, squares);
-	this.setPiece(5, Piece.Bishop, Color.Black, squares);
-	this.setPiece(6, Piece.Knight, Color.Black, squares);
-	this.setPiece(7, Piece.Rook, Color.Black, squares);
-	this.setPieces(arrayRange(8, 15, 1), Piece.Pawn, Color.Black, squares);
 
 	// empty
-	this.setPieces(arrayRange(16, 47, 1), Piece.NoPiece, Color.NoColor, squares);
-
-	// white
-	this.setPieces(arrayRange(48, 55, 1), Piece.Pawn, Color.White, squares);
-	this.setPiece(56, Piece.Rook, Color.White, squares);
-	this.setPiece(57, Piece.Knight, Color.White, squares);
-	this.setPiece(58, Piece.Bishop, Color.White, squares);
-	this.setPiece(59, Piece.Queen, Color.White, squares);
-	this.setPiece(60, Piece.King, Color.White, squares);
-	this.setPiece(61, Piece.Bishop, Color.White, squares);
-	this.setPiece(62, Piece.Knight, Color.White, squares);
-	this.setPiece(63, Piece.Rook, Color.White, squares);
+	this.setPieces(squares, arrayRange(0, 63, 1), new Piece());
 
 	this.setState({
 	    squares: squares,
@@ -147,25 +80,15 @@ export default class Game extends React.Component {
     }
 
     setPiece(index, piece, color, squares) {
-	squares[index] = {
-	    color: color,
-	    piece: piece
-	};
+	squares[index] = new Square();
     }
 
-    setPieces(indexArray, piece, color, squares) {
+    setPieces(squares, indexArray, piece : Piece) {
 	indexArray.forEach((index) => {
-	    squares[index] = {
-		color: color,
-		piece: piece
-	    };
+	    squares[index] = new Square(piece)
 	});
     }
     
-    restart() {
-	this.initializeBoard();
-	this.clearHighlights();
-    }
 
     /*
      * CHECKING
@@ -489,18 +412,19 @@ export default class Game extends React.Component {
     /************************************************************************/
     
     handleClick(index) {
-	const piece = this.state.squares[this.state.selected]
-	if (this.state.active) {
-	    if (this.state.highlights[index] > 0) {
-		this.move(index);
-		this.nextTurn();
-	    }
-	    this.deselectPiece();
-	} else {
-	    if (this.isValidTurn(index)) {
-		this.highlightMoves(index);
-	    }
-	}
+	console.log("square clicked")
+	
+	// if (this.state.active) {
+	//     if (this.state.highlights[index] > 0) {
+	// 	this.move(index);
+	// 	this.nextTurn();
+	//     }
+	//     this.deselectPiece();
+	// } else {
+	//     if (this.isValidTurn(index)) {
+	// 	this.highlightMoves(index);
+	//     }
+	// }
     }
 
     /************************************************************************/
@@ -561,7 +485,7 @@ export default class Game extends React.Component {
 	    <div>
 		<div className="board">
 		    {this.state.squares.map((_, index) => (
-			<Square
+			<SquareComponent
 			    key={index}
 			    id={index}
 			    state={this.state.squares[index]}
@@ -575,7 +499,8 @@ export default class Game extends React.Component {
 			/>
 		    ))}
 		</div>
-		<button onClick={() => this.restart()}>Restart</button>
+		<button onClick={() => this.initializeBoard()}>Restart</button>
+		<button onClick={() => console.log(this.state.squares)}>log squares</button>
 	    </div>
 	);
     }

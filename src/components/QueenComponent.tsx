@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { Color } from '@/models/Color';
-import wqueen from '@/media/white/Queen.png';
-import bqueen from '@/media/black/Queen.png';
+import wqueen from '@/media/white/QueenComponent.png';
+import bqueen from '@/media/black/QueenComponent.png';
 
-export default class Queen extends React.Component {
+export default class QueenComponent extends React.Component {
 
     render() {
 	return (

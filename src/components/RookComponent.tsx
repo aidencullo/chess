@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { Color } from '@/models/Color';
-import wrook from '@/media/white/Rook.png';
-import brook from '@/media/black/Rook.png';
+import wrook from '@/media/white/RookComponent.png';
+import brook from '@/media/black/RookComponent.png';
 
-export default class Rook extends React.Component {
+export default class RookComponent extends React.Component {
 
     render() {
 	return (

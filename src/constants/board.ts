@@ -1,4 +1,4 @@
-import { Piece } from '@/enums/Piece';
+import { Piece } from '@models/Piece';
 
 // board measurements
 export const BOARD_WIDTH = 8;
@@ -9,7 +9,4 @@ export const OPEN = 1;
 export const ATTACK = 2;
 export const ENPASSANT = 3;
 
-export const EMPTY_SQUARE = {
-    color : null,
-    piece : Piece.NoPiece
-}
+export const EMPTY_SQUARE = {};
