@@ -1,15 +1,15 @@
-import { PieceType } from '@/models/PieceType';
-import { Color } from '@/models/Color';
+import { PieceType } from '@models/PieceType';
+import { Color } from '@models/Color';
 
 export class Piece {    
-    readonly color: Color;
+    _color: Color;
     _pieceType: PieceType;
     
     constructor(color : Color, pieceType : PieceType) {
-	this.color = color;
+	this._color = color;
 	this._pieceType = pieceType;
     }
-    
+
     get pieceType(): PieceType {
 	return this._pieceType;
     }
@@ -18,7 +18,15 @@ export class Piece {
 	this._pieceType = pieceType;
     }
 
-    isNoPiece() : boolean {
-	return this._pieceType as unknown as boolean;
+    get color(): Color {
+	return this._color;
+    }
+
+    set color(color: Color) {
+	this._color = color;
+    }
+
+    isWhite() {
+	return this._color.isWhite();
     }
 }

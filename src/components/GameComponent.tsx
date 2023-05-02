@@ -6,6 +6,7 @@ import SquareComponent from '@components/SquareComponent';
 import { row, column, distance } from '@/auxiliary/geometry';
 import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/constants/board';
 import { Piece } from '@models/Piece';
+import { PieceType } from '@models/PieceType';
 import { Color } from '@models/Color';
 import { Square } from '@models/Square';
 import { arrayRange } from '@/auxiliary/array';
@@ -24,7 +25,7 @@ export default class Game extends React.Component {
     constructor(props) {
 	super(props);
 	this.state = {
-	    squares: new Array(64).fill(null),
+	    squares: new Array(64).fill(new Square(new Piece(new Color("black"), new PieceType("pawn")))),
 	    highlights: new Array(64).fill(0),
 	    active: null,
 	    turn: null,
@@ -58,7 +59,7 @@ export default class Game extends React.Component {
 	const squares = this.state.squares.slice();
 
 	// empty
-	this.setPieces(squares, arrayRange(0, 63, 1), new Piece());
+	this.setPieces(squares, arrayRange(0, 63, 1));
 
 	this.setState({
 	    squares: squares,
@@ -79,7 +80,7 @@ export default class Game extends React.Component {
 	});
     }
 
-    setPiece(index, piece, color, squares) {
+    setPiece(squares, index, piece) {
 	squares[index] = new Square();
     }
 

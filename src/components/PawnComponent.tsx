@@ -144,15 +144,13 @@ export default class PawnComponent extends React.Component {
   //   }
     
     render() {
-	if (this.props.state) {
-	    return (
-		<>
-		    {
-			this.props.state.color.isWhite() ? <img className="piece" src={ wpawn } alt="white pawn chess piece" onClick={this.handleClick}/> :
-			    <img className="piece" src={ bpawn } alt="black pawn chess piece" onClick={this.handleClick}/>
-		    }
-		</>
-	    );
-	}
+	return (
+	    <>
+		{
+		    this.props.state.isWhite() ? <img className="piece" src={ wpawn } alt="white pawn chess piece" onClick={this.handleClick}/> :
+			<img className="piece" src={ bpawn } alt="black pawn chess piece" onClick={this.handleClick}/>
+		}
+	    </>
+	);
     }    
 }

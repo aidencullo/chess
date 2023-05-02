@@ -86,7 +86,6 @@ export default class SquareComponent extends React.Component {
     // }
 
     render() {
-		console.log(this.props.state)
 	return (
 	    <button
 	    className="square"
@@ -96,15 +95,18 @@ export default class SquareComponent extends React.Component {
 	    }}
 	    onClick={() => this.props.handleClick()}
 		>
+
+		{ this.props.state.piece && 
 		<PawnComponent
-	    state={this.props.state}
+	    state={this.props.state.piece}
 	    // highlights={this.props.highlights}
 	    // setHighlights={this.props.setHighlights}
 	    // index={this.props.id}
 	    // squares={this.props.squares}				   
 	    // turn={this.props.turn}
 	    // lastMove={this.props.lastMove}
-		/>
+		    />
+		    }
 	    </button>
 	);
     }
