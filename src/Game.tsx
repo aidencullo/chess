@@ -4,9 +4,9 @@ import React from 'react';
 // internal
 import Square from '@/components/Square';
 import { row, column, distance } from '@/auxiliary/geometry';
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/types/constants';
-import { Piece } from '@/types/Piece';
-import { Color } from '@/types/Color';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/enums/constants';
+import { Piece } from '@/enums/Piece';
+import { Color } from '@/enums/Color';
 import { arrayRange } from '@/auxiliary/array';
 
 /* 

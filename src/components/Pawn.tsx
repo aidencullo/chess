@@ -2,10 +2,13 @@
 import React from 'react';
 
 // internal
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/types/constants';
-import { Piece } from '@/types/Piece';
-import { Color } from '@/types/Color';
-import { isEqualMove } from '@/auxiliary/move';
+import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/enums/constants';
+import { Piece } from '@/enums/Piece';
+import { PieceI } from '@/models/PieceI';
+import { PieceTypeI } from '@/models/PieceTypeI';
+import { ColorI } from '@/models/ColorI';
+import { Color } from '@/enums/Color';
+import { MoveI, isEqualMove } from '@/models/MoveI';
 import { isOnBoard } from '@/auxiliary/board';
 import { getDirection } from '@/auxiliary/direction';
 import { row, column, distance } from '@/auxiliary/geometry';
@@ -110,23 +113,35 @@ export default class Pawn extends React.Component {
 	let pawn = this.props.squares[index];
 	let direction = getDirection(pawn.color);
 	
-	let targetMoveEast = {
-	    start: index + (direction * 2 * BOARD_WIDTH) + 1,
-	    end: index + 1,
-	    piece: {
-		color: pawn.color === Color.White ? Color.Black : Color.White,
-		piece: Piece.Pawn
-	    }
-	};
+	// let targetMoveEast : MoveI = {
+	//     start: index + (direction * 2 * BOARD_WIDTH) + 1,
+	//     end: index + 1,
+	//     piece: {
+	// 	color: pawn.color === Color.White ? Color.Black : Color.White,
+	// 	piece: Piece.Pawn
+	//     } as PieceI
+	// };
 
-	let targetMoveWest = {
-	    start: index + (direction * 2 * BOARD_WIDTH) - 1,
-	    end: index - 1,
-	    piece: {
-		color: pawn.color === Color.White ? Color.Black : Color.White,
-		piece: Piece.Pawn
-	    }
-	};
+	// let targetMoveWest : MoveI = {
+	//     start: index + (direction * 2 * BOARD_WIDTH) - 1,
+	//     end: index - 1,
+	//     piece: {
+	// 	color: pawn.color === Color.White ? Color.Black : Color.White,
+	// 	piece: Piece.Pawn
+	//     } as PieceI
+	// };
+
+	// let targetMoveEast : MoveI = {
+	//     start: 0,
+	//     end: 0,
+	//     piece: {
+	// 	color: {} as ColorI;
+	// 	type: {} as PieceTypeI;
+	//     } as PieceI
+	// };
+
+	let targetMoveEast : MoveI = {} as MoveI;
+	let targetMoveWest : MoveI = {} as MoveI;
 
 	if (isEqualMove(this.props.lastMove, targetMoveEast)) {
 	    let position = index + (direction * BOARD_WIDTH) + 1;

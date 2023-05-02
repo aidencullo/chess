@@ -4,9 +4,8 @@
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-export function arrayRange(start, stop, step) {
-    return Array.from(
-	{ length: (stop - start) / step + 1 },
-	(value, index) => start + index * step
-    );
+export function arrayRange(start : number, stop : number, step : number) {
+    return Array.from({
+	length: (stop - start) / step + 1
+    }, (_, index) => start + index * step);
 }

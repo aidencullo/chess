@@ -1,4 +1,4 @@
-import { Piece } from '@/types/Piece';
+import { Piece } from '@/enums/Piece';
 
 // board measurements
 export const BOARD_WIDTH = 8;

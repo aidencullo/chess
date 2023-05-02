@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react'
 
 import Pawn from '@/components/Pawn';
-import { Color } from '@/types/Color';
+import { Color } from '@/enums/Color';
 
 describe("Pawn test", () => {
     test("Black Pawn existence", () => {

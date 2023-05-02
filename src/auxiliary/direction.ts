@@ -1,5 +1,5 @@
-import { Color } from '@/types/Color';
-import { Direction } from '@/types/Direction';
+import { ColorI, isWhite } from '@/models/ColorI';
+import { Direction } from '@/enums/Direction';
 
 /* 
  * Array helper functions
@@ -7,6 +7,6 @@ import { Direction } from '@/types/Direction';
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-export function getDirection(color) {
-    return color === Color.White ? Direction.North : Direction.South;
+export function getDirection(color : ColorI) {
+    return isWhite(color) ? Direction.North : Direction.South;
 }

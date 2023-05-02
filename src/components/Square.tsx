@@ -8,8 +8,8 @@ import Bishop from '@/components/Bishop';
 import Rook from '@/components/Rook';
 import Queen from '@/components/Queen';
 import King from '@/components/King';
-import { BOARD_WIDTH } from '@/types/constants';
-import { Piece } from '@/types/Piece';
+import { BOARD_WIDTH } from '@/enums/constants';
+import { Piece } from '@/enums/Piece';
 
 var WHITE = "white";
 var OTHER = "brown";

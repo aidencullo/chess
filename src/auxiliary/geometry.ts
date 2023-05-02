@@ -1,4 +1,4 @@
-import { BOARD_WIDTH } from '@/types/constants';
+import { BOARD_WIDTH } from '@/enums/constants';
 
 /* 
  * Geometry helper functions
@@ -6,16 +6,16 @@ import { BOARD_WIDTH } from '@/types/constants';
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-export function distance(p1, p2) {
+export function distance(p1 : number, p2 : number) {
     const rd = Math.abs(row(p1) - row(p2));
     const cd = Math.abs(column(p1) - column(p2));
     return Math.sqrt(rd * rd + cd * cd);
 }
 
-export function row(index) {
+export function row(index : number) {
     return Math.floor(index / BOARD_WIDTH);
 }
 
-export function column(index) {
+export function column(index : number) {
     return index % BOARD_WIDTH;
 }
