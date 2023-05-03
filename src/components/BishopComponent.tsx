@@ -1,16 +1,16 @@
 import React from 'react';
 
-import { Color } from '@/models/Color';
+//import { Color } from '@/models/Color';
 import wbishop from '@/media/white/Bishop.png';
 import bbishop from '@/media/black/Bishop.png';
 
-export default class Bishop extends React.Component {
+export default class Bishop extends React.Component <{ color : string }> {
 
     render() {
 	return (
 	    <>
 		{
-		    this.props.state.color === Color.White ?
+		    this.props.color === "white" ?
 			<img className="piece" src={ wbishop } alt="white bishop chess piece" /> :
 		    <img className="piece" src={ bbishop} alt="black bishop chess piece" />
 		}

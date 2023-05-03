@@ -1,13 +1,12 @@
 export class Highlight {    
-    _options: string[] = ["open", "attack"];
+    _options: string[] = ["open", "attack", "unavailable"];
     _state: string;
 
-    constructor(name : string) {
-	console.log("highlight constructor")
-	if (name && !this._options.includes(name)) {
-	    throw new Error("Error on color construction, name parameter not an acceptable color")
+    constructor(state : string) {
+	if (!this._options.includes(state)) {
+	    throw new Error("Error on highlight construction, name parameter not an acceptable option")
 	}
-	this._state = name;
+	this._state = state;
     }
 }
 

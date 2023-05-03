@@ -3,21 +3,31 @@ import React from 'react';
 
 // internal
 import SquareComponent from '@components/SquareComponent';
-import { row, column, distance } from '@auxiliary/geometry';
-import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@constants/board';
+//import { row, column, distance } from '@auxiliary/geometry';
+//import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@constants/board';
 import { Piece } from '@models/Piece';
+import { Move } from '@models/Move';
 import { PieceType } from '@models/PieceType';
 import { Color } from '@models/Color';
 import { Square } from '@models/Square';
 import { Highlight } from '@models/Highlight';
-import { arrayRange } from '@auxiliary/array';
+//import { arrayRange } from '@auxiliary/array';
 
 /* 
  * Chess board and logic
  * 
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
-export default class Game extends React.Component {
+
+type Props = {}
+type State = {
+    squares: Square[],
+    highlights: Highlight[],
+    active: boolean,
+    lastMove: Move | null,
+}
+
+export default class Game extends React.Component<Props, State> {
 
     /*
      * COMPONENT CREATION
@@ -31,13 +41,12 @@ export default class Game extends React.Component {
      * Initialize all state variables to null.
      * @constructor
      */
-    constructor(props) {
+    constructor(props : Props) {
 	super(props);
 	this.state = {
-	    squares: new Array(64).fill(new Square()),
-	    highlights: new Array(64).fill(new Highlight()),
-	    active: null,
-	    turn: null,
+	    squares: new Array(64).fill(new Square(null)),
+	    highlights: new Array(64).fill(new Highlight("unavailable")),
+	    active: false,
 	    lastMove: null,
 	};
 
@@ -88,12 +97,12 @@ export default class Game extends React.Component {
 
     /************************************************************************/
 
-    setPiece(squares, index, piece) {
+    setPiece(squares : Square[], index : number, piece : Piece) {
 	squares[index] = new Square(piece);
     }
 
-    setPieces(squares, indexArray, piece : Piece) {
-	indexArray.forEach((index) => {
+    setPieces(squares : Square[], indexArray : number[], piece : Piece) {
+	indexArray.forEach((index : number) => {
 	    squares[index] = new Square(piece)
 	});
     }
@@ -112,21 +121,21 @@ export default class Game extends React.Component {
      * @function
      * @param {number} index - index in chessboard
      */
-    isValidTurn(index) {}    
+//    isValidTurn(index : number) {}    
     
     /**
      * Check if move is pawn promotion
      * @function
      * @param {number} index - index of square on chessboard
      */
-    isPromotion(index) {}
+//    isPromotion(index : number) {}
         
     /**
      * Check if square on row 0 or 8
      * @function
      * @param {number} index - index of square on chessboard
      */
-    isEndOfBoard(index) {}
+//    isEndOfBoard(index : number) {}
 
     /*
      * HIGHLIGHTING
@@ -141,7 +150,7 @@ export default class Game extends React.Component {
 	});
     }
 
-    // highlightMoves(index) {
+    // highlightMoves(index : number) {
     // 	const square = this.state.squares[index];
 	
     // 	switch (square.piece) {
@@ -171,7 +180,7 @@ export default class Game extends React.Component {
     // 	});
     // }
 
-    // highlightBishop(index) {
+    // highlightBishop(index : number) {
     // 	const highlights = this.state.highlights.slice();
     // 	//northeast
     // 	for (let position = index - (BOARD_WIDTH - 1); position >= 0 && column(position) !== 0; position -= (BOARD_WIDTH - 1)) {
@@ -206,7 +215,7 @@ export default class Game extends React.Component {
     // }
 
 
-    // highlightKnight(index) {
+    // highlightKnight(index : number) {
     // 	const highlights = this.state.highlights.slice();
     // 	// north
     // 	// up 2, right 1
@@ -235,7 +244,7 @@ export default class Game extends React.Component {
 
     // }
 
-    // highlightKnightSquare(index, newIndex, highlights) {
+    // highlightKnightSquare(index : number, newIndex, highlights) {
     // 	if (distance(index, newIndex) > 3) {
     // 	    return;
     // 	}
@@ -245,7 +254,7 @@ export default class Game extends React.Component {
     // }
 
     
-    // highlightRook(index) {
+    // highlightRook(index : number) {
     // 	const highlights = this.state.highlights.slice();
     // 	//north
     // 	for (let position = index - BOARD_WIDTH; position > 0; position -= BOARD_WIDTH) {
@@ -380,7 +389,7 @@ export default class Game extends React.Component {
 
     /************************************************************************/
     
-    handleClick(index) {
+    handleClick(index : number) {
 	console.log("square clicked")
 	
 	// if (this.state.active) {
@@ -406,7 +415,7 @@ export default class Game extends React.Component {
 
     /************************************************************************/
 
-    move(index) {
+    move(index : number) {
 	const squares = this.state.squares.slice();
 	
 	let lastMove = {
@@ -434,18 +443,18 @@ export default class Game extends React.Component {
 	});
     }
 
-    switchPieces(index, squares) {
+    switchPieces(index : number, squares : Square[]) {
 	let selected = squares[this.state.selected];
 	squares[this.state.selected] = squares[index];
 	squares[index] = selected;
     }
 
-    takePiece(index, squares) {
+    takePiece(index : number, squares : Square[]) {
 	squares[index] = squares[this.state.selected];
 	squares[this.state.selected] = EMPTY_SQUARE;
     }
 
-    deletePiece(index, squares) {
+    deletePiece(index : number, squares : Square[]) {
 	squares[index] = EMPTY_SQUARE;
     }
 
@@ -453,7 +462,7 @@ export default class Game extends React.Component {
 	return (
 	    <div>
 		<div className="board">
-		    {this.state.squares.map((_, index) => (
+		    {this.state.squares.map((_, index : number) => (
 			<SquareComponent
 			    key={index}
 			    id={index}
@@ -463,7 +472,6 @@ export default class Game extends React.Component {
 			    highlights={this.state.highlights}
 			    setHighlights={this.setHighlights}
 			    squares={this.state.squares}
-			    turn={this.state.turn}
 			    lastMove={this.state.lastMove}
 			/>
 		    ))}
