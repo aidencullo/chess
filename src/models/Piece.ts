@@ -6,6 +6,9 @@ export class Piece {
     _pieceType: PieceType;
     
     constructor(color : Color, pieceType : PieceType) {
+	if (color === undefined || pieceType === undefined) {
+	    throw new Error("Error on piece construction, color or pieceType object is undefined")
+	}
 	this._color = color;
 	this._pieceType = pieceType;
     }
