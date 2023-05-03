@@ -1,8 +1,8 @@
 export class Color {    
     _colors: string[] = ["white", "black"];
-    _name: String;
+    _name: string;
 
-    constructor(name : String) {
+    constructor(name : string) {
 	if (name === undefined) {
 	    throw new Error("Error on color construction, name parameter (string) undefined")
 	}

@@ -30,7 +30,7 @@
 	},
 	
     },
-    "include": ["src/**/*.ts", "tests/**/*.ts"],
+    "include": ["src"],
     "exclude": ["node_modules", ".vscode"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

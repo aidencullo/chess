@@ -1,5 +1,3 @@
-import { Piece } from '@models/Piece';
-
 // board measurements
 export const BOARD_WIDTH = 8;
 export const BOARD_SIZE = 64;

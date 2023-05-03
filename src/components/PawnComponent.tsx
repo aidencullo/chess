@@ -3,10 +3,10 @@ import React from 'react';
 
 // internal
 import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@/constants/board';
-import { Piece } from '@/models/Piece';
-import { Color } from '@/models/Color';
-import { Move } from '@/models/Move';
-import { isOnBoard } from '@/auxiliary/board';
+// import { Piece } from '@/models/Piece';
+// import { Color } from '@/models/Color';
+// import { Move } from '@/models/Move';
+// import { isOnBoard } from '@/auxiliary/board';
 import { getDirection } from '@/auxiliary/direction';
 import { row, column, distance } from '@/auxiliary/geometry';
 import wpawn from '@/media/white/Pawn.png';
