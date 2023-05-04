@@ -10,7 +10,7 @@ export default class QueenComponent extends React.Component {
 	return (
 	    <>
 		{
-		    this.props.state.color === Color.White ?
+		    this.props.piece.isWhite() ?
 			<img className="piece" src={ wqueen } alt="white queen chess piece" /> :
 		    <img className="piece" src={ bqueen } alt="black queen chess piece" />
 		}

@@ -10,4 +10,8 @@ export class Square {
     setEmpty() {
 	this._piece = null;
     }
+
+    getPiece() {
+	return this._piece;
+    }
 }

@@ -15,7 +15,7 @@ type Props = {
     highlights : Highlight[];
     setHighlights : (h : Highlight[]) => void;
     squares : Square[];
-    lastMove : Move;
+    lastMove : Move | null;
 }
 
 export default class SquareComponent extends React.Component<Props> {

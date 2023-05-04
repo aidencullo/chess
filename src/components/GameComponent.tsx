@@ -27,7 +27,9 @@ type State = {
     selected: number,
 }
 
-export default class Game extends React.Component<State> {
+type Props = {}
+
+export default class Game extends React.Component<Props, State> {
 
     /*
      * COMPONENT CREATION
@@ -41,7 +43,8 @@ export default class Game extends React.Component<State> {
      * Initialize all state variables to null.
      * @constructor
      */
-    constructor() {
+    constructor(props : Props) {
+	super(props);
 	this.state = {
 	    squares: new Array(64).fill(new Square(null)),
 	    highlights: new Array(64).fill(new Highlight("unavailable")),
@@ -418,7 +421,7 @@ export default class Game extends React.Component<State> {
     move(index : number) {
 	const squares = this.state.squares.slice();
 	
-	const lastMove = new Move(this.state.selected, index,this.state.squares[this.state.selected].piece)
+	const lastMove = new Move(this.state.selected, index,this.state.squares[this.state.selected].getPiece())
 
 	if (this.state.highlights[index].isOpen()) {
 	    this.switchPieces(index, squares);
