@@ -1,5 +1,5 @@
 export class Highlight {    
-    _options: string[] = ["open", "attack", "unavailable"];
+    _options: string[] = ["open", "attack", "unavailable", "enpassant"];
     _state: string;
 
     constructor(state : string) {
@@ -8,5 +8,23 @@ export class Highlight {
 	}
 	this._state = state;
     }
+
+    isOpen() {
+	return this._state === "open";
+    }
+    
+    isAttack() {
+	return this._state === "attack";
+    }
+    
+    isUnavailable() {
+	return this._state === "unavailable";
+    }
+    
+    isEnPassant() {
+	return this._state === "unavailable";
+    }
+
+
 }
 

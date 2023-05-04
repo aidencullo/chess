@@ -4,7 +4,7 @@ import React from 'react';
 // internal
 import SquareComponent from '@components/SquareComponent';
 //import { row, column, distance } from '@auxiliary/geometry';
-//import { BOARD_WIDTH, BOARD_SIZE, OPEN, ATTACK, ENPASSANT, EMPTY_SQUARE } from '@constants/board';
+import { BOARD_WIDTH } from '@constants/board';
 import { Piece } from '@models/Piece';
 import { Move } from '@models/Move';
 import { PieceType } from '@models/PieceType';
@@ -25,6 +25,7 @@ type State = {
     highlights: Highlight[],
     active: boolean,
     lastMove: Move | null,
+    selected: number,
 }
 
 export default class Game extends React.Component<Props, State> {
@@ -48,6 +49,7 @@ export default class Game extends React.Component<Props, State> {
 	    highlights: new Array(64).fill(new Highlight("unavailable")),
 	    active: false,
 	    lastMove: null,
+	    selected: -1,
 	};
 
 	this.setHighlights = this.setHighlights.bind(this);
@@ -146,7 +148,7 @@ export default class Game extends React.Component<Props, State> {
     /************************************************************************/
     clearHighlights() {
 	this.setState({
-	    highlights: new Array(64).fill(new Highlight()),
+	    highlights: new Array(64).fill(new Highlight("unavailable")),
 	});
     }
 
@@ -375,7 +377,7 @@ export default class Game extends React.Component<Props, State> {
      * @function
      * @param {Array<number>} highlights - updated array of highlighted squares
      */
-    setHighlights(highlights) {
+    setHighlights(highlights : Highlight[]) {
 	this.setState({
 	    highlights: highlights
 	})
@@ -390,7 +392,7 @@ export default class Game extends React.Component<Props, State> {
     /************************************************************************/
     
     handleClick(index : number) {
-	console.log("square clicked")
+	console.log("square clicked ", index)
 	
 	// if (this.state.active) {
 	//     if (this.state.highlights[index] > 0) {
@@ -418,17 +420,13 @@ export default class Game extends React.Component<Props, State> {
     move(index : number) {
 	const squares = this.state.squares.slice();
 	
-	let lastMove = {
-	    start: this.state.selected,
-	    end: index,
-	    piece: this.state.squares[this.state.selected]
-	}
+	const lastMove = new Move(this.state.selected, index,this.state.squares[this.state.selected])
 
-	if (this.state.highlights[index] === OPEN) {
+	if (this.state.highlights[index].isOpen()) {
 	    this.switchPieces(index, squares);
-	} else if (this.state.highlights[index] === ATTACK) {
+	} else if (this.state.highlights[index].isAttack()) {
 	    this.takePiece(index, squares);
-	} else if (this.state.highlights[index] === ENPASSANT) {
+	} else if (this.state.highlights[index].isEnPassant()) {
 	    this.switchPieces(index, squares);
 	    if (lastMove.start > lastMove.end) {
 		this.deletePiece(index + BOARD_WIDTH, squares);
