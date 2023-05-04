@@ -1,9 +1,13 @@
 import { Piece } from '@models/Piece';
 
 export class Square {
-    piece: Piece;
+    private _piece: Piece;
 
     constructor(piece : Piece | null) {
-	this.piece = piece;
+	this._piece = piece;
+    }
+
+    setEmpty() {
+	this._piece = null;
     }
 }

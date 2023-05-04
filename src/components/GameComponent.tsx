@@ -19,7 +19,6 @@ import { Highlight } from '@models/Highlight';
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-type Props = {}
 type State = {
     squares: Square[],
     highlights: Highlight[],
@@ -28,7 +27,7 @@ type State = {
     selected: number,
 }
 
-export default class Game extends React.Component<Props, State> {
+export default class Game extends React.Component<State> {
 
     /*
      * COMPONENT CREATION
@@ -42,8 +41,7 @@ export default class Game extends React.Component<Props, State> {
      * Initialize all state variables to null.
      * @constructor
      */
-    constructor(props : Props) {
-	super(props);
+    constructor() {
 	this.state = {
 	    squares: new Array(64).fill(new Square(null)),
 	    highlights: new Array(64).fill(new Highlight("unavailable")),
@@ -420,7 +418,7 @@ export default class Game extends React.Component<Props, State> {
     move(index : number) {
 	const squares = this.state.squares.slice();
 	
-	const lastMove = new Move(this.state.selected, index,this.state.squares[this.state.selected])
+	const lastMove = new Move(this.state.selected, index,this.state.squares[this.state.selected].piece)
 
 	if (this.state.highlights[index].isOpen()) {
 	    this.switchPieces(index, squares);
@@ -449,11 +447,11 @@ export default class Game extends React.Component<Props, State> {
 
     takePiece(index : number, squares : Square[]) {
 	squares[index] = squares[this.state.selected];
-	squares[this.state.selected] = EMPTY_SQUARE;
+	squares[this.state.selected].setEmpty();
     }
 
     deletePiece(index : number, squares : Square[]) {
-	squares[index] = EMPTY_SQUARE;
+	squares[index].setEmpty();
     }
 
     render() {
@@ -463,10 +461,7 @@ export default class Game extends React.Component<Props, State> {
 		    {this.state.squares.map((_, index : number) => (
 			<SquareComponent
 			    key={index}
-			    id={index}
-			    state={this.state.squares[index]}
-			    handleClick={() => this.handleClick(index)}
-			    highlight={this.state.highlights[index]}
+			    index={index}
 			    highlights={this.state.highlights}
 			    setHighlights={this.setHighlights}
 			    squares={this.state.squares}

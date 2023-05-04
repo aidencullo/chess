@@ -1,16 +1,20 @@
 import React from 'react';
 
-import { Color } from '@/models/Color';
+import { Piece } from '@/models/Piece';
 import wking from '@/media/white/King.png';
 import bking from '@/media/black/King.png';
 
-export default class King extends React.Component {
+type Props = {
+    piece : Piece;
+}
+
+export default class King extends React.Component<Props> {
 
     render() {
 	return (
 	    <>
 		{
-		    this.props.state.color === Color.White ?
+		    this.props.piece.isWhite() ?
 			<img className="piece" src={ wking } alt="white king chess piece" /> :
 		    <img className="piece" src={ bking } alt="black king chess piece" />
 		}

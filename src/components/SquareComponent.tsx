@@ -3,26 +3,30 @@ import React from 'react';
 
 // internal
 import PawnComponent from '@components/PawnComponent';
-import KnightComponent from '@components/KnightComponent';
-import BishopComponent from '@components/BishopComponent';
-import RookComponent from '@components/RookComponent';
-import QueenComponent from '@components/QueenComponent';
-import KingComponent from '@components/KingComponent';
 import { BOARD_WIDTH } from '@constants/board';
 import { Piece } from '@models/Piece';
+import { Move } from '@models/Move';
+import { Square } from '@models/Square';
+import { Highlight } from '@models/Highlight';
 
-var WHITE = "white";
-var OTHER = "brown";
+type Props = {
+    key : number;
+    index : number;
+    highlights : Highlight[];
+    setHighlights : (h : Highlight[]) => void;
+    squares : Square[];
+    lastMove : Move;
+}
 
-export default class SquareComponent extends React.Component {
+export default class SquareComponent extends React.Component<Props> {
 
     getColor() {
 	let index = this.props.id;
 	let row = Math.floor(index / BOARD_WIDTH);
 	if (row % 2 !== 0) {
-	    return index % 2 === 0 ? OTHER : WHITE;
+	    return index % 2 === 0 ? "brown" : "white";
 	} else {
-	    return index % 2 === 0 ? WHITE : OTHER;
+	    return index % 2 === 0 ? "white" : "brown";
 	}
     }
 
@@ -91,22 +95,16 @@ export default class SquareComponent extends React.Component {
 	    className="square"
 	    style={{ 
 		backgroundColor: this.getColor(),
-		borderColor: this.setColor(this.props.highlight),
+		borderColor: this.setColor(this.props.highlights[this.props.index]),
 	    }}
-	    onClick={() => this.props.handleClick()}
 		>
 
-		{ this.props.state.piece && 
-		<PawnComponent
-	    state={this.props.state.piece}
-	    // highlights={this.props.highlights}
-	    // setHighlights={this.props.setHighlights}
-	    // index={this.props.id}
-	    // squares={this.props.squares}				   
-	    // turn={this.props.turn}
-	    // lastMove={this.props.lastMove}
-		    />
-		    }
+		{ 
+		    this.props.squares[this.props.index].piece &&
+			<PawnComponent
+		    piece={this.props.squares[this.props.index].piece}
+			/>
+		}
 	    </button>
 	);
     }
