@@ -1,10 +1,15 @@
 import React from 'react';
 
-import { Color } from '@/models/Color';
+import { Piece } from '@/models/Piece';
 import wrook from '@/media/white/RookComponent.png';
 import brook from '@/media/black/RookComponent.png';
 
-export default class RookComponent extends React.Component {
+
+type Props = {
+    piece : Piece;
+}
+
+export default class RookComponent extends React.Component<Props> {
 
     render() {
 	return (

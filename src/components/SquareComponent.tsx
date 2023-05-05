@@ -4,7 +4,6 @@ import React from 'react';
 // internal
 import PawnComponent from '@components/PawnComponent';
 import { BOARD_WIDTH } from '@constants/board';
-import { Piece } from '@models/Piece';
 import { Move } from '@models/Move';
 import { Square } from '@models/Square';
 import { Highlight } from '@models/Highlight';
@@ -21,7 +20,7 @@ type Props = {
 export default class SquareComponent extends React.Component<Props> {
 
     getColor() {
-	let index = this.props.id;
+	let index = this.props.index;
 	let row = Math.floor(index / BOARD_WIDTH);
 	if (row % 2 !== 0) {
 	    return index % 2 === 0 ? "brown" : "white";
@@ -30,10 +29,10 @@ export default class SquareComponent extends React.Component<Props> {
 	}
     }
 
-    setColor(color) {
-	if(color === 1){
+    setHighlight(highlight : Highlight) {
+	if (highlight.isOpen() || highlight.isEnPassant()) {
 	    return "green";
-	} else if (color === 2) {
+	} else if (highlight.isAttack()) {
 	    return "red";
 	} else {
 	    return "transparent";
@@ -57,7 +56,7 @@ export default class SquareComponent extends React.Component<Props> {
     // 				   state={this.props.state}
     // 				   highlights={this.props.highlights}
     // 				   setHighlights={this.props.setHighlights}
-    // 				   index={this.props.id}
+    // 				   index={this.props.index}
     // 				   squares={this.props.squares}				   
     // 				   turn={this.props.turn}
     // 				   lastMove={this.props.lastMove}
@@ -100,9 +99,9 @@ export default class SquareComponent extends React.Component<Props> {
 		>
 
 		{ 
-		    this.props.squares[this.props.index].piece &&
+		    this.props.squares[this.props.index].getPiece() &&
 			<PawnComponent
-		    piece={this.props.squares[this.props.index].piece}
+		    piece={this.props.squares[this.props.index].getPiece()}
 			/>
 		}
 	    </button>

@@ -1,10 +1,14 @@
 import React from 'react';
 
-import { Color } from '@/models/Color';
+import { Piece } from '@/models/Piece';
 import wqueen from '@/media/white/QueenComponent.png';
 import bqueen from '@/media/black/QueenComponent.png';
 
-export default class QueenComponent extends React.Component {
+type Props = {
+    piece : Piece;
+}
+
+export default class QueenComponent extends React.Component<Props> {
 
     render() {
 	return (

@@ -420,8 +420,10 @@ export default class Game extends React.Component<Props, State> {
 
     move(index : number) {
 	const squares = this.state.squares.slice();
-	
-	const lastMove = new Move(this.state.selected, index,this.state.squares[this.state.selected].getPiece())
+
+	if (this.state.squares[this.state.selected].hasPiece()) {
+	    const lastMove = new Move(this.state.selected, index, this.state.squares[this.state.selected].getPiece())
+	}
 
 	if (this.state.highlights[index].isOpen()) {
 	    this.switchPieces(index, squares);

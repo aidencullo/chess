@@ -6,7 +6,7 @@ export class Move {
     _end: number;
     _piece: Piece;
     
-    constructor(start : number, end: number, piece : Piece) {
+    constructor(start : number, end: number, piece : Piece ) {
 	this._start = start;
 	this._end = end;
 	this._piece = piece;

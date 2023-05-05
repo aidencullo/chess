@@ -1,9 +1,11 @@
 import { Piece } from '@models/Piece';
 
-export class Square {
-    private _piece: Piece;
+type SquarePiece = Piece | null;
 
-    constructor(piece : Piece | null) {
+export class Square {
+    private _piece: SquarePiece;
+
+    constructor(piece : SquarePiece) {
 	this._piece = piece;
     }
 
@@ -11,7 +13,11 @@ export class Square {
 	this._piece = null;
     }
 
-    getPiece() {
+    getPiece() : SquarePiece {
 	return this._piece;
+    }
+
+    hasPiece() : boolean {
+	return !!this._piece ;
     }
 }

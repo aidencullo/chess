@@ -9,6 +9,7 @@ import React from 'react';
 // import { isOnBoard } from '@/auxiliary/board';
 //import { getDirection } from '@/auxiliary/direction';
 //import { row, column, distance } from '@/auxiliary/geometry';
+import { Piece } from '@models/Piece';
 import wpawn from '@/media/white/Pawn.png';
 import bpawn from '@/media/black/Pawn.png';
 
@@ -18,7 +19,9 @@ import bpawn from '@/media/black/Pawn.png';
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-type Props = {}
+type Props = {
+    piece : Piece;
+}
 
 export default class PawnComponent extends React.Component<Props> {
 
@@ -150,8 +153,8 @@ export default class PawnComponent extends React.Component<Props> {
 	return (
 	    <>
 		{
-		    this.props.state.isWhite() ? <img className="piece" src={ wpawn } alt="white pawn chess piece" onClick={this.handleClick}/> :
-			<img className="piece" src={ bpawn } alt="black pawn chess piece" onClick={this.handleClick}/>
+		    this.props.piece.isWhite() ? <img className="piece" src={ wpawn } alt="white pawn chess piece" /> :
+			<img className="piece" src={ bpawn } alt="black pawn chess piece" />
 		}
 	    </>
 	);

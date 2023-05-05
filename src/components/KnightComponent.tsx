@@ -1,10 +1,14 @@
 import React from 'react';
 
-import { Color } from '@/models/Color';
+import { Piece } from '@/models/Piece';
 import wknight from '@/media/white/KnightComponent.png';
 import bknight from '@/media/black/KnightComponent.png';
 
-export default class KnightComponent extends React.Component {
+type Props = {
+    piece : Piece;
+}
+
+export default class KnightComponent extends React.Component<Props> {
 
     render() {
 	return (
