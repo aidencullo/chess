@@ -1,6 +1,6 @@
 export class Color {    
-    _colors: string[] = ["white", "black"];
-    _name: string;
+    private _colors: string[] = ["white", "black"];
+    readonly _name: string;
 
     constructor(name : string) {
 	if (name === undefined) {
@@ -10,6 +10,10 @@ export class Color {
 	    throw new Error("Error on color construction, name parameter not an acceptable color")
 	}	
 	this._name = name;
+    }
+
+    getName() {
+	return this._name;
     }
 
     isWhite() : boolean {
