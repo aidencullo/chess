@@ -1,31 +1,27 @@
-import { Color } from '@models/Color';
+/*
+ * Unit test for Color object
+ *
+ */
 
-const testWhite = new Color("white");
-const testBlack = new Color("black");
+import { Color } from '@models/Color';
+import { test, expect } from 'vitest';
 
 test("test constructors with black or white string input", () => {
-    const testWhite = new Color("white");
-    const testBlack = new Color("black");
+    expect(() => new Color("white")).not.toThrowError();
+    expect(() => new Color("black")).not.toThrowError();
 })
 
 test("test color value after constructor", () => {
-    expect(testWhite.getName()).toBe("white");
-    expect(testBlack.getName()).toBe("black");
-    expect(testBlack.isWhite()).not.toBe(true);
+    const testWhite = new Color("white");
+    const testBlack = new Color("black");
+    expect(testBlack.isWhite()).toBe(false);
+    expect(testBlack.isBlack()).toBe(true);
     expect(testWhite.isWhite()).toBe(true);
-})
-
-test("constructor should throw error with novalue passed", () => {
-    expect(() => new Color()).toThrowError();
+    expect(testWhite.isBlack()).toBe(false);
 })
 
 test("constructor should throw error with incorrect value passed", () => {
     expect(() => new Color("")).toThrowError();
     expect(() => new Color("green")).toThrowError();
-    expect(() => new Color(true)).toThrowError();
-    expect(() => new Color(false)).toThrowError();
-    expect(() => new Color(1)).toThrowError();
-    expect(() => new Color(0)).toThrowError();
-    expect(() => new Color(NaN)).toThrowError();
     expect(() => new Color("WHITE")).toThrowError();
 })

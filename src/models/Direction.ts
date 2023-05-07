@@ -5,19 +5,21 @@
  */
 
 export class Direction {    
-    _value: String;
+    readonly _directions: string[] = ["north", "south"];
+    readonly _value: string;
 
-    constructor(value : String) {
+    constructor(value : string) {
+	if (!this._directions.includes(value)) {
+	    throw new Error("Error on direction construction, value parameter not an acceptable direction")
+	}	
 	this._value = value;
     }
 
-    get value(): String {
-	return this._value;
+    isNorth() : boolean {
+	return this._value === "north";
     }
 
-    set value(value: String) {
-	this._value = value;
+    isSouth() : boolean {
+	return this._value === "south";
     }
-    
 }
-

@@ -1,23 +1,28 @@
+/* 
+ * Color of piece
+ * 
+ * @author Aiden Cullo [https://github.com/aidencullo]
+ */
+
 export class Color {    
-    private _colors: string[] = ["white", "black"];
-    readonly _name: string;
+     _colors: string[] = ["white", "black"];
+    readonly _value: string;
 
-    constructor(name : string) {
-	if (name === undefined) {
-	    throw new Error("Error on color construction, name parameter (string) undefined")
-	}
-	if (!this._colors.includes(name)) {
-	    throw new Error("Error on color construction, name parameter not an acceptable color")
+    constructor(value : string) {
+	if (!this._colors.includes(value)) {
+	    throw new Error("Error on color construction, value parameter not an acceptable color")
 	}	
-	this._name = name;
-    }
-
-    getName() {
-	return this._name;
+	this._value = value;
     }
 
     isWhite() : boolean {
-	return this._name === "white";
+	return this._value === "white";
+    }
+
+    isBlack() : boolean {
+	return this._value === "black";
     }
 }
+
+
 

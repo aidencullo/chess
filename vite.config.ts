@@ -18,7 +18,4 @@ export default defineConfig({
 	    '@auxiliary': path.resolve(__dirname, './src/auxiliary'),
 	}
     },
-    test: {
-	globals: true,
-    }
 })
