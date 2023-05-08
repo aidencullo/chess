@@ -5,7 +5,7 @@
  */
 
 export class Color {    
-     _colors: string[] = ["white", "black"];
+    readonly _colors: string[] = ["white", "black"];
     readonly _value: string;
 
     constructor(value : string) {
@@ -17,10 +17,6 @@ export class Color {
 
     isWhite() : boolean {
 	return this._value === "white";
-    }
-
-    isBlack() : boolean {
-	return this._value === "black";
     }
 }
 

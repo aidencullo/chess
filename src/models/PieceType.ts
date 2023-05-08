@@ -16,6 +16,9 @@ export class PieceType {
     }
 
     promote(type: string) : void {
+	if (type === "pawn") {
+	    throw new Error("Error on PieceType promition, cannot promote to a pawn")
+	}
 	if (!this._types.includes(type)) {
 	    throw new Error("Error on PieceType promition, type parameter not an acceptable type")
 	}

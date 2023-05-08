@@ -5,8 +5,6 @@ import React from 'react';
 import SquareComponent from '@components/SquareComponent';
 import { Piece } from '@models/Piece';
 import { Move } from '@models/Move';
-import { PieceType } from '@models/PieceType';
-import { Color } from '@models/Color';
 import { Square } from '@models/Square';
 import { Highlight } from '@models/Highlight';
 
@@ -82,7 +80,7 @@ export default class Game extends React.Component<Props, State> {
 
 	// empty
 //	this.setPieces(squares, arrayRange(0, 63, 1));
-	this.setPiece(squares, 0, new Piece(new Color("black"), new PieceType("pawn")));
+	this.setPiece(squares, 0, new Piece("pawn", "black"));
 
 	this.setState({
 	    squares: squares,

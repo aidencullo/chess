@@ -14,8 +14,17 @@ export class Move {
     
     constructor(start : number, end: number, piece : Piece | null) {
 	if (piece === null) {
-	    throw new Error("trying to construct move object with null piece object")
+	    throw new Error("trying to construct move object with null piece object");
 	}
+	if (start === end) {
+	    throw new Error("start square and end square of move equal");
+	}	    
+	if (start < 0 || start > 63) {
+	    throw new Error("start square of move not on board");
+	}	    
+	if (end < 0 || end > 63) {
+	    throw new Error("end square of move not on board");
+	}	    
 
 	this._start = start;
 	this._end = end;

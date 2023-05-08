@@ -15,19 +15,19 @@ export class Highlight {
 	this._value = value;
     }
 
-    isOpen() {
+    isOpen() : boolean {
 	return this._value === "open";
     }
     
-    isAttack() {
+    isAttack() : boolean {
 	return this._value === "attack";
     }
     
-    isClosed() {
+    isClosed() : boolean {
 	return this._value === "closed";
     }
     
-    isEnPassant() {
+    isEnPassant() : boolean {
 	return this._value === "enpassant";
     }
 }

@@ -15,9 +15,7 @@ test("test color value after constructor", () => {
     const testWhite = new Color("white");
     const testBlack = new Color("black");
     expect(testBlack.isWhite()).toBe(false);
-    expect(testBlack.isBlack()).toBe(true);
     expect(testWhite.isWhite()).toBe(true);
-    expect(testWhite.isBlack()).toBe(false);
 })
 
 test("constructor should throw error with incorrect value passed", () => {
