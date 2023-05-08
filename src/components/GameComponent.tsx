@@ -3,15 +3,12 @@ import React from 'react';
 
 // internal
 import SquareComponent from '@components/SquareComponent';
-//import { row, column, distance } from '@auxiliary/geometry';
-import { BOARD_WIDTH } from '@constants/board';
 import { Piece } from '@models/Piece';
 import { Move } from '@models/Move';
 import { PieceType } from '@models/PieceType';
 import { Color } from '@models/Color';
 import { Square } from '@models/Square';
 import { Highlight } from '@models/Highlight';
-//import { arrayRange } from '@auxiliary/array';
 
 /* 
  * Chess board and logic
@@ -431,12 +428,7 @@ export default class Game extends React.Component<Props, State> {
 	} else if (this.state.highlights[index].isAttack()) {
 	    this.takePiece(index, squares);
 	} else if (this.state.highlights[index].isEnPassant()) {
-	    this.switchPieces(index, squares);
-	    if (lastMove.start > lastMove.end) {
-		this.deletePiece(index + BOARD_WIDTH, squares);
-	    } else {
-		this.deletePiece(index - BOARD_WIDTH, squares);
-	    }
+	    //unimplemented
 	}
 	
 	this.setState({

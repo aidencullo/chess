@@ -1,13 +1,18 @@
+/* 
+ * Movement of piece
+ * 
+ * @author Aiden Cullo [https://github.com/aidencullo]
+ */
+
 import { Piece } from '@/models/Piece';
 import _ from 'lodash';
 
 export class Move {    
-    _start: number;
-    _end: number;
-    _piece: Piece;
+    readonly _start: number;
+    readonly _end: number;
+    readonly _piece: Piece;
     
     constructor(start : number, end: number, piece : Piece | null) {
-	
 	if (piece === null) {
 	    throw new Error("trying to construct move object with null piece object")
 	}
@@ -16,38 +21,8 @@ export class Move {
 	this._end = end;
 	this._piece = piece;
     }
-   
-    //getters and setters
-    
-    get piece(): Piece {
-	return this._piece;
-    }
-
-    set piece(piece: Piece) {
-	this._piece = piece;
-    }
-    
-    get start(): number {
-	return this._start;
-    }
-
-    set start(start: number) {
-	this._start = start;
-    }
-    
-    get end(): number {
-	return this._end;
-    }
-
-    set end(end: number) {
-	this._end = end;
-    }
-
-    //comparisons
-
-    isEqualTo(move : Move) : boolean {
-	return _.isEqual(this, move);
-    }
-    
 }
 
+export function isEqualMove(m1 : Move, m2 : Move) : boolean {
+    return _.isEqual(m1, m2);
+}

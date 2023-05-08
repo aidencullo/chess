@@ -1,3 +1,9 @@
+/*
+ * React component for a bishop piece
+ *
+ * @author Aiden Cullo [https://github.com/aidencullo]
+ */
+
 import React from 'react';
 
 import { Piece } from '@/models/Piece';

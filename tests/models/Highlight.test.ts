@@ -1,10 +1,10 @@
 /*
  * Unit test for Highlight object
  *
+ * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
 import { Highlight } from '@models/Highlight';
-import { test, expect } from 'vitest';
 
 test("test constructors with north or south string input", () => {
     expect(() => new Highlight("open")).not.toThrowError();

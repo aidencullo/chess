@@ -1,10 +1,10 @@
 /*
  * Unit test for Color object
  *
+ * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
 import { Color } from '@models/Color';
-import { test, expect } from 'vitest';
 
 test("test constructors with black or white string input", () => {
     expect(() => new Color("white")).not.toThrowError();

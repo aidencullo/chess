@@ -30,6 +30,9 @@
 	    "@constants/*": ["src/constants/*"],
 	    "@auxiliary/*": ["src/auxiliary/*"],
 	},
+
+	/* add vitest testing globals */
+	"types": ["vitest/globals"]
 	
     },
     "include": ["src", "tests"],

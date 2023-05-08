@@ -1,10 +1,10 @@
 /*
  * Unit test for Direction object
  *
+ * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
 import { Direction } from '@models/Direction';
-import { test, expect } from 'vitest';
 
 test("test constructors with north or south string input", () => {
     expect(() => new Direction("north")).not.toThrowError();
