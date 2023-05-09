@@ -2,7 +2,9 @@
 import React from 'react';
 
 // internal
+import { Highlight } from '@models/modular/Highlight';
 import { Pawn } from '@models/composite/pieces/Pawn';
+import { BOARD_WIDTH } from '@constants/board';
 import wpawn from '@/media/white/Pawn.png';
 import bpawn from '@/media/black/Pawn.png';
 
@@ -16,7 +18,11 @@ type Props = {
     pawn : Pawn;
 }
 
-export default class PawnComponent extends React.Component<Props> {
+type State = {
+    pawn : Pawn;
+}
+
+export default class PawnComponent extends React.Component<Props, State> {
 
     constructor(props : Props){
 	super(props);
@@ -55,47 +61,47 @@ export default class PawnComponent extends React.Component<Props> {
     // 	this.props.setHighlights(highlights);
     // }
 
-    highlightMoves(index : number, highlights : Highlights[]) {
-	const position = this.state.square.piece.advanceOne();
+    highlightMoves(index : number, highlights : Highlight[]) {
+	let position = this.state.pawn.advanceOne();
 	
 	if (this.isValidMove(position)) {
-	    highlights[position] = 1;
-	    position = this.state.square.piece.advanceTwo();
+	    highlights[position].setOpen();
+	    position = this.state.pawn.advanceTwo();
 	    if (this.hasMoved(index)) {
 		return;
 	    }
 	    if (this.isValidMove(position)) {
-		    highlights[position] = 1;
+		highlights[position].setOpen();
 	    }
 	}
     }
 
-    isValidMove(index) {
-	return isOnBoard(index) && !this.hasPiece(index);
+    isValidMove(index : number) {
+	return this.isOnBoard(index) && !this.hasPiece(index);
     }    
 
-    isOnBoard(index) {
+    isOnBoard(index : number) {
 	return index > 0 && index < 63;
-    }    
-
-    // onWestEdge(index) {
+    }   
+ 
+    // onWestEdge(index : number) {
     // 	return column(index) === 0;
     // }    
 
-    // onEastEdge(index) {
+    // onEastEdge(index : number) {
     // 	return column(index) === BOARD_WIDTH - 1;
     // }    
 
-    hasmoved(index) {
-	return false;
-	// if (this.props.squares[index].color === color.white) {
-	//     return math.floor(index/board_width) !== 6;
-	// }
-	// return math.floor(index/board_width) !== 1;
+    hasMoved(index : number) {
+	if (this.state.pawn.isWhite()) {
+	    return Math.floor(index / BOARD_WIDTH) !== 6;
+	}
+	return Math.floor(index / BOARD_WIDTH) !== 1;
     }
 
-    hasPiece(index) {
-	return this.props.squares[index].piece.isNoPiece();
+    hasPiece(index : number) {
+	return index > 0;
+	// return this.props.squares[index].piece.isNoPiece();
     }    
 	
     // highlightAttacks(currentIndex, highlights) {

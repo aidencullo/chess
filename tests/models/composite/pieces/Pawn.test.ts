@@ -24,6 +24,20 @@ test("test type value after constructor", () => {
     
 })
 
+test("test movement", () => {
+
+    const pawn = new Pawn("white", 0);
+    
+    expect(pawn.advanceOne()).toBe(8);    
+    expect(pawn.advanceTwo()).toBe(16);    
+
+    const otherPawn = new Pawn("white", 1);
+    
+    expect(otherPawn.advanceOne()).toBe(9);    
+    expect(otherPawn.advanceTwo()).toBe(17);
+    
+})
+
 test("constructor should throw error with incorrect value passed", () => {
     
     expect(() => new Pawn("green", 0)).toThrowError();

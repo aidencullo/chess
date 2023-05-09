@@ -30,5 +30,21 @@ export class Highlight {
     isEnPassant() : boolean {
 	return this._value === "enpassant";
     }
+
+    setOpen() : void {
+	this._value = "open";
+    }    
+        
+    setAttack() : void {
+	this._value = "attack";
+    }
+    
+    setClosed() : void {
+	this._value = "closed";
+    }
+    
+    setEnPassant() : void {
+	this._value = "enpassant";
+    }
 }
 
