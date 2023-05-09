@@ -5,13 +5,14 @@
  */
 
 import { Square } from '@models/composite/Square';
-import { Piece } from '@models/composite/Piece';
+import { Pawn } from '@models/composite/pieces/Pawn';
+import { King } from '@models/composite/pieces/King';
+import { Knight } from '@models/composite/pieces/Knight';
 
 test("test constructors with acceptable input", () => {
-
-    const pawnWhite = new Piece("pawn", "white");
-    const pawnBlack = new Piece("pawn", "black");
-    const king = new Piece("king", "white");
+    const pawnWhite = new Pawn("white", 0);
+    const pawnBlack = new Pawn("black", 0);
+    const king = new King("white", 0);
     
     expect(() => new Square(null)).not.toThrowError();
     expect(() => new Square(pawnWhite)).not.toThrowError();
@@ -22,8 +23,8 @@ test("test constructors with acceptable input", () => {
 
 test("test value after constructor", () => {
 
-    const pawn = new Piece("pawn", "black");
-    const knight = new Piece("pawn", "black");
+    const pawn = new Pawn("black", 0);
+    const knight = new Knight("black", 0);
     const pawnSquare = new Square(pawn);
     
     expect(pawnSquare.hasPiece()).toBe(true);

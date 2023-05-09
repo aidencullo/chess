@@ -35,6 +35,7 @@ test("test type value after constructor", () => {
     expect(standardBoard.getPiece(4)).toStrictEqual(new King("black", 4));
     expect(standardBoard.getPiece(5)).toStrictEqual(new Bishop("black", 5));
     expect(standardBoard.getPiece(8)).toStrictEqual(new Pawn("black", 8));
+    expect(standardBoard.getPiece(66)).toThrowError();
 
 })
 

@@ -20,9 +20,6 @@ export class Board {
     private _squares : Square[];
 
     constructor(type : string) {
-	if (!this._types.includes(type)) {
-	    throw new Error("Error on board construction, value parameter not an acceptable board type")
-	}
 	switch(type){
 	    case "empty":
 		this._squares = new Array(64).fill(new Square(null))

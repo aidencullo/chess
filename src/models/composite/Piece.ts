@@ -7,13 +7,18 @@
 import { PieceType } from '@models/modular/PieceType';
 import { Color } from '@models/modular/Color';
 
-export class Piece {    
+export abstract class Piece {    
+    protected _index: number;
     private _color: Color;
     private _pieceType: PieceType;
     
-    constructor(pieceType : string, color : string) {
+    constructor(pieceType : string, color : string, index : number) {
 	this._color = new Color(color);
 	this._pieceType = new PieceType(pieceType);
+	if (index < 0 || index > 63) {
+	    throw new Error("piece instantiated with invalid index");
+	}
+	this._index = index;
     }
 
     isWhite() {
@@ -43,5 +48,5 @@ export class Piece {
     isKing() {
 	return this._pieceType.isKing();
     }
-    
+
 }

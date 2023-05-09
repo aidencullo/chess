@@ -5,12 +5,13 @@
  */
 
 import { Move, isEqualMove } from '@models/composite/Move';
-import { Piece } from '@models/composite/Piece';
+import { Pawn } from '@models/composite/pieces/Pawn';
+import { Knight } from '@models/composite/pieces/Knight';
 
 test("test constructors with acceptable string input", () => {
 
-    const pawn = new Piece("pawn", "white")
-    const knight = new Piece("knight", "black")
+    const pawn = new Pawn("white", 0)
+    const knight = new Knight("black", 0)
     
     expect(() => new Move(0, 1, pawn)).not.toThrowError();
     expect(() => new Move(0, 4, pawn)).not.toThrowError();
@@ -24,7 +25,7 @@ test("test constructors with acceptable string input", () => {
 
 test("constructor should throw error with incorrect value passed", () => {
     
-    const pawn = new Piece("pawn", "white")
+    const pawn = new Pawn("white", 0)
 
     expect(() => new Move(1, -1, pawn)).toThrowError();
     expect(() => new Move(-1, 0, pawn)).toThrowError();
@@ -39,8 +40,8 @@ test("constructor should throw error with incorrect value passed", () => {
 
 test("equality of moves", () => {
     
-    const pawn = new Piece("pawn", "white");
-    const knight = new Piece("knight", "white");
+    const pawn = new Pawn("white", 0);
+    const knight = new Knight("white", 0);
 
     expect(isEqualMove(new Move(0, 1, pawn), new Move(0, 1, pawn))).toBe(true);
     expect(isEqualMove(new Move(0, 2, pawn), new Move(0, 1, pawn))).toBe(false);
