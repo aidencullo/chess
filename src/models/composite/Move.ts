@@ -4,7 +4,7 @@
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-import { Piece } from '@/models/Piece';
+import { Piece } from '@models/composite/Piece';
 import _ from 'lodash';
 
 export class Move {    

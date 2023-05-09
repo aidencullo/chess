@@ -4,8 +4,8 @@
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-import { Square } from '@models/Square';
-import { Piece } from '@models/Piece';
+import { Square } from '@models/composite/Square';
+import { Piece } from '@models/composite/Piece';
 
 test("test constructors with acceptable input", () => {
 

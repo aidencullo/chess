@@ -4,7 +4,7 @@
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-import { PieceType } from '@models/PieceType';
+import { PieceType } from '@models/modular/PieceType';
 
 test("test constructors with acceptable string input", () => {
     

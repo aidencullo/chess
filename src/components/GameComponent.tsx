@@ -3,10 +3,10 @@ import React from 'react';
 
 // internal
 import SquareComponent from '@components/SquareComponent';
-import { Piece } from '@models/Piece';
-import { Move } from '@models/Move';
-import { Square } from '@models/Square';
-import { Highlight } from '@models/Highlight';
+import { Piece } from '@models/composite/Piece';
+import { Move } from '@models/composite/Move';
+import { Square } from '@models/composite/Square';
+import { Highlight } from '@models/modular/Highlight';
 
 /* 
  * Chess board and logic
@@ -42,7 +42,7 @@ export default class Game extends React.Component<Props, State> {
 	super(props);
 	this.state = {
 	    squares: new Array(64).fill(new Square(null)),
-	    highlights: new Array(64).fill(new Highlight("unavailable")),
+	    highlights: new Array(64).fill(new Highlight("closed")),
 	    active: false,
 	    lastMove: null,
 	    selected: -1,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Piece } from '@/models/Piece';
+import { Piece } from '@/models/composite/Piece';
 import wqueen from '@/media/white/QueenComponent.png';
 import bqueen from '@/media/black/QueenComponent.png';
 

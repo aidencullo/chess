@@ -5,11 +5,11 @@
  */
 
 export class PieceType {    
-    readonly _types: string[] = ["pawn", "knight", "bishop", "rook", "queen", "king"];
+    readonly _models: string[] = ["pawn", "knight", "bishop", "rook", "queen", "king"];
     private _type: string;
     
     constructor(type : string) {
-	if (!this._types.includes(type)) {
+	if (!this._models.includes(type)) {
 	    throw new Error("Error on PieceType construction, type parameter not an acceptable type")
 	}
 	this._type = type;
@@ -19,7 +19,7 @@ export class PieceType {
 	if (type === "pawn") {
 	    throw new Error("Error on PieceType promition, cannot promote to a pawn")
 	}
-	if (!this._types.includes(type)) {
+	if (!this._models.includes(type)) {
 	    throw new Error("Error on PieceType promition, type parameter not an acceptable type")
 	}
 	this._type = type;

@@ -4,7 +4,7 @@
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-import { Highlight } from '@models/Highlight';
+import { Highlight } from '@models/modular/Highlight';
 
 test("test constructors with north or south string input", () => {
     expect(() => new Highlight("open")).not.toThrowError();

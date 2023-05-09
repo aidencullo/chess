@@ -4,9 +4,9 @@ import React from 'react';
 // internal
 import PawnComponent from '@components/PawnComponent';
 import { BOARD_WIDTH } from '@constants/board';
-import { Move } from '@models/Move';
-import { Square } from '@models/Square';
-import { Highlight } from '@models/Highlight';
+import { Move } from '@models/composite/Move';
+import { Square } from '@models/composite/Square';
+import { Highlight } from '@models/modular/Highlight';
 
 type Props = {
     key : number;

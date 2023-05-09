@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Piece } from '@/models/Piece';
+import { Piece } from '@/models/composite/Piece';
 import wrook from '@/media/white/RookComponent.png';
 import brook from '@/media/black/RookComponent.png';
 

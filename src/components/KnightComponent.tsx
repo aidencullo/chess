@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Piece } from '@/models/Piece';
+import { Piece } from '@/models/composite/Piece';
 import wknight from '@/media/white/KnightComponent.png';
 import bknight from '@/media/black/KnightComponent.png';
 

@@ -4,8 +4,8 @@
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-import { PieceType } from '@models/PieceType';
-import { Color } from '@models/Color';
+import { PieceType } from '@models/modular/PieceType';
+import { Color } from '@models/modular/Color';
 
 export class Piece {    
     private _color: Color;

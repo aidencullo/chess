@@ -4,7 +4,7 @@
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-import { Direction } from '@models/Direction';
+import { Direction } from '@models/modular/Direction';
 
 test("test constructors with north or south string input", () => {
     expect(() => new Direction("north")).not.toThrowError();

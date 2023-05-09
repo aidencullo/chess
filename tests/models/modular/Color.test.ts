@@ -4,7 +4,7 @@
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-import { Color } from '@models/Color';
+import { Color } from '@models/modular/Color';
 
 test("test constructors with black or white string input", () => {
     expect(() => new Color("white")).not.toThrowError();

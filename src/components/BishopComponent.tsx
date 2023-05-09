@@ -6,7 +6,7 @@
 
 import React from 'react';
 
-import { Piece } from '@/models/Piece';
+import { Piece } from '@/models/composite/Piece';
 import wbishop from '@/media/white/Bishop.png';
 import bbishop from '@/media/black/Bishop.png';
 

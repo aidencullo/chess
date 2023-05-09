@@ -4,8 +4,8 @@
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
-import { Move, isEqualMove } from '@models/Move';
-import { Piece } from '@models/Piece';
+import { Move, isEqualMove } from '@models/composite/Move';
+import { Piece } from '@models/composite/Piece';
 
 test("test constructors with acceptable string input", () => {
 
