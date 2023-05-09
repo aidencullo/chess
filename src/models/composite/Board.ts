@@ -7,9 +7,13 @@
 import { Square } from '@models/composite/Square';
 
 export class Board {
+    readonly _types: string[] = ["standard", "empty"];
     private _squares : Square[];
 
-    constructor() {
+    constructor(type : string) {
+	if (!this._types.includes(type)) {
+	    throw new Error("Error on board construction, value parameter not an acceptable board type")
+	}	
 	this._squares = new Array(64).fill(new Square(null))
     }
 

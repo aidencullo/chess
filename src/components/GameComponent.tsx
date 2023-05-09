@@ -36,7 +36,7 @@ export default class Game extends React.Component<Props, State> {
     constructor(props : Props) {
 	super(props);
 	this.state = {
-	    board: new Board(),
+	    board: new Board("empty"),
 	};
     }
 
@@ -56,16 +56,20 @@ export default class Game extends React.Component<Props, State> {
 	return (
 	    <div>
 		<div className="board">
-		{this.state.board.getSquares().map((square : Square, index : number) => (
-			<SquareComponent
-			    key={index}
-			highlight={new Highlight("open")}
+		{
+		    this.state.board.getSquares().map((square : Square, index : number) => (
+		    <SquareComponent
+		    key={index}
+		    index={index}
+		    highlight={new Highlight("closed")}
 			square={square}
 			/>
-		    ))}
+		    ))
+		}
 		</div>
 		<button onClick={() => this.initializeBoard()}>Restart</button>
 	    </div>
 	);
     }
+    
 }

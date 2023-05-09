@@ -9,7 +9,7 @@ import { Square } from '@models/composite/Square';
 import { Highlight } from '@models/modular/Highlight';
 
 type Props = {
-    key : number;
+    index : number;
     highlight : Highlight;
     square : Square;
 }
@@ -26,7 +26,7 @@ export default class SquareComponent extends React.Component<Props, State> {
 	super(props);
 	this.state = {
 	    highlight : this.props.highlight,
-	    index : this.props.key,
+	    index : this.props.index,
 	    square : this.props.square,
 	}
     }
