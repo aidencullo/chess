@@ -58,12 +58,12 @@ export default class Game extends React.Component<Props, State> {
 		<div className="board">
 		{
 		    this.state.board.getSquares().map((square : Square, index : number) => (
-		    <SquareComponent
-		    key={index}
-		    index={index}
-		    highlight={new Highlight("closed")}
+			<SquareComponent
+			key={index}
+			index={index}
+			highlight={new Highlight("closed")}
 			square={square}
-			/>
+			    />
 		    ))
 		}
 		</div>

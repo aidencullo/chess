@@ -1,25 +1,35 @@
+// external
 import React from 'react';
 
-import { Piece } from '@/models/composite/Piece';
-import wrook from '@/media/white/RookComponent.png';
-import brook from '@/media/black/RookComponent.png';
+// internal
+import { Piece } from '@models/composite/Piece';
+import wrook from '@/media/white/Rook.png';
+import brook from '@/media/black/Rook.png';
 
+/* 
+ * RookComponent chess movement logic
+ * 
+ * @author Aiden Cullo [https://github.com/aidencullo]
+ */
 
 type Props = {
-    piece : Piece;
+    piece : Piece | null;
 }
 
 export default class RookComponent extends React.Component<Props> {
 
+    constructor(props : Props){
+	super(props);
+    }
+    
     render() {
 	return (
 	    <>
 		{
-		    this.props.piece.isWhite() ?
-			<img className="piece" src={ wrook } alt="white rook chess piece" /> :
-		    <img className="piece" src={ brook } alt="black rook chess piece" />
+		    this.props.piece?.isWhite() ? <img className="piece" src={ wrook } alt="white rook" /> :
+			<img className="piece" src={ brook } alt="black rook" />
 		}
 	    </>
 	);
-    }
+    }    
 }

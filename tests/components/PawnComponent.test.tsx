@@ -21,7 +21,7 @@ describe("Basic test", () => {
     test("", () => {
 	const pawn = new Pawn("white", 0);
 	
-	render(<PawnComponent pawn={pawn} />);
+	render(<PawnComponent piece={pawn}/>);
 
         // expect(screen.getByText(/Testing/i)).toBeDefined()
     })

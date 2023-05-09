@@ -2,8 +2,12 @@
 import React from 'react';
 
 // internal
-import { Pawn } from '@models/composite/pieces/Pawn';
 import PawnComponent from '@components/PawnComponent';
+import KnightComponent from '@components/KnightComponent';
+import BishopComponent from '@components/BishopComponent';
+import RookComponent from '@components/RookComponent';
+import QueenComponent from '@components/QueenComponent';
+import KingComponent from '@components/KingComponent';
 import { BOARD_WIDTH } from '@constants/board';
 import { Square } from '@models/composite/Square';
 import { Highlight } from '@models/modular/Highlight';
@@ -52,6 +56,42 @@ export default class SquareComponent extends React.Component<Props, State> {
 	}
     }
 
+    renderSwitch() {
+	if (this.state.square.getPiece()?.isPawn()) {
+	    return <PawnComponent
+	    piece={ this.state.square.getPiece() }
+		/>;
+	}
+	if (this.state.square.getPiece()?.isKnight()) {
+	    return <KnightComponent
+	    piece={ this.state.square.getPiece() }
+		/>;
+	}
+	if (this.state.square.getPiece()?.isBishop()) {
+	    return <BishopComponent
+	    piece={ this.state.square.getPiece() }
+		/>;
+	}
+	if (this.state.square.getPiece()?.isRook()) {
+	    return <RookComponent
+	    piece={ this.state.square.getPiece() }
+		/>;
+	}
+	if (this.state.square.getPiece()?.isQueen()) {
+	    return <QueenComponent
+	    piece={ this.state.square.getPiece() }
+		/>;
+	}
+	if (this.state.square.getPiece()?.isKing()) {
+	    return <KingComponent
+	    piece={ this.state.square.getPiece() }
+		/>;
+	}
+	return (
+	    <></>
+	);
+    }
+
     render() {
 	return (
 	    <button
@@ -61,11 +101,8 @@ export default class SquareComponent extends React.Component<Props, State> {
 		borderColor: this.getHighlight(),
 	    }}>
 
-		{ 
-		    this.state.square.getPiece() &&
-			<PawnComponent
-		    pawn={this.state.square.getPiece() as Pawn}
-			/>
+		{
+		    this.renderSwitch()
 		}
 
 	    </button>

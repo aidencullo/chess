@@ -1,21 +1,35 @@
+// external
 import React from 'react';
 
-import { Piece } from '@/models/composite/Piece';
-import wknight from '@/media/white/KnightComponent.png';
-import bknight from '@/media/black/KnightComponent.png';
+// internal
+import { Piece } from '@models/composite/Piece';
+import wknight from '@/media/white/Knight.png';
+import bknight from '@/media/black/Knight.png';
+
+/* 
+ * KnightComponent chess movement logic
+ * 
+ * @author Aiden Cullo [https://github.com/aidencullo]
+ */
 
 type Props = {
-    piece : Piece;
+    piece : Piece | null;
 }
 
 export default class KnightComponent extends React.Component<Props> {
 
+    constructor(props : Props){
+	super(props);
+    }
+    
     render() {
 	return (
 	    <>
-		{ this.props.piece.isWhite() ? <img className="piece" src={ wknight} alt="white knight chess piece" /> :
-		  <img className="piece" src={ bknight} alt="black knight chess piece" /> }
+		{
+		    this.props.piece?.isWhite() ? <img className="piece" src={ wknight } alt="white knight" /> :
+			<img className="piece" src={ bknight } alt="black knight" />
+		}
 	    </>
 	);
-    }
+    }    
 }

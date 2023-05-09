@@ -1,30 +1,35 @@
-/*
- * React component for a bishop piece
- *
- * @author Aiden Cullo [https://github.com/aidencullo]
- */
-
+// external
 import React from 'react';
 
-import { Piece } from '@/models/composite/Piece';
+// internal
+import { Piece } from '@models/composite/Piece';
 import wbishop from '@/media/white/Bishop.png';
 import bbishop from '@/media/black/Bishop.png';
 
+/* 
+ * BishopComponent chess movement logic
+ * 
+ * @author Aiden Cullo [https://github.com/aidencullo]
+ */
+
 type Props = {
-    piece : Piece;
+    piece : Piece | null;
 }
 
-export default class Bishop extends React.Component <Props> {
+export default class BishopComponent extends React.Component<Props> {
 
+    constructor(props : Props){
+	super(props);
+    }
+    
     render() {
 	return (
 	    <>
 		{
-		    this.props.piece.isWhite() ?
-			<img className="piece" src={ wbishop } alt="white bishop chess piece" /> :
-		    <img className="piece" src={ bbishop} alt="black bishop chess piece" />
+		    this.props.piece?.isWhite() ? <img className="piece" src={ wbishop } alt="white bishop" /> :
+			<img className="piece" src={ bbishop } alt="black bishop" />
 		}
 	    </>
 	);
-    }
+    }    
 }
