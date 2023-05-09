@@ -6,6 +6,14 @@
 
 import { Square } from '@models/composite/Square';
 import { Rook } from '@models/composite/pieces/Rook';
+import { Knight } from '@models/composite/pieces/Knight';
+import { Bishop } from '@models/composite/pieces/Bishop';
+import { Queen } from '@models/composite/pieces/Queen';
+import { King } from '@models/composite/pieces/King';
+import { Pawn } from '@models/composite/pieces/Pawn';
+import { Piece } from '@models/composite/Piece';
+
+type SquarePiece = Piece | null;
 
 export class Board {
     readonly _types: string[] = ["standard", "empty"];
@@ -20,8 +28,39 @@ export class Board {
 		this._squares = new Array(64).fill(new Square(null))
 		break;
 	    case "standard":
-		this._squares = new Array(64).fill(new Square(null))
+		this._squares = new Array(64).fill(undefined).map(() => new Square(null));
 		this._squares[0].setPiece(new Rook("black", 0));
+		this._squares[1].setPiece(new Knight("black", 1));
+		this._squares[2].setPiece(new Bishop("black", 2));
+		this._squares[3].setPiece(new Queen("black", 3));
+		this._squares[4].setPiece(new King("black", 4));
+		this._squares[5].setPiece(new Bishop("black", 5));
+		this._squares[6].setPiece(new Knight("black", 6));
+		this._squares[7].setPiece(new Rook("black", 7));
+		this._squares[8].setPiece(new Pawn("black", 8));
+		this._squares[9].setPiece(new Pawn("black", 9));
+		this._squares[10].setPiece(new Pawn("black", 10));
+		this._squares[11].setPiece(new Pawn("black", 11));
+		this._squares[12].setPiece(new Pawn("black", 12));
+		this._squares[13].setPiece(new Pawn("black", 13));
+		this._squares[14].setPiece(new Pawn("black", 14));
+		this._squares[15].setPiece(new Pawn("black", 15));
+		this._squares[56].setPiece(new Rook("white", 56));
+		this._squares[57].setPiece(new Knight("white", 57));
+		this._squares[58].setPiece(new Bishop("white", 58));
+		this._squares[59].setPiece(new Queen("white", 59));
+		this._squares[60].setPiece(new King("white", 60));
+		this._squares[61].setPiece(new Bishop("white", 61));
+		this._squares[62].setPiece(new Knight("white", 62));
+		this._squares[63].setPiece(new Rook("white", 63));
+		this._squares[48].setPiece(new Pawn("white", 48));
+		this._squares[49].setPiece(new Pawn("white", 49));
+		this._squares[50].setPiece(new Pawn("white",  50));
+		this._squares[51].setPiece(new Pawn("white",  51));
+		this._squares[52].setPiece(new Pawn("white",  52));
+		this._squares[53].setPiece(new Pawn("white",  53));
+		this._squares[54].setPiece(new Pawn("white",  54));
+		this._squares[55].setPiece(new Pawn("white",  55));
 		break;
 	    default:
 		throw new Error("Error on board construction, invalid board type entered");
@@ -32,7 +71,7 @@ export class Board {
 	return this._squares;
     }
 
-    getSquare(index : number) : Square {
+    getPiece(index : number) : SquarePiece {
 	if (index < 0 || index > 63) {
 	    throw new Error("trying to access invalid board index");
 	}

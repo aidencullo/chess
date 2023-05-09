@@ -36,7 +36,7 @@ export default class Game extends React.Component<Props, State> {
     constructor(props : Props) {
 	super(props);
 	this.state = {
-	    board: new Board("empty"),
+	    board: new Board("standard"),
 	};
     }
 

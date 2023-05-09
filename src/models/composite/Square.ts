@@ -12,9 +12,6 @@ export class Square {
     private _piece: SquarePiece;
 
     constructor(piece : SquarePiece) {
-	if (piece) {
-	    this._piece = piece;	    
-	}
 	this._piece = piece;
     }
 
