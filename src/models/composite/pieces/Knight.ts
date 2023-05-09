@@ -1,16 +1,16 @@
 /* 
- * Rook chess piece
+ * Knight chess piece
  * 
  * @author Aiden Cullo [https://github.com/aidencullo]
  */
 
 import { Piece } from '@models/composite/Piece';
 
-export class Rook extends Piece {    
+export class Knight extends Piece {    
     private _index : number;
     
     constructor(color : string, index : number) {
-	super("rook", color);
+	super("knight", color);
 	if (index < 0 || index > 63) {
 	    throw new Error("piece instantiated with invalid index");
 	}
