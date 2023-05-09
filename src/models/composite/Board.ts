@@ -5,6 +5,7 @@
  */
 
 import { Square } from '@models/composite/Square';
+import { Rook } from '@models/composite/pieces/Rook';
 
 export class Board {
     readonly _types: string[] = ["standard", "empty"];
@@ -13,13 +14,31 @@ export class Board {
     constructor(type : string) {
 	if (!this._types.includes(type)) {
 	    throw new Error("Error on board construction, value parameter not an acceptable board type")
-	}	
-	this._squares = new Array(64).fill(new Square(null))
+	}
+	switch(type){
+	    case "empty":
+		this._squares = new Array(64).fill(new Square(null))
+		break;
+	    case "standard":
+		this._squares = new Array(64).fill(new Square(null))
+		this._squares[0].setPiece(new Rook("black", 0));
+		break;
+	    default:
+		throw new Error("Error on board construction, invalid board type entered");
+	}
     }
 
     getSquares() : Square[] {
 	return this._squares;
     }
+
+    getSquare(index : number) : Square {
+	if (index < 0 || index > 63) {
+	    throw new Error("trying to access invalid board index");
+	}
+	return this._squares[index].getPiece();
+    }
+
 }
 
 // highlight

@@ -6,6 +6,7 @@
 
 import { Board } from '@models/composite/Board';
 import { Square } from '@models/composite/Square';
+import { Rook } from '@models/composite/pieces/Rook';
 
 test("test constructors with acceptable string input", () => {
 
@@ -19,7 +20,11 @@ test("test type value after constructor", () => {
     const board = new Board("empty");
 
     expect(board.getSquares()).toStrictEqual(new Array(64).fill(new Square(null)));
-    
+
+    const standardBoard = new Board("standard");
+
+    expect(standardBoard.getSquare(0)).toStrictEqual(new Rook("black", 0));
+
 })
 
 test("constructor should throw error with incorrect value passed", () => {

@@ -5,26 +5,20 @@
  */
 
 import { Piece } from '@models/composite/Piece';
-import { BOARD_WIDTH } from '@constants/board';
 
-export class Pawn extends Piece {    
-    private _direction : number;
+export class Rook extends Piece {    
     private _index : number;
     
     constructor(color : string, index : number) {
-	super("pawn", color);
+	super("rook", color);
 	if (index < 0 || index > 63) {
 	    throw new Error("piece instantiated with invalid index");
 	}
 	this._index = index;
-	this._direction = this.isWhite() ? 1 : -1;
     }
 
-    advanceOne() {
-    	return this._index + this._direction * BOARD_WIDTH;
-    }
-
-    advanceTwo() {
-    	return this._index + 2 * this._direction * BOARD_WIDTH;
+    getIndex() : number {
+	// dummy fn
+	return this._index;
     }
 }
