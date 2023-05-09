@@ -8,14 +8,14 @@ import { Pawn } from '@models/composite/pieces/Pawn';
 
 test("test constructors with acceptable string input", () => {
 
-    expect(() => new Pawn("white")).not.toThrowError();
-    expect(() => new Pawn("black")).not.toThrowError();
+    expect(() => new Pawn("white", 0)).not.toThrowError();
+    expect(() => new Pawn("black", 1)).not.toThrowError();
     
 })
 
 test("test type value after constructor", () => {
 
-    const pawn = new Pawn("white");
+    const pawn = new Pawn("white", 0);
     
     expect(pawn.isPawn()).toBe(true);    
     expect(pawn.isKing()).toBe(false);    
@@ -26,9 +26,11 @@ test("test type value after constructor", () => {
 
 test("constructor should throw error with incorrect value passed", () => {
     
-    expect(() => new Pawn("green")).toThrowError();
-    expect(() => new Pawn("")).toThrowError();
-    expect(() => new Pawn("jlskadf")).toThrowError();
-    expect(() => new Pawn("whit")).toThrowError();
+    expect(() => new Pawn("green", 0)).toThrowError();
+    expect(() => new Pawn("", 1)).toThrowError();
+    expect(() => new Pawn("jlskadf", 1)).toThrowError();
+    expect(() => new Pawn("whit", 1)).toThrowError();
+    expect(() => new Pawn("white", 100)).toThrowError();
+    expect(() => new Pawn("white", -1)).toThrowError();
     
 })
