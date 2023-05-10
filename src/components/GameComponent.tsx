@@ -44,7 +44,7 @@ export default class Game extends React.Component<Props, State> {
 
     handleClick(index : number) {
 	const board = Object.create(this.state.board);
-	board.setSquare(index, new Rook("white"));
+	board.showMoves(index);
 	this.setState({
 	    board: board,
 	})
@@ -59,7 +59,7 @@ export default class Game extends React.Component<Props, State> {
 			<SquareComponent
 			key={index}
 			index={index}
-			highlight={new Highlight("closed")}
+			highlight={this.state.board.getHighlight(index)}
 			square={square}
 			handleClick={() => this.handleClick(index)}
 			    />

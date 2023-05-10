@@ -90,6 +90,14 @@ export class Board {
 	return this._squares[index].getPiece();
     }
 
+    showMoves(index : number) {
+	for (let i = 0; i < 64; i++) {
+	    if (i !== index) {
+		this._highlights[i].setOpen();
+	    }
+	}
+    }
+    
     setSquare(index : number, piece : Piece) : void {
 	this._squares[index].setPiece(piece);
     }
