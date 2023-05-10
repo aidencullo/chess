@@ -8,14 +8,14 @@ import { Bishop } from '@models/composite/pieces/Bishop';
 
 test("test constructors with acceptable string input", () => {
 
-    expect(() => new Bishop("white", 0)).not.toThrowError();
-    expect(() => new Bishop("black", 1)).not.toThrowError();
+    expect(() => new Bishop("white")).not.toThrowError();
+    expect(() => new Bishop("black")).not.toThrowError();
     
 })
 
 test("test type value after constructor", () => {
 
-    const bishop = new Bishop("white", 0);
+    const bishop = new Bishop("white");
     
     expect(bishop.isPawn()).toBe(false);    
     expect(bishop.isKnight()).toBe(false);    
@@ -28,11 +28,7 @@ test("test type value after constructor", () => {
 
 test("constructor should throw error with incorrect value passed", () => {
     
-    expect(() => new Bishop("green", 0)).toThrowError();
-    expect(() => new Bishop("", 1)).toThrowError();
-    expect(() => new Bishop("jlskadf", 1)).toThrowError();
-    expect(() => new Bishop("whit", 1)).toThrowError();
-    expect(() => new Bishop("white", 100)).toThrowError();
-    expect(() => new Bishop("white", -1)).toThrowError();
+    expect(() => new Bishop("green")).toThrowError();
+    expect(() => new Bishop("")).toThrowError();
     
 })

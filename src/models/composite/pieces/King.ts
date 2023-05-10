@@ -8,8 +8,8 @@ import { Piece } from '@models/composite/Piece';
 
 export class King extends Piece {    
     
-    constructor(color : string, index : number) {
-	super("king", color, index);
+    constructor(color : string) {
+	super("king", color);
     }
 
 }

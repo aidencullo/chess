@@ -19,7 +19,7 @@ afterEach(() => {
 
 describe("Basic test", () => {
     test("", () => {
-	const pawn = new Pawn("white", 0);
+	const pawn = new Pawn("white");
 	
 	render(<PawnComponent piece={pawn}/>);
 

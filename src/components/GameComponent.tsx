@@ -40,18 +40,10 @@ export default class Game extends React.Component<Props, State> {
 	};
     }
 
-    componentDidMount() {
-	this.initializeBoard();
+    handleClick() {
+	console.log("click handled");
     }
-
-    initializeBoard() {
-	this.setStandardBoard();
-    }
-
-    setStandardBoard() {
-	console.log("setting standard board!");
-    }
-
+    
     render() {
 	return (
 	    <div>
@@ -63,11 +55,12 @@ export default class Game extends React.Component<Props, State> {
 			index={index}
 			highlight={new Highlight("closed")}
 			square={square}
+			handleClick={this.handleClick}
 			    />
 		    ))
 		}
 		</div>
-		<button onClick={() => this.initializeBoard()}>Restart</button>
+		<button onClick={() => console.log("this.initializeBoard()")}>Restart</button>
 	    </div>
 	);
     }

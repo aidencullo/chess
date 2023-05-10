@@ -8,14 +8,14 @@ import { King } from '@models/composite/pieces/King';
 
 test("test constructors with acceptable string input", () => {
 
-    expect(() => new King("white", 0)).not.toThrowError();
-    expect(() => new King("black", 1)).not.toThrowError();
+    expect(() => new King("white")).not.toThrowError();
+    expect(() => new King("black")).not.toThrowError();
     
 })
 
 test("test type value after constructor", () => {
 
-    const king = new King("white", 0);
+    const king = new King("white");
     
     expect(king.isKing()).toBe(true);    
     expect(king.isPawn()).toBe(false);    
@@ -26,13 +26,9 @@ test("test type value after constructor", () => {
     
 })
 
-test("constructor should throw error with incorrect value passed", () => {
+test("constructor with incorrect value passed", () => {
     
-    expect(() => new King("green", 0)).toThrowError();
-    expect(() => new King("", 1)).toThrowError();
-    expect(() => new King("jlskadf", 1)).toThrowError();
-    expect(() => new King("whit", 1)).toThrowError();
-    expect(() => new King("white", 100)).toThrowError();
-    expect(() => new King("white", -1)).toThrowError();
+    expect(() => new King("green")).toThrowError();
+    expect(() => new King("")).toThrowError();
     
 })

@@ -7,7 +7,7 @@
 import { Piece } from '@models/composite/Piece';
 
 export class Knight extends Piece {    
-    constructor(color : string, index : number) {
-	super("knight", color, index);
+    constructor(color : string) {
+	super("knight", color);
     }
 }

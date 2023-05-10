@@ -16,12 +16,14 @@ type Props = {
     index : number;
     highlight : Highlight;
     square : Square;
+    handleClick: () => void;
 }
 
 type State = {
     index : number;
     highlight : Highlight;
     square : Square;
+    handleClick: () => void;
 }
 
 export default class SquareComponent extends React.Component<Props, State> {
@@ -32,6 +34,7 @@ export default class SquareComponent extends React.Component<Props, State> {
 	    highlight : this.props.highlight,
 	    index : this.props.index,
 	    square : this.props.square,
+	    handleClick: this.props.handleClick,
 	}
     }
     
@@ -99,7 +102,9 @@ export default class SquareComponent extends React.Component<Props, State> {
 	    style={{ 
 		backgroundColor: this.getColor(),
 		borderColor: this.getHighlight(),
-	    }}>
+	    }}
+	    onClick={this.state.handleClick}
+		>
 
 		{
 		    this.renderSwitch()

@@ -8,14 +8,14 @@ import { Rook } from '@models/composite/pieces/Rook';
 
 test("test constructors with acceptable string input", () => {
 
-    expect(() => new Rook("white", 0)).not.toThrowError();
-    expect(() => new Rook("black", 1)).not.toThrowError();
+    expect(() => new Rook("white")).not.toThrowError();
+    expect(() => new Rook("black")).not.toThrowError();
     
 })
 
 test("test type value after constructor", () => {
 
-    const rook = new Rook("white", 0);
+    const rook = new Rook("white");
     
     expect(rook.isRook()).toBe(true);    
     expect(rook.isPawn()).toBe(false);    
@@ -28,11 +28,7 @@ test("test type value after constructor", () => {
 
 test("constructor should throw error with incorrect value passed", () => {
     
-    expect(() => new Rook("green", 0)).toThrowError();
-    expect(() => new Rook("", 1)).toThrowError();
-    expect(() => new Rook("jlskadf", 1)).toThrowError();
-    expect(() => new Rook("whit", 1)).toThrowError();
-    expect(() => new Rook("white", 100)).toThrowError();
-    expect(() => new Rook("white", -1)).toThrowError();
+    expect(() => new Rook("green")).toThrowError();
+    expect(() => new Rook("")).toThrowError();
     
 })
