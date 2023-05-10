@@ -6,6 +6,7 @@ import SquareComponent from '@components/SquareComponent';
 import { Board } from '@models/composite/Board';
 import { Highlight } from '@models/modular/Highlight';
 import { Square } from '@models/composite/Square';
+import { Rook } from '@models/composite/pieces/Rook';
 
 /* 
  * Chess board and logic
@@ -38,10 +39,15 @@ export default class Game extends React.Component<Props, State> {
 	this.state = {
 	    board: new Board("standard"),
 	};
+	this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick() {
-	console.log("click handled");
+    handleClick(index : number) {
+	const board = Object.create(this.state.board);
+	board.setSquare(index, new Rook("white"));
+	this.setState({
+	    board: board,
+	})
     }
     
     render() {
@@ -55,7 +61,7 @@ export default class Game extends React.Component<Props, State> {
 			index={index}
 			highlight={new Highlight("closed")}
 			square={square}
-			handleClick={this.handleClick}
+			handleClick={() => this.handleClick(index)}
 			    />
 		    ))
 		}

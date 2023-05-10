@@ -71,6 +71,10 @@ export class Board {
 	return this._squares;
     }
 
+    getSquare(index : number) : Square {
+	return this._squares[index];
+    }
+
     getHighlights() : Highlight[] {
 	return this._highlights;
     }
@@ -84,6 +88,10 @@ export class Board {
 	    throw new Error("trying to access invalid board index");
 	}
 	return this._squares[index].getPiece();
+    }
+
+    setSquare(index : number, piece : Piece) : void {
+	this._squares[index].setPiece(piece);
     }
 
 }
