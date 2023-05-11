@@ -19,3 +19,11 @@ export function row(index : number) {
 export function column(index : number) {
     return index % BOARD_WIDTH;
 }
+
+export function down(index : number, step : number) {
+    return index + (BOARD_WIDTH * step);
+}
+
+export function up(index : number, step : number) {
+    return index - (BOARD_WIDTH * step);
+}

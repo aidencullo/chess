@@ -6,6 +6,7 @@ import SquareComponent from '@components/SquareComponent';
 import { Square } from '@models/composite/Square';
 import { Highlight } from '@models/modular/Highlight';
 import { MoveLogic } from '@models/composite/MoveLogic';
+import { Board } from '@models/composite/Board';
 
 /* 
  * Chess board and logic
@@ -17,7 +18,6 @@ type State = {
     squares: Square[];
     highlights: Highlight[];
     active: boolean;
-    index: number;
 }
 
 type Props = {}
@@ -39,7 +39,7 @@ export default class Game extends React.Component<Props, State> {
     constructor(props : Props) {
 	super(props);
 	this.state = {
-	    squares: new Array(64).fill({}).map(() => new Square(null)),
+	    squares: Board.createStandardBoard(),
 	    highlights: new Array(64).fill({}).map(() => new Highlight("closed")),
 	    active: false,
 	};
