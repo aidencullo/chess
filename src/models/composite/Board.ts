@@ -13,6 +13,7 @@ import { King } from '@models/composite/pieces/King';
 import { Pawn } from '@models/composite/pieces/Pawn';
 import { Piece } from '@models/composite/Piece';
 import { Highlight } from '@models/modular/Highlight';
+import { BOARD_WIDTH } from '@constants/board';
 
 type SquarePiece = Piece | null;
 
@@ -89,79 +90,67 @@ export class Board {
 	}
 	return this._squares[index].getPiece();
     }
-
-    showMoves(index : number) {
-	for (let i = 0; i < 64; i++) {
-	    if (i !== index) {
-		this._highlights[i].setOpen();
-	    }
-	}
-    }
     
     setSquare(index : number, piece : Piece) : void {
 	this._squares[index].setPiece(piece);
     }
 
-}
+    showMoves(index : number) : void {
+	if (!this._squares[index].getPiece() === null) {
+	    return;
+	}
+	if (this._squares[index].getPiece()?.isPawn()) {
+	    this.showMovesPawn(index);
+	} else {
+	    console.log("isn't pawn");
+	}
+    }
 
-// highlight
+    showMovesPawn(index : number) {
+	this.showMovesPawnOpen(index);
+    }
 
 
-      /************************************************************************/
+    showMovesPawnOpen(index : number) {
+	const position = this._squares[index].getPiece()?.isWhite() ? this.up(index, 1) : this.down(index, 1);
+	console.log(this._squares[index].getPiece())
+	
+	// if (this.isValidMove(position)) {
+	    this._highlights[position].setOpen();
+	//     position = this.state.pawn.advanceTwo();
+	//     if (this.hasMoved(index)) {
+	// 	return;
+	//     }
+	//     if (this.isValidMove(position)) {
+		// highlights[position].setOpen();
+	//     }
+	// }
+    }
 
-    /*
-     * HIGHLIGHTING
-     *
-     * highlight possible moves
-     */
+    isValidMove(index : number) {
+	return this.isOnBoard(index) && !this.hasPiece(index);
+    }    
+
+    isOnBoard(index : number) {
+	return index > 0 && index < 63;
+    }
+
+    down(index : number, step : number) {
+	return index + (BOARD_WIDTH * step);
+    }
+
+    up(index : number, step : number) {
+	return index - (BOARD_WIDTH * step);
+    }
     
-    /************************************************************************/
-
-    // handleClick() {
-    // 	if (this.props.state.color === this.props.turn) {
-    // 	    this.highlight();
-    // 	}
-    // }
-
-    // highlight() {
-    // 	const highlights = this.props.highlights.slice();
-    // 	this.highlightMoves(this.props.index, highlights);
-    // 	this.highlightAttacks(this.props.index, highlights);
-    // 	this.highlightEnPassant(this.props.index, highlights);
-	
-    // 	this.props.setHighlights(highlights);
-    // }
-
-    // highlightMoves(index : number, highlights : Highlight[]) {
-    // 	let position = this.state.pawn.advanceOne();
-	
-    // 	if (this.isValidMove(position)) {
-    // 	    highlights[position].setOpen();
-    // 	    position = this.state.pawn.advanceTwo();
-    // 	    if (this.hasMoved(index)) {
-    // 		return;
-    // 	    }
-    // 	    if (this.isValidMove(position)) {
-    // 		highlights[position].setOpen();
-    // 	    }
-    // 	}
-    // }
-
-    // isValidMove(index : number) {
-    // 	return this.isOnBoard(index) && !this.hasPiece(index);
+ 
+    // onWestEdge(index : number) {
+    // 	return column(index) === 0;
     // }    
 
-    // isOnBoard(index : number) {
-    // 	return index > 0 && index < 63;
-    // }   
- 
-    // // onWestEdge(index : number) {
-    // // 	return column(index) === 0;
-    // // }    
-
-    // // onEastEdge(index : number) {
-    // // 	return column(index) === BOARD_WIDTH - 1;
-    // // }    
+    // onEastEdge(index : number) {
+    // 	return column(index) === BOARD_WIDTH - 1;
+    // }    
 
     // hasMoved(index : number) {
     // 	if (this.state.pawn.isWhite()) {
@@ -170,11 +159,12 @@ export class Board {
     // 	return Math.floor(index / BOARD_WIDTH) !== 1;
     // }
 
-    // hasPiece(index : number) {
-    // 	return index > 0;
-    // 	// return this.props.squares[index].piece.isNoPiece();
-    // }    
+    hasPiece(index : number) {
+	return index > 0;
+	// return this.props.squares[index].piece.isNoPiece();
+    }    
 	
+}
     // highlightAttacks(currentIndex, highlights) {
     // 	let pawn = this.props.squares[currentIndex];
     // 	let direction = getDirection(pawn.color);
