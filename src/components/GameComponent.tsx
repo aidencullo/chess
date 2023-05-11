@@ -15,10 +15,10 @@ import { HighlightBoard } from '@models/composite/HighlightBoard';
  */
 
 type State = {
-    square: Square;
     squares: Square[];
     highlights: Highlight[];
     active: boolean;
+    index: number;
 }
 
 type Props = {}
@@ -43,13 +43,13 @@ export default class Game extends React.Component<Props, State> {
 	    squares: Board.createStandardBoard(),
 	    highlights: HighlightBoard.createClosedBoard(),
 	    active: false,
+	    index: 0,
 	};
 	this.handleClick = this.handleClick.bind(this);
     }
 
     handleClick(index : number) {
 
-	
 	this.setState({
 	    squares: Board.createEmptyBoard(),
 	})

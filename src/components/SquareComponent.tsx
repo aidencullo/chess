@@ -19,27 +19,14 @@ type Props = {
     handleClick: () => void;
 }
 
-type State = {
-    index : number;
-    highlight : Highlight;
-    square : Square;
-    handleClick: () => void;
-}
-
-export default class SquareComponent extends React.Component<Props, State> {
+export default class SquareComponent extends React.Component<Props> {
 
     constructor(props : Props) {
 	super(props);
-	this.state = {
-	    highlight : this.props.highlight,
-	    index : this.props.index,
-	    square : this.props.square,
-	    handleClick: this.props.handleClick,
-	}
     }
     
     getColor() {
-	const index = this.state.index;
+	const index = this.props.index;
 	const row = Math.floor(index / BOARD_WIDTH);
 	if (row % 2 !== 0) {
 	    return index % 2 === 0 ? "brown" : "white";
@@ -49,7 +36,7 @@ export default class SquareComponent extends React.Component<Props, State> {
     }
 
     getHighlight() {
-	const highlight = this.state.highlight;
+	const highlight = this.props.highlight;
 	if (highlight.isOpen() || highlight.isEnPassant()) {
 	    return "green";
 	} else if (highlight.isAttack()) {
@@ -60,34 +47,34 @@ export default class SquareComponent extends React.Component<Props, State> {
     }
 
     renderSwitch() {
-	if (this.state.square.getPiece()?.isPawn()) {
+	if (this.props.square.getPiece()?.isPawn()) {
 	    return <PawnComponent
-	    piece={ this.state.square.getPiece() }
+	    piece={ this.props.square.getPiece() }
 		/>;
 	}
-	if (this.state.square.getPiece()?.isKnight()) {
+	if (this.props.square.getPiece()?.isKnight()) {
 	    return <KnightComponent
-	    piece={ this.state.square.getPiece() }
+	    piece={ this.props.square.getPiece() }
 		/>;
 	}
-	if (this.state.square.getPiece()?.isBishop()) {
+	if (this.props.square.getPiece()?.isBishop()) {
 	    return <BishopComponent
-	    piece={ this.state.square.getPiece() }
+	    piece={ this.props.square.getPiece() }
 		/>;
 	}
-	if (this.state.square.getPiece()?.isRook()) {
+	if (this.props.square.getPiece()?.isRook()) {
 	    return <RookComponent
-	    piece={ this.state.square.getPiece() }
+	    piece={ this.props.square.getPiece() }
 		/>;
 	}
-	if (this.state.square.getPiece()?.isQueen()) {
+	if (this.props.square.getPiece()?.isQueen()) {
 	    return <QueenComponent
-	    piece={ this.state.square.getPiece() }
+	    piece={ this.props.square.getPiece() }
 		/>;
 	}
-	if (this.state.square.getPiece()?.isKing()) {
+	if (this.props.square.getPiece()?.isKing()) {
 	    return <KingComponent
-	    piece={ this.state.square.getPiece() }
+	    piece={ this.props.square.getPiece() }
 		/>;
 	}
 	return (
@@ -103,9 +90,8 @@ export default class SquareComponent extends React.Component<Props, State> {
 		backgroundColor: this.getColor(),
 		borderColor: this.getHighlight(),
 	    }}
-	    onClick={this.state.handleClick}
+	    onClick={this.props.handleClick}
 		>
-
 		{
 		    this.renderSwitch()
 		}
