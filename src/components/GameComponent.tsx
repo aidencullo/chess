@@ -5,6 +5,8 @@ import React from 'react';
 import SquareComponent from '@components/SquareComponent';
 import { Board } from '@models/composite/Board';
 import { Square } from '@models/composite/Square';
+import { Highlight } from '@models/modular/Highlight';
+import { HighlightBoard } from '@models/composite/HighlightBoard';
 
 /* 
  * Chess board and logic
@@ -13,7 +15,10 @@ import { Square } from '@models/composite/Square';
  */
 
 type State = {
-    board: Board;
+    square: Square;
+    squares: Square[];
+    highlights: Highlight[];
+    active: boolean;
 }
 
 type Props = {}
@@ -35,17 +40,32 @@ export default class Game extends React.Component<Props, State> {
     constructor(props : Props) {
 	super(props);
 	this.state = {
-	    board: new Board("standard"),
+	    squares: Board.createStandardBoard(),
+	    highlights: HighlightBoard.createClosedBoard(),
+	    active: false,
 	};
 	this.handleClick = this.handleClick.bind(this);
     }
 
     handleClick(index : number) {
-	const board = Object.create(this.state.board);
-	board.showMoves(index);
+
+	
 	this.setState({
-	    board: board,
+	    squares: Board.createEmptyBoard(),
 	})
+    // 	if (this.state.active) {
+    // 	    const highlights = 	HighlightBoard.createClosedBoard();
+    // 	    this.setState({
+    // 		highlights: highlights,
+    // 		active: !this.state.active,
+    // 	    })
+    // 	} else {
+    // 	    const highlights = 	HighlightBoard.createOpenBoard();
+    // 	    this.setState({
+    // 		highlights: highlights,
+    // 		active: !this.state.active,
+    // 	    })
+    // 	}
     }
     
     render() {
@@ -53,18 +73,17 @@ export default class Game extends React.Component<Props, State> {
 	    <div>
 		<div className="board">
 		{
-		    this.state.board.getSquares().map((square : Square, index : number) => (
+		    this.state.squares.map((square : Square, index : number) => (
 			<SquareComponent
 			key={index}
 			index={index}
-			highlight={this.state.board.getHighlight(index)}
+			highlight={this.state.highlights[index]}
 			square={square}
 			handleClick={() => this.handleClick(index)}
-			    />
+				    />
 		    ))
 		}
 		</div>
-		<button onClick={() => console.log("this.initializeBoard()")}>Restart</button>
 	    </div>
 	);
     }
