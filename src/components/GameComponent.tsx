@@ -3,10 +3,9 @@ import React from 'react';
 
 // internal
 import SquareComponent from '@components/SquareComponent';
-import { Board } from '@models/composite/Board';
 import { Square } from '@models/composite/Square';
 import { Highlight } from '@models/modular/Highlight';
-import { HighlightBoard } from '@models/composite/HighlightBoard';
+import { MoveLogic } from '@models/composite/MoveLogic';
 
 /* 
  * Chess board and logic
@@ -40,32 +39,25 @@ export default class Game extends React.Component<Props, State> {
     constructor(props : Props) {
 	super(props);
 	this.state = {
-	    squares: Board.createStandardBoard(),
-	    highlights: HighlightBoard.createClosedBoard(),
+	    squares: new Array(64).fill({}).map(() => new Square(null)),
+	    highlights: new Array(64).fill({}).map(() => new Highlight("closed")),
 	    active: false,
-	    index: 0,
 	};
 	this.handleClick = this.handleClick.bind(this);
     }
 
     handleClick(index : number) {
-
-	this.setState({
-	    squares: Board.createEmptyBoard(),
-	})
-    // 	if (this.state.active) {
-    // 	    const highlights = 	HighlightBoard.createClosedBoard();
-    // 	    this.setState({
-    // 		highlights: highlights,
-    // 		active: !this.state.active,
-    // 	    })
-    // 	} else {
-    // 	    const highlights = 	HighlightBoard.createOpenBoard();
-    // 	    this.setState({
-    // 		highlights: highlights,
-    // 		active: !this.state.active,
-    // 	    })
-    // 	}
+	if (this.state.active) {
+	    console.log("active state!")
+	} else {
+	    console.log("nonactive state!")
+	    const moveLogic = new MoveLogic(this.state.squares);
+	    const moves = moveLogic.getMoves(index);
+	    this.setState({
+		highlights: moves,
+		active: !this.state.active,
+	    })
+	}
     }
     
     render() {
