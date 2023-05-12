@@ -6,7 +6,7 @@
 
 import { Square } from '@models/composite/Square';
 import { Highlight } from '@models/modular/Highlight';
-import { up, down } from '@auxiliary/geometry';
+import { up, down, isWestEdge, isEastEdge, onBoard } from '@auxiliary/geometry';
 import { BOARD_WIDTH } from '@constants/board';
 
 export class MoveLogic {
@@ -25,12 +25,14 @@ export class MoveLogic {
     /** PAWN MOVES */
 
     getMovesPawn(index : number) {
-	return this.getMovesPawnOpen(index)
+	const highlights = new Array(64).fill({}).map(() => new Highlight("closed"))
+	this.getMovesPawnOpen(index, highlights)
+	this.getMovesPawnAttack(index, highlights)
+	return highlights;
     }
 
     
-    getMovesPawnOpen(index : number) {
-	const highlights = new Array(64).fill({}).map(() => new Highlight("closed"))
+    getMovesPawnOpen(index : number, highlights : Highlight[]) {
 	const isWhite = this._squares[index].getPiece()?.isWhite();
 	const firstPosition = isWhite ? up(index, 1) : down(index, 1);
 
@@ -44,23 +46,41 @@ export class MoveLogic {
             }
 	}
 
-	return highlights;
-
     }
-    
+        
+    getMovesPawnAttack(index : number, highlights : Highlight[]) {
+	if (this._squares[index].getPiece()?.isWhite()) {
+	    if (!isWestEdge(index)) {
+		const eastTarget = up(index +  1, 1);
+		if (this.hasEnemyPiece(index, eastTarget)) {
+		    highlights[eastTarget].setAttack();
+		}
+	    }
+	    if (!isEastEdge(index)) {
+		const westTarget = up(index -  1, 1);
+		if (this.hasEnemyPiece(index, westTarget)) {
+		    highlights[westTarget].setAttack();
+		}
+	    }
+	}	
+    }
+
     /** CHECKS */
 
     isValidMove(index : number) {
-	return this.isOnBoard(index) && !this.hasPiece(index);
+	return onBoard(index) && !this.hasPiece(index);
     }    	
 
     hasPiece(index : number) {
 	return this._squares[index].getPiece() !== null;
     }    
 
-    isOnBoard(index : number) {
-	return index > 0 && index < 64;
-    }
+    hasEnemyPiece(index : number, enemyIndex : number) {
+	if (!this.hasPiece(enemyIndex)) {
+	    return false;
+	}
+	return this._squares[index].getPiece()?.getColor() !== this._squares[index].getPiece()?.getColor();
+    }    
 
     /** PAWN CHECKS */
 

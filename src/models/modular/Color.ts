@@ -18,6 +18,10 @@ export class Color {
     isWhite() : boolean {
 	return this._value === "white";
     }
+
+    getColor() : string {
+	return this._value;
+    }
 }
 
 

@@ -20,6 +20,10 @@ export abstract class Piece {
 	return this._color.isWhite();
     }
 
+    getColor() {
+	return this._color.getColor();
+    }
+    
     isPawn() {
 	return this._pieceType.isPawn();
     }

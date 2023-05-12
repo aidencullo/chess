@@ -27,3 +27,16 @@ export function down(index : number, step : number) {
 export function up(index : number, step : number) {
     return index - (BOARD_WIDTH * step);
 }
+
+export function onBoard(index : number) {
+    return index > 0 && index < 64;
+}
+
+export function isWestEdge(index : number) {
+    return column(index) === 0;
+}
+
+export function isEastEdge(index : number) {
+    return column(index) === 7;
+}
+
