@@ -79,7 +79,7 @@ export class MoveLogic {
 	if (!this.hasPiece(enemyIndex)) {
 	    return false;
 	}
-	return this._squares[index].getPiece()?.getColor() !== this._squares[index].getPiece()?.getColor();
+	return this._squares[index].getPiece()?.getColor() !== this._squares[enemyIndex].getPiece()?.getColor();
     }    
 
     /** PAWN CHECKS */

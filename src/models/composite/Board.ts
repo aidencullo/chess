@@ -65,5 +65,12 @@ export class Board {
     static createEmptyBoard() {
 	return new Array(64).fill(null).map(() => new Square(null));
     }
+
+    static createPawnAttackBoard() {
+	const squares = new Array(64).fill(null).map(() => new Square(null));
+	squares[0].setPiece(new Pawn("black"));
+	squares[9].setPiece(new Pawn("white"));
+	return squares;
+    }
     
 }

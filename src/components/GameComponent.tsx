@@ -39,7 +39,7 @@ export default class Game extends React.Component<Props, State> {
     constructor(props : Props) {
 	super(props);
 	this.state = {
-	    squares: Board.createStandardBoard(),
+	    squares: Board.createPawnAttackBoard(),
 	    highlights: new Array(64).fill({}).map(() => new Highlight("closed")),
 	    active: false,
 	};
