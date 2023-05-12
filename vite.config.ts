@@ -21,4 +21,5 @@ export default defineConfig({
 	globals: true,
 	environment: 'jsdom',
     },
+    base: '/chess/',
 })
