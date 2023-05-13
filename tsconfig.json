@@ -32,7 +32,7 @@
 	},
 
 	/* add vitest testing globals */
-	"types": ["vitest/globals"]
+	"types": ["vitest/globals", "cypress"]
 	
     },
     "include": ["src", "tests"],
