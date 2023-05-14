@@ -3,6 +3,7 @@ import React from 'react';
 
 // internal
 import Game from '@components/GameComponent';
+import './index.css'
 
 /*
  * Homepage
