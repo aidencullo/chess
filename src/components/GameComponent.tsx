@@ -9,6 +9,9 @@ import { MoveLogic } from '@models/composite/MoveLogic';
 import { Board } from '@models/composite/Board';
 import { HighlightBoard } from '@models/composite/HighlightBoard';
 
+// styling
+import '../index.css'
+
 /* 
  * Chess board and logic
  * 
