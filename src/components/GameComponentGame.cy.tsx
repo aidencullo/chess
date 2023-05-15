@@ -5,9 +5,8 @@ describe('<Game />', () => {
   it('renders', () => {
     // see: https://on.cypress.io/mounting-react
       cy.mount(<Game />)
-      // cy.get(':nth-child(10)').should('have.attr', 'background-color')
-      cy.get(':nth-child(10)').get('button').then(($p) => {
-	  cy.log($p)
-      });
+      cy.get(':nth-child(10)').click();
+      cy.get('.board > :nth-child(2)').should('have.css', 'border-color', 'rgb(0, 128, 0)')
+      
   })
 })
